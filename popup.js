@@ -157,6 +157,15 @@ function PopUp()
 			}
 		},false);
 
+		document.addEventListener('dblclick', function(e){
+			if (e.button == 0){
+				_movedWhilePressed = true;
+				_downEvent = e;
+				_upEvent = e;
+			}
+		},false);
+
+		
 		_popupNode.addEventListener('mousedown', function(e){
 			e.stopPropagation();
 		},false);
