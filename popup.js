@@ -61,16 +61,18 @@ function PopUp()
 		_active = false;
 	}
 
-	this.setCSSText = function (css){
+	this.setExtraCSSText = function (css){
 
-		while (_styleNode.hasChildNodes()) {
+		while (_styleNode.hasChildNodes() && _styleNode.childNodes.length > 1) {
 			_styleNode.removeChild(_styleNode.lastChild);
 		}
+		_that.addCSSText(css);
 
-		css = css.replace(/#popup/g, '#' + _popupId);
+	}
 
-		var style = document.createTextNode(css);
-		_styleNode.appendChild(style);
+	this.setDefaultCSSText = function (css){
+
+		_that.addCSSText(css);
 
 	}
 
@@ -163,7 +165,10 @@ function PopUp()
 
 	this.load = function(){
 		chrome.extension.sendRequest({}, function(response){
-			_that.setCSSText(response.style);
+			_that.setDefaultCSSText(response.default_style);
+			if(response.extra_style)
+				_that.setExtraCSSText(response.extra_style);
+	
 			_popupButton = response.button;
 			for (i in response.searchEngines){
 				var en = response.searchEngines[i];

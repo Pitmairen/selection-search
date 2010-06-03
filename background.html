@@ -9,7 +9,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 
 	resp.searchEngines = Storage.getSearchEngines();
 
-	resp.style = Storage.getStyle(document.getElementById('default-style').value);
+	resp.default_style = document.getElementById('default-style').value;
+	resp.extra_style = Storage.getStyle('');
 
 	resp.button = Storage.getButton();
 

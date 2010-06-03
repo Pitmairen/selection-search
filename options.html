@@ -43,7 +43,7 @@ a.delete{
 }
 #style{
 	width: 100%;
-	height: 25em;
+	height: 15em;
 }
 #save-buttons{
 	margin-top: 2em;
@@ -74,13 +74,18 @@ a.delete{
 	clear: both;
 }
 
-#info{
+.info{
 	background:#F6F6F6;
 	border: 1px solid #D1D1D1;
 	-webkit-border-radius: 5px;
 	margin-bottom: 2em;
 	padding: 0.5em;
 	font-size: 9pt;
+}
+
+#style-info a{
+	color: #2E6DAC;
+	text-decoration: none;
 }
 
 </style>
@@ -132,8 +137,19 @@ $(document).ready(function(){
 
 	var popup = new PopUp();
 
+
+	// The style system has changed.
+	// Check if the user has changed the style. If it hasn't we can clear the stored style.
+	var stored_style = Storage.getStyle('');
+	if (stored_style == $('#old-default-style').val())
+		Storage.setStyle('');
+
+
+
 	chrome.extension.sendRequest({}, function(response){
-		popup.setCSSText(response.style);
+		popup.setDefaultCSSText(response.default_style);
+		if(response.extra_style)
+			popup.setExtraCSSText(response.extra_style);
 
 		for (i in response.searchEngines){
 			var en = response.searchEngines[i];
@@ -147,9 +163,37 @@ $(document).ready(function(){
 
 
 		$('#preview').append(popup.getForPreview());
-		$('#style').val(popup.getCSS());
+		$('#style').val(response.extra_style);
 
 		$("input[name='button']").filter("[value="+response.button+"]").attr('checked', 'checked');
+
+
+
+		if($('#style').val().length == 0){
+
+
+			var ex = $('<a id="css-example" href="#">Show Example</a>');
+
+			ex.click(function(){
+
+				$('#style').val(
+					'#popup {\n' +
+						' background: gray;\n' +
+						' -webkit-border-radius: 8px;\n'+
+					'}\n' +
+					'#popup a, #popup li:first-child {\n' +
+						' color: white;\n' +
+					'}');
+
+				$(this).hide();
+
+				popup.setExtraCSSText($('#style').val());
+
+				return false;
+			});
+
+			$('#style-info').append(ex);
+		}
 
 	});
 
@@ -158,6 +202,7 @@ $(document).ready(function(){
 
 		addNewEngine('', '', '');
 
+		return false;
 	});
 
 
@@ -183,7 +228,7 @@ $(document).ready(function(){
 
 
 		Storage.setSearchEngines(new_engines);
-		Storage.setStyle($('#style').val());
+		Storage.setStyle(jQuery.trim($('#style').val()));
 		Storage.setButton($("input[name='button']:checked").val());
 
 		location.reload();
@@ -192,18 +237,23 @@ $(document).ready(function(){
 
 	$('#restore').click(function(){
 
-		Storage.clear();
 
-		location.reload();
+		if(confirm("This will delete all your search engines and reset all the changes you have made")){
 
+			Storage.clear();
+
+			location.reload();
+		}
+		return false;
 	});
 
 	$('#update-preview').click(function(e){
 
-		popup.setCSSText($('#style').val());
+		popup.setExtraCSSText($('#style').val());
 
 		return false;
 	});
+
 
 });
 </script>
@@ -214,9 +264,9 @@ $(document).ready(function(){
 <div id="content">
 
 
-<div id="info">
-<p>The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text</p>
-</div>
+
+<p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.</p>
+
 
 <table id="engines">
 	<tr>
@@ -232,6 +282,8 @@ $(document).ready(function(){
 
 
 <h4>Style</h4>
+<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>. You can see the html structure of the menu below.
+Leave it empty to use the default. </p>
 <textarea id="style">
 </textarea>
 
@@ -246,8 +298,8 @@ $(document).ready(function(){
 <td>
 <pre id="html">
 &lt;ul id="popup"&gt;
-    &lt;li&gt;Search Text&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;&lt;img src="#" /&gt;Name&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;Selected Text&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;&lt;img src="#" /&gt;Search engine name&lt;/a&gt;&lt;/li&gt;
     ...
 &lt;/ul&gt;
 </pre>
@@ -263,5 +315,54 @@ $(document).ready(function(){
 <div class="clearb"></div>
 </div>
 
+<!-- The is used to check if someone with an older version of the extension have changed the stylesheet.
+ This cant be removed after a while when everybody have updgraded -->
+<textarea id="old-default-style" style="display: none;">
+#popup{
+ width: 12em;
+ position: absolute;
+ background: #EDECEC;
+ border: solid 1px #AEAAA7;
+ padding: 0.3em 0.3em;
+ font-size: 9pt;
+ margin: 0;
+ list-style-type: none;
+ -webkit-box-shadow: 0px 1px 10px #ccc;
+}
+#popup li{
+ margin: 1px 0;
+ padding: 0;
+ text-align: left;
+ color: #202020;
+}
+#popup img{
+ width: 16px;
+ height: 16px;
+ vertical-align: middle;
+ border:none;
+ margin: 0;
+ margin-right: 4px;
+}
+#popup li:first-child {
+ overflow: hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ border-bottom: solid 1px #AEAAA7;
+ margin-bottom: 0.5em;
+ padding: 0.2em 0.8em;
+}
+#popup a{
+ margin: 1px;
+ text-decoration: none;
+ color: #202020;
+ display: block;
+ padding: 0.2em 0.8em;
+ -webkit-border-radius: 3px;
+}
+#popup a:hover{
+ background: #96B8E1;
+}
+
+</textarea>
 </body>
 </html>
