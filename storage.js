@@ -71,7 +71,22 @@ var Storage = new function (){
 		_removeValue(_BUTTON_KEY);
 	}
 
-	function _getValue(key, default_value, parse_json){
+
+	this.getValue = function(key, default_value){
+		return _getValue(key, default_value);
+	}
+
+	this.setValue = function(key, value){
+
+		_setValue(key, value);
+	}
+
+	this.removeValue = function(key){
+		_removeValue(key);
+	}
+
+
+	function _getValue(key, default_value){
 
 		var value = localStorage[key];
 

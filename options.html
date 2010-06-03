@@ -49,21 +49,14 @@ a.delete{
 	margin-top: 2em;
 }
 
-#restore{
-	float: right;
-}
-#save{
+
+#preview{
+
 	float: left;
 }
 
-#preview{
-	margin-right: 1em;
-}
-#preview-table{
-	width: 100%;
-}
-#preview-table th{
-	text-align: left;
+#html{
+	display: none;
 }
 
 #mousebutton{
@@ -83,9 +76,18 @@ a.delete{
 	font-size: 9pt;
 }
 
-#style-info a{
+a{
 	color: #2E6DAC;
 	text-decoration: none;
+}
+
+.theme_def{
+	display: none;
+}
+
+
+#customize{
+	display: none;
 }
 
 </style>
@@ -93,8 +95,6 @@ a.delete{
 <script src="popup.js"></script>
 <script src="jquery-1.4.2.min.js"></script>
 <script>
-
-
 
 function addNewEngine(name, url, icon_url){
 
@@ -144,7 +144,7 @@ $(document).ready(function(){
 	if (stored_style == $('#old-default-style').val())
 		Storage.setStyle('');
 
-
+	var CURRENT_STYLE = '';
 
 	chrome.extension.sendRequest({}, function(response){
 		popup.setDefaultCSSText(response.default_style);
@@ -154,7 +154,7 @@ $(document).ready(function(){
 		for (i in response.searchEngines){
 			var en = response.searchEngines[i];
 
-			if(i < 5) // add 5 engines for preview
+			if(i < 3) // add 3 engines for preview
 				popup.addSearchEngine(en);
 
 			addNewEngine(en.name, en.url, en.icon_url);
@@ -162,38 +162,18 @@ $(document).ready(function(){
 		}
 
 
+		if(response.extra_style){
+
+			CURRENT_STYLE= response.extra_style;
+			$('#select_theme').prepend('<option selected="selected" value="current_style">&lt;Current Style&gt;</option>');
+		}
+
 		$('#preview').append(popup.getForPreview());
-		$('#style').val(response.extra_style);
 
 		$("input[name='button']").filter("[value="+response.button+"]").attr('checked', 'checked');
 
+		$('#select_theme').change();
 
-
-		if($('#style').val().length == 0){
-
-
-			var ex = $('<a id="css-example" href="#">Show Example</a>');
-
-			ex.click(function(){
-
-				$('#style').val(
-					'#popup {\n' +
-						' background: gray;\n' +
-						' -webkit-border-radius: 8px;\n'+
-					'}\n' +
-					'#popup a, #popup li:first-child {\n' +
-						' color: white;\n' +
-					'}');
-
-				$(this).hide();
-
-				popup.setExtraCSSText($('#style').val());
-
-				return false;
-			});
-
-			$('#style-info').append(ex);
-		}
 
 	});
 
@@ -235,13 +215,13 @@ $(document).ready(function(){
 
 	});
 
+
 	$('#restore').click(function(){
 
 
 		if(confirm("This will delete all your search engines and reset all the changes you have made")){
 
 			Storage.clear();
-
 			location.reload();
 		}
 		return false;
@@ -254,6 +234,46 @@ $(document).ready(function(){
 		return false;
 	});
 
+	var theme_select = $('#select_theme');
+
+	$('.theme_def').each(function(){
+		theme_select.append('<option value="' + $(this).attr('id')+'">'+$(this).attr('name')+'</option>');
+	});
+
+	theme_select.change(function(){
+
+		var opt = $('#select_theme option:selected').first();
+
+		var id = opt.attr('value');
+
+		if(id == 'current_style'){
+			popup.setExtraCSSText(CURRENT_STYLE)
+			$("#style").val(CURRENT_STYLE);
+			return;
+		}
+
+		var css = $('textarea#' + id).val();
+
+		$("#style").val(css);
+
+		popup.setExtraCSSText(css);
+
+	});
+
+
+
+
+	$('#show_customize').click(function(){
+		$('#customize').toggle();
+
+		return false;
+	});
+
+
+	$('#show_html').click(function(){
+		$('#html').toggle();
+		return false;
+	});
 
 });
 </script>
@@ -275,45 +295,107 @@ $(document).ready(function(){
 		<th>Icon url</th>
 		<th>Delete</th>
 	</tr>
-
 </table>
 <p class="buttons"><input type="button" value="New Search Engine"  id="new-engine" /></p>
 
 
 
 <h4>Style</h4>
-<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>. You can see the html structure of the menu below.
-Leave it empty to use the default. </p>
-<textarea id="style">
-</textarea>
 
-<p class="buttons"><input id="update-preview" type="button" value="Update Preview" /></p>
-<table id="preview-table">
-	<tr>
-		<th>Preview</th>
-		<th>HTML</th>
-	</tr>
-	<tr>
-<td><div id="preview"></div></td>
-<td>
-<pre id="html">
+<p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /></p>
+
+<h4>Preview</h4>
+
+<div id="preview"></div>
+
+
+<div id="customize">
+	<div class="clearb"></div>
+
+	<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.</p>
+
+	<pre id="html">
 &lt;ul id="popup"&gt;
-    &lt;li&gt;Selected Text&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-    ...
+	&lt;li&gt;Selected Text&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+	...
 &lt;/ul&gt;
-</pre>
-</td>
-</tr>
-</table>
+	</pre>
 
-<p id="mousebutton"><strong>Activate menu:</strong> Left mouse button: <input type="radio" value="0" name="button" /> Middle mouse button: <input type="radio" value="1" name="button" /></p>
+	<textarea id="style"></textarea>
+	<p class="buttons"><input id="update-preview" type="button" value="Update Preview" /> <input type="button" id="show_html" value="Show HTML" /></p>
 
+
+</div>
+
+
+<div class="clearb"></div>
+<p id="mousebutton"><strong>Mouse Button to activate menu:</strong></p>
+<p>Left: <input type="radio" value="0" name="button" /> Middle: <input type="radio" value="1" name="button" /></p>
 
 <p class="buttons" id="save-buttons"><input type="button" id="save" value="Save" /> <input type="button" id="restore" value="Restore defaults" /></p>
 
 <div class="clearb"></div>
 </div>
+
+
+
+<textarea class="theme_def" name="Default" id="theme_1"></textarea>
+
+<textarea class="theme_def" name="Icons only" id="theme_2">
+#popup .engine-name, #popup li:first-child{
+ display: none;
+}
+#popup a, #popup li{
+ display: inline; padding: 0.2em;
+}
+#popup img{
+ margin: 0; padding: 0;
+}
+#popup {
+ width: auto;
+}
+</textarea>
+
+
+<textarea class="theme_def" name="No selection" id="theme_3">
+#popup li:first-child{
+ display: none;
+}
+</textarea>
+
+
+<textarea class="theme_def" name="Rounded gradient" id="theme_4">
+#popup {
+ background: -webkit-gradient(linear, left top, left bottom, from(#E0DFDC), to(#B9B8B6));
+ -webkit-border-radius: 5px;
+}
+#popup a:hover{
+ background: #E0DFDD;
+}
+</textarea>
+
+<textarea class="theme_def" name="Transparent" id="theme_5">
+#popup {
+ opacity: 0.9;
+}
+</textarea>
+
+<textarea class="theme_def" name="Dark" id="theme_6">
+#popup{
+ background: #303030;
+ border: 1px solid #D1D1D1;
+ -webkit-border-radius: 6px;
+ -webkit-box-shadow: 0px 1px 5px #979797
+}
+#popup a, #popup li{
+ color: #DDDDDD;
+}
+#popup a:hover{
+ background: #595959;
+}
+</textarea>
+
 
 <!-- The is used to check if someone with an older version of the extension have changed the stylesheet.
  This cant be removed after a while when everybody have updgraded -->
