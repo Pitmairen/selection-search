@@ -89,7 +89,7 @@ function PopUp()
 		var li = document.createElement('li');
 		var a = document.createElement('a');
 
-		a.innerHTML = '<img src="'+_getIconUrl(engine)+'" />' +engine.name;
+		a.innerHTML = '<img class="engine-img" src="'+_getIconUrl(engine)+'" /><span class="engine-name">' +engine.name + '</span>';
 
 		a.search_url = engine.url;
 		a.href = '#';
