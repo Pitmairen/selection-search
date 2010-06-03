@@ -1,0 +1,25 @@
+{
+    "name": "Selection Search",
+    "version": "0.1.1",
+
+    "description": "Search for the selected text in search engines",
+
+	"icons": {
+		"16": "icon16.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	},
+
+	"options_page": "options.html",
+
+    "background_page": "background.html",
+
+	"content_scripts": [
+		{
+			"matches": ["http://*/*", "https://*/*"],
+			"js": ["popup.js", "search.js"]
+		}
+	],
+
+    "permissions": []
+}

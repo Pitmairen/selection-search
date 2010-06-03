@@ -1,0 +1,267 @@
+<html>
+<head>
+<style type="text/css">
+
+body{
+
+	background: #FCF9F9;
+
+}
+h4{text-align: left}
+p.buttons{
+	margin: 0.5em 0;
+}
+
+
+#content{
+	margin: 0 auto;
+	width: 95%;
+	background: #E2EAFF;
+	border: 1px solid #D4D4D4;
+	-webkit-border-radius: 5px;
+	padding: 0.5em;
+}
+a.delete{
+	text-decoration: none;
+	color: #CA171A;
+	font-weight: bold;
+}
+#engines{
+
+	width: 100%;
+}
+#engines th:first-child{
+	width: 12em;
+}
+#engines th:last-child, #engines tr td:last-child{
+	width: 50px;
+	text-align: center;
+}
+#engines input{
+	width: 100%;
+	border: 1px solid #D4D4D4;
+}
+#style{
+	width: 100%;
+	height: 25em;
+}
+#save-buttons{
+	margin-top: 2em;
+}
+
+#restore{
+	float: right;
+}
+#save{
+	float: left;
+}
+
+#preview{
+	margin-right: 1em;
+}
+#preview-table{
+	width: 100%;
+}
+#preview-table th{
+	text-align: left;
+}
+
+#mousebutton{
+	margin-top: 2em;
+}
+
+.clearb{
+	clear: both;
+}
+
+#info{
+	background:#F6F6F6;
+	border: 1px solid #D1D1D1;
+	-webkit-border-radius: 5px;
+	margin-bottom: 2em;
+	padding: 0.5em;
+	font-size: 9pt;
+}
+
+</style>
+<script src="storage.js"></script>
+<script src="popup.js"></script>
+<script src="jquery-1.4.2.min.js"></script>
+<script>
+
+
+
+function addNewEngine(name, url, icon_url){
+
+
+	icon_url = icon_url == undefined ||
+				icon_url.length == 0 ? '(Use default)' : icon_url;
+
+	var tr = $('<tr></tr>');
+
+	tr.append('<td><input class="name" type="text" value="'+name+'" /></td>');
+	tr.append('<td><input class="url" type="text" value="'+url+'" /></td>');
+	tr.append('<td><input class="icon_url" type="text" value="'+icon_url+'" /></td>');
+	tr.append('<td><a href="#" class="delete">X</a></td>');
+
+
+	tr.find('input.icon_url').focus(function (){
+
+		if ($(this).val() == '(Use default)')
+			$(this).val('');
+
+	}).blur(function (){
+
+		if (!$(this).val())
+			$(this).val('(Use default)');
+
+	});
+
+	tr.find('a.delete').click(function(){
+
+		$(this).parent().parent().remove();
+		return false;
+	});
+
+
+	$('#engines').append(tr);
+
+}
+
+$(document).ready(function(){
+
+	var popup = new PopUp();
+
+	chrome.extension.sendRequest({}, function(response){
+		popup.setCSSText(response.style);
+
+		for (i in response.searchEngines){
+			var en = response.searchEngines[i];
+
+			if(i < 5) // add 5 engines for preview
+				popup.addSearchEngine(en);
+
+			addNewEngine(en.name, en.url, en.icon_url);
+
+		}
+
+
+		$('#preview').append(popup.getForPreview());
+		$('#style').val(popup.getCSS());
+
+		$("input[name='button']").filter("[value="+response.button+"]").attr('checked', 'checked');
+
+	});
+
+
+	$('#new-engine').click(function(){
+
+		addNewEngine('', '', '');
+
+	});
+
+
+	$('#save').click(function(){
+
+
+		var new_engines = [];
+		$('#engines tr:gt(0)').each(function(){
+
+			var en = {};
+
+			$(this).find('input').each(function(){
+				en[$(this).attr('class')] = $(this).val();
+			});
+
+			if(en.icon_url == '(Use default)')
+				delete en.icon_url;
+
+
+			if(en.name && en.url)
+				new_engines.push(en);
+		});
+
+
+		Storage.setSearchEngines(new_engines);
+		Storage.setStyle($('#style').val());
+		Storage.setButton($("input[name='button']:checked").val());
+
+		location.reload();
+
+	});
+
+	$('#restore').click(function(){
+
+		Storage.clear();
+
+		location.reload();
+
+	});
+
+	$('#update-preview').click(function(e){
+
+		popup.setCSSText($('#style').val());
+
+		return false;
+	});
+
+});
+</script>
+
+</head>
+<body>
+
+<div id="content">
+
+
+<div id="info">
+<p>The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text</p>
+</div>
+
+<table id="engines">
+	<tr>
+		<th>Name</th>
+		<th>Search url</th>
+		<th>Icon url</th>
+		<th>Delete</th>
+	</tr>
+
+</table>
+<p class="buttons"><input type="button" value="New Search Engine"  id="new-engine" /></p>
+
+
+
+<h4>Style</h4>
+<textarea id="style">
+</textarea>
+
+<p class="buttons"><input id="update-preview" type="button" value="Update Preview" /></p>
+<table id="preview-table">
+	<tr>
+		<th>Preview</th>
+		<th>HTML</th>
+	</tr>
+	<tr>
+<td><div id="preview"></div></td>
+<td>
+<pre id="html">
+&lt;ul id="popup"&gt;
+    &lt;li&gt;Search Text&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;&lt;img src="#" /&gt;Name&lt;/a&gt;&lt;/li&gt;
+    ...
+&lt;/ul&gt;
+</pre>
+</td>
+</tr>
+</table>
+
+<p id="mousebutton"><strong>Active menu:</strong> Left mouse button: <input type="radio" value="0" name="button" /> Middle mouse button: <input type="radio" value="1" name="button" /></p>
+
+
+<p class="buttons" id="save-buttons"><input type="button" id="save" value="Save" /> <input type="button" id="restore" value="Restore defaults" /></p>
+
+<div class="clearb"></div>
+</div>
+
+</body>
+</html>
