@@ -131,11 +131,13 @@ function PopUp()
 
 
 			if (e.pageY >= y1 && e.pageY <= y2){
-
 				_lastSelection = _getSelection();
 				_setTitle(_lastSelection);
 				_that.show(e.pageX, e.pageY);
 				e.stopPropagation();
+				e.preventDefault();
+
+				return;
 			}
 
 
