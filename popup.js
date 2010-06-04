@@ -79,10 +79,17 @@ function PopUp()
 
 	this.addSearchEngine = function(engine){
 
-		var a = $('<a href="#"><img class="engine-img" src="'+ _getIconUrl(engine) +
+		var icon_url = _getIconUrl(engine);
+		if (icon_url == undefined)
+			icon_url = '#';
+
+		var a = $('<a href="#"><img class="engine-img" src="'+ icon_url +
 				'" /><span class="engine-name">'+ engine.name + '</span></a>'
 			).data('search_url', engine.url).hover(function(){
-				$(this).attr('href', $(this).data('search_url').replace('%s', _lastSelection));
+
+				var url = $(this).data('search_url').replace('%s', _lastSelection);
+
+				$(this).attr('href', url);
 			})
 
 		
@@ -201,16 +208,21 @@ function PopUp()
 	}
 
 	function _getIconUrl(engine){
-		return PopUp.getIconUrl(engine);
+		return PopUp.getIconUrlFromEngine(engine);
 
 	}
 
 }
 
-PopUp.getIconUrl = function(engine) {
+PopUp.getIconUrlFromEngine = function(engine) {
 	if(engine.icon_url != undefined)
 		return engine.icon_url;
-	url = engine.url.replace('http://', '', 'https://', '').split('/')[0];
+	return PopUp.getIconUrl(engine.url);
+}
+PopUp.getIconUrl = function(url) {
+	url = url.replace('http://', '', 'https://', '').split('/')[0];
+	if(url == undefined)
+		return undefined;
 	return 'http://www.google.com/s2/favicons?domain=' + url;
 }
 
