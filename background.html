@@ -35,12 +35,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
  margin: 0;
  list-style-type: none;
  -webkit-box-shadow: 0px 1px 10px #ccc;
+ display: block;
 }
 #popup li{
  margin: 1px 0;
  padding: 0;
  text-align: left;
  color: #202020;
+ display: block;
 }
 #popup img{
  width: 16px;
@@ -49,6 +51,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
  border:none;
  margin: 0;
  margin-right: 4px;
+ display: inline;
 }
 #popup li:first-child {
  overflow: hidden;
@@ -69,7 +72,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 #popup a:hover{
  background: #96B8E1;
 }
-
+#popup .engine-name{
+	display: inline;
+}
 </textarea>
 
 
