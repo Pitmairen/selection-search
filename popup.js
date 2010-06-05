@@ -116,8 +116,7 @@ function PopUp()
 
 
 			if(_doubleClick && !_movedWhilePressed){
-				console.log(e.timeStamp - _doubleClickTime);
-				if(e.timeStamp - _doubleClickTime > 130)
+				if(e.timeStamp - _doubleClickTime > 130) // we don't want to prevent tripleclick selection
 					_movedWhilePressed = true;
 			}
 
