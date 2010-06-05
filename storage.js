@@ -69,7 +69,7 @@ var Storage = new function (){
 	this.setOptions = function(options){
 
 		if(localStorage[_BUTTON_KEY] != undefined)
-			removeValue(_BUTTON_KEY);
+			_removeValue(_BUTTON_KEY);
 
 		
 		_setValue(_OPTIONS_KEY, JSON.stringify(options))
