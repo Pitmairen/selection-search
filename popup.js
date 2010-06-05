@@ -36,6 +36,8 @@ function PopUp()
 	var _movedWhilePressed = false;
 	var _isPressed = false;
 	var _options;
+	var _doubleClick = false;
+	var _doubleClickTime = 0;
 
 	this.show = function (x, y){
 
@@ -112,6 +114,15 @@ function PopUp()
 			if(e.button == 0)
 				_isPressed = true;
 
+
+			if(_doubleClick && !_movedWhilePressed){
+				console.log(e.timeStamp - _doubleClickTime);
+				if(e.timeStamp - _doubleClickTime > 130)
+					_movedWhilePressed = true;
+			}
+
+			_doubleClick = false;
+			
 			if(e.button == 0 && !_movedWhilePressed){
 				_downEvent = e;
 				return;
@@ -155,10 +166,15 @@ function PopUp()
 		});
 
 		$(document).dblclick(function(e){
-			if (e.button == 0 && _popupButton == 1){
-				_movedWhilePressed = true;
+			if (e.button == 0){
+				_doubleClick = true;
 				_downEvent = e;
 				_upEvent = e;
+				_doubleClickTime = e.timeStamp;
+
+				if(_popupButton == 1){
+					_movedWhilePressed = true;
+				}
 			}
 		});
 
@@ -235,4 +251,7 @@ PopUp.getIconUrl = function(url) {
 		return undefined;
 	return 'http://www.google.com/s2/favicons?domain=' + url;
 }
+
+
+ 
 
