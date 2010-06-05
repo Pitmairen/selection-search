@@ -3,13 +3,19 @@ var Storage = new function (){
 
 	_SEARCH_ENGINES_KEY = 'searchEngines';
 	_STYLE_KEY = 'styleSheet';
-	_BUTTON_KEY = 'button';
+	_BUTTON_KEY = 'button'; // Used in previous versions
+	_OPTIONS_KEY = 'options';
 
 	var _defaultEngines = searchEngines = [
 		{name: 'Google', url: 'http://google.com/search?q=%s'},
 		{name: 'Youtube', url: 'http://www.youtube.com/results?search_query=%s'},
 		{name: 'Stackoverflow', url: 'http://stackoverflow.com/search?q=%s'}
 	];
+	
+	var _defaultOptions = {
+		button: 1,
+		newtab: false,
+	};
 
 	var _that = this;
 	
@@ -37,9 +43,18 @@ var Storage = new function (){
 		return parseInt(_getValue(_BUTTON_KEY, 1), 10);
 	}
 
-	this.setButton = function(button){
-		return _setValue(_BUTTON_KEY, button.toString());
+
+	this.getOptions = function(){
+		var options  = JSON.parse(_getValue(_OPTIONS_KEY, '{}'));
+
+		// Before it was stored as its own value
+		if(localStorage[_BUTTON_KEY] != undefined)
+			options.button = _that.getButton();
+
+		return $.extend({}, _defaultOptions, options);
+
 	}
+
 
 	this.setSearchEngines = function(engines){
 		_setValue(_SEARCH_ENGINES_KEY, JSON.stringify(engines));
@@ -51,12 +66,23 @@ var Storage = new function (){
 
 	}
 
+	this.setOptions = function(options){
+
+		if(localStorage[_BUTTON_KEY] != undefined)
+			removeValue(_BUTTON_KEY);
+
+		
+		_setValue(_OPTIONS_KEY, JSON.stringify(options))
+	}
+
 
 	this.clear = function(style){
 
+		//localStorage.clear(); // This will clear VERSION stored in the background tab
 		_that.clearStyle();
 		_that.clearSearchEngines();
 		_that.clearButton();
+		_that.clearOptions();
 
 	}
 
@@ -71,6 +97,9 @@ var Storage = new function (){
 		_removeValue(_BUTTON_KEY);
 	}
 
+	this.clearOptions = function(){
+		_removeValue(_OPTIONS_KEY);
+	}
 
 	this.getValue = function(key, default_value){
 		return _getValue(key, default_value);
@@ -105,3 +134,4 @@ var Storage = new function (){
 		localStorage.removeItem(key);
 	}
 }
+

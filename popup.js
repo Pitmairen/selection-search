@@ -35,6 +35,7 @@ function PopUp()
 	var _lastSelection = '';
 	var _movedWhilePressed = false;
 	var _isPressed = false;
+	var _options;
 
 	this.show = function (x, y){
 
@@ -92,6 +93,9 @@ function PopUp()
 				$(this).attr('href', url);
 			})
 
+		if(_options.newtab){
+			a.attr('target', '_blank');
+		}
 		
 		_popupNode.append($('<li></li>').append(a));
 
@@ -172,8 +176,10 @@ function PopUp()
 			_that.setDefaultCSSText(response.default_style);
 			if(response.extra_style)
 				_that.setExtraCSSText(response.extra_style);
-	
-			_popupButton = response.button;
+
+			_popupButton = response.options.button;
+			_that.setOptions(response.options);
+
 			for (i in response.searchEngines){
 				var en = response.searchEngines[i];
 				_that.addSearchEngine(en);
@@ -188,6 +194,10 @@ function PopUp()
 		_popupNode.css({'position': 'static', 'display': 'block'});
 		return _popupNode;
 
+	}
+
+	this.setOptions = function(opts){
+		_options = opts;
 	}
 
 	function _setTitle(title){
