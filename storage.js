@@ -15,7 +15,7 @@ var Storage = new function (){
 	var _defaultOptions = {
 		button: 1,
 		newtab: false,
-		activator: 'auto',
+		activator: 'click',
 	};
 
 	var _that = this;
