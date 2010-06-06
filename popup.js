@@ -24,40 +24,91 @@ function PopUp()
 	});
 
 	$('body').first().append(_popupNode);
+	
+	var _buttonId = 'context-search-button-' + _randomId;
+
+	var _buttonNode = $('<div></div>');
+
+	_buttonNode.attr('id', _buttonId);
+	_buttonNode.css({
+		'position': 'absolute',
+		'display' :  'none',
+		'zIndex' :  9999999,
+		'background-image' : 'url("' + chrome.extension.getURL('icon16.png') + '")',
+	});
+	$('body').first().append(_buttonNode);
 
 
-	var _popupButton = 1;
-
-	var _downEvent = false;
-	var _upEvent = false;
 	var _that = this;
 	var _active = false;
+	var _buttonActive = false;
 	var _lastSelection = '';
-	var _movedWhilePressed = false;
-	var _isPressed = false;
-	var _options;
-	var _doubleClick = false;
-	var _doubleClickTime = 0;
+	var _activator;
 
+	this.options = {};
+
+
+
+	_buttonNode.mouseover(function(e){
+
+		_that.show(_buttonNode.offset().left, _buttonNode.offset().top);
+	});
+
+	
 	this.show = function (x, y){
 
-		_popupNode.css({'display': 'block', 'visibility': 'hidden'});
+		if(_buttonActive)
+			_that.hideButton();
 
-		if (x - window.pageXOffset + _popupNode.outerWidth() > window.innerWidth - 20)
-			x -= _popupNode.outerWidth() - 14;
-		if (y - window.pageYOffset + _popupNode.outerHeight() > window.innerHeight - 20)
-			y -= _popupNode.outerHeight() + 14;
+		var wwidth =  $(window).width() - 5;
+		var wheight = $(window).height() - 5;
 
-		_popupNode.css({'top': y + 'px', 'left': x + 'px', 'visibility': 'visible'});
+		if (x - window.pageXOffset + _popupNode.outerWidth() > wwidth)
+			x -= (x - window.pageXOffset + _popupNode.outerWidth()) - wwidth;
+		else if(x - window.pageXOffset < 5)
+			x = window.pageXOffset + 5;
+	
+		if (y - window.pageYOffset + _popupNode.outerHeight() > wheight)
+			y -= (y - window.pageYOffset + _popupNode.outerHeight()) - wheight;
+		else if(y - window.pageYOffset < 5)
+			y = window.pageYOffset + 5
 
+		_popupNode.css({'top': y + 'px', 'left': x + 'px'});
+		_popupNode.show(200);
 		_active = true;
 
 
 	}
 
+	this.showButton = function(x, y){
+
+		var wwidth =  $(window).width() - 5;
+		var wheight = $(window).height() - 5;
+
+		if (x - window.pageXOffset + _buttonNode.outerWidth() > wwidth)
+			x -= (x - window.pageXOffset + _buttonNode.outerWidth()) - wwidth;
+		else if(x - window.pageXOffset < 5)
+			x = window.pageXOffset + 5;
+
+		if (y - window.pageYOffset + _buttonNode.outerHeight() > wheight)
+			y -= (y - window.pageYOffset + _buttonNode.outerHeight()) - wheight;
+		else if(y - window.pageYOffset < 5)
+			y = window.pageYOffset + 5
+
+		_buttonNode.css({'top': y + 'px', 'left': x + 'px'});
+		_buttonNode.show(100);
+
+		_buttonActive = true;
+	}
+
 	this.hide = function (){
-		_popupNode.css('display', 'none');
+		_popupNode.hide(200);
 		_active = false;
+	}
+
+	this.hideButton = function(){
+		_buttonNode.hide(100);
+		_buttonActive = false;
 	}
 
 	this.setExtraCSSText = function (css){
@@ -76,6 +127,7 @@ function PopUp()
 	this.addCSSText = function (css){
 
 		css = css.replace(/#popup/g, '#' + _popupId);
+		css = css.replace(/#button/g, '#' + _buttonId);
 		_styleNode.append(document.createTextNode(css));
 
 	}
@@ -95,7 +147,7 @@ function PopUp()
 				$(this).attr('href', url);
 			})
 
-		if(_options.newtab){
+		if(_that.options.newtab){
 			a.attr('target', '_blank');
 		}
 		
@@ -105,79 +157,8 @@ function PopUp()
 
 	this.bindEvents = function(){
 
-		$(document).mousedown(function(e){
+		_activator.setup();
 
-			if(_active)
-				_that.hide();
-
-	
-			if(e.button == 0)
-				_isPressed = true;
-
-
-			if(_doubleClick && !_movedWhilePressed){
-				if(e.timeStamp - _doubleClickTime > 130) // we don't want to prevent tripleclick selection
-					_movedWhilePressed = true;
-			}
-
-			_doubleClick = false;
-			
-			if(e.button == 0 && !_movedWhilePressed){
-				_downEvent = e;
-				return;
-			}
-
-
-			_movedWhilePressed = false;
-
-			if(!_hasSelection() || e.button != _popupButton)
-				return;
-		
-			y1 = Math.min(_downEvent.pageY,_upEvent.pageY) - 10;
-			y2 = Math.max(_downEvent.pageY,_upEvent.pageY) + 10;
-
-
-			if (e.pageY >= y1 && e.pageY <= y2){
-				_lastSelection = _getSelection();
-				_setTitle(_lastSelection);
-				_that.show(e.pageX, e.pageY);
-				e.stopPropagation();
-				e.preventDefault();
-
-				return;
-			}
-
-
-		});
-
-
-		$(document).mouseup(function(e){
-			if (e.button == 0){
-				_upEvent = e;
-				_isPressed = false;
-			}
-		});
-
-		$(document).mousemove(function(e){
-			if (_isPressed){
-				_movedWhilePressed = true;
-			}
-		});
-
-		$(document).dblclick(function(e){
-			if (e.button == 0){
-				_doubleClick = true;
-				_downEvent = e;
-				_upEvent = e;
-				_doubleClickTime = e.timeStamp;
-
-				if(_popupButton == 1){
-					_movedWhilePressed = true;
-				}
-			}
-		});
-
-		
 		_popupNode.mousedown(function(e){
 			e.stopPropagation();
 		});
@@ -186,22 +167,36 @@ function PopUp()
 
 	}
 
-	this.load = function(){
+	this.load = function(onloaded){
 		chrome.extension.sendRequest({}, function(response){
 			_that.setDefaultCSSText(response.default_style);
 			if(response.extra_style)
 				_that.setExtraCSSText(response.extra_style);
 
-			_popupButton = response.options.button;
 			_that.setOptions(response.options);
 
 			for (i in response.searchEngines){
 				var en = response.searchEngines[i];
 				_that.addSearchEngine(en);
 			}
+
+			if(response.options.activator == 'auto')
+				_that.setActivator(new AutoActivator(_that));
+			else
+				_that.setActivator(new ClickActivator(_that));
+			_that.bindEvents();
+
+
+			if(onloaded != undefined)
+				onloaded();
 		});
 	}
 
+
+	this.setActivator = function(act){
+
+		_activator = act;
+	}
 
 	this.getForPreview = function(){
 
@@ -211,25 +206,49 @@ function PopUp()
 
 	}
 
-	this.setOptions = function(opts){
-		_options = opts;
+	this.getButtonForPreview = function(){
+
+		_buttonNode.css({'position': 'static', 'display': 'block'});
+		return _buttonNode;
+
 	}
+
+	this.setOptions = function(opts){
+		_that.options = opts;
+	}
+
+	this.setSelection = function(sel){
+		_setTitle(sel);
+		_lastSelection = sel;
+	}
+
+	this.isActive = function(){
+		return _active;
+	}
+
+	this.buttonIsActive = function(){
+		return _buttonActive;
+	}
+
+	this.buttonNode = function(){
+		return _buttonNode;
+	}
+
+	this.popupNode = function(){
+		return _popupNode;
+	}
+
 
 	function _setTitle(title){
 		_popupNode.children().first().text(title);
 	}
 
 	function _getSelection(){
-		return window.getSelection().toString();
+		return PopUp.getSelection();
 	}
 
 	function _hasSelection(){
-		var sel = _getSelection();
-
-		if (sel.length == 0)
-			return false;
-
-		return sel.indexOf("\n") == -1;
+		return PopUp.hasSelection();
 	}
 
 	function _getIconUrl(engine){
@@ -251,6 +270,141 @@ PopUp.getIconUrl = function(url) {
 	return 'http://www.google.com/s2/favicons?domain=' + url;
 }
 
+PopUp.getSelection = function(){
+	return jQuery.trim(window.getSelection().toString());
+}
 
- 
+PopUp.hasSelection = function(){
+	var sel = PopUp.getSelection();
 
+	if (sel.length == 0)
+		return false;
+
+	return sel.indexOf("\n") == -1;
+}
+
+
+PopUp.getSelectionRect = function(){
+
+	var range = window.getSelection().getRangeAt(0);
+	if(range)
+		return range.getBoundingClientRect();
+	return undefined;
+}
+
+
+
+function ClickActivator(pupup){
+
+	var _doubleClickTime = 0;
+	var _popup = popup;
+
+	this.setup = function(){
+
+		$(document).mousedown(function(e){
+			
+			if(_popup.isActive()){
+				_popup.hide();
+				return;
+			}
+
+			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
+				return;
+
+
+
+			if (!PopUp.hasSelection() || e.button != _popup.options.button)
+				return;
+
+			// we don't want to prevent tripleclick selection
+			if(e.button == 0 && e.timeStamp - _doubleClickTime < 130)
+				return;
+
+
+			var rect = PopUp.getSelectionRect();
+
+			var rx = window.pageXOffset + rect.left;
+			var ry = window.pageYOffset + rect.top;
+
+			if (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx){
+
+				var sel = PopUp.getSelection();
+				_popup.setSelection(sel)
+				_popup.show(e.pageX, e.pageY);
+
+				e.stopPropagation();
+				e.preventDefault();
+			}
+	
+		});
+
+
+		$(document).dblclick(function(e){
+			if (e.button == 0){
+				_doubleClickTime = e.timeStamp;
+			}
+		});
+	}
+
+}
+
+
+
+function AutoActivator(pupup){
+
+	var _popup = popup;
+	var _lastTimer;
+
+	this.setup = function(){
+
+		$(document).mousedown(function(e){
+
+
+			if(_lastTimer != undefined)
+				window.clearTimeout(_lastTimer);
+
+	
+			if(_popup.isActive())
+				_popup.hide();
+			if(_popup.buttonIsActive())
+				_popup.hideButton();
+
+		});
+
+		$(document).mouseup(function(e){
+
+			if(e.button != 0 || _popup.isActive())
+				return;
+			
+			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
+				return;
+
+			if (PopUp.hasSelection()){
+				if(_lastTimer != undefined)
+					window.clearTimeout(_lastTimer);
+				_lastTimer = window.setTimeout(_tryShow, 300, e);
+
+			}
+		});
+
+	}
+
+	function _tryShow(e){
+		if (PopUp.hasSelection()){
+
+
+			var rect = PopUp.getSelectionRect();
+
+			var x = window.pageXOffset + rect.right;
+			var y = window.pageYOffset + rect.top - popup.buttonNode().height() - 20;
+
+			var sel = PopUp.getSelection();
+
+
+	
+			_popup.setSelection(sel)
+			_popup.showButton(x, y);
+			_lastTimer = undefined;
+		}
+	}
+}

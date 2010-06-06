@@ -54,6 +54,10 @@ a.delete{
 
 	float: left;
 }
+#preview-button{
+	margin-left: 2em;
+}
+
 
 #html{
 	display: none;
@@ -80,11 +84,16 @@ a{
 	color: #2E6DAC;
 	text-decoration: none;
 }
-
-.theme_def{
+#activator_heading{
+	margin-bottom: 0.5em;
+}
+.theme_def, .activator_options{
 	display: none;
 }
-
+.activator_options{
+	margin-left: 3em;
+	margin-bottom: 2em;
+}
 
 #customize{
 	display: none;
@@ -95,6 +104,12 @@ a{
 <script src="popup.js"></script>
 <script src="jquery-1.4.2.min.js"></script>
 <script>
+
+
+var ACTIVATORS = {
+	'click' : 'Mouse Click',
+	'auto' :  'Auto'
+}
 
 function addNewEngine(name, url, icon_url){
 
@@ -171,11 +186,16 @@ $(document).ready(function(){
 		}
 
 		$('#preview').append(popup.getForPreview());
+		$('#preview-button').append(popup.getButtonForPreview());
+
 
 		$("input[name='button']").filter("[value="+response.options.button+"]").attr('checked', true);
 
 		$("input[name='newtab']").attr('checked', response.options.newtab);
 
+
+		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
+		$("#select_activator").change();
 
 		$('#select_theme').change();
 
@@ -217,7 +237,8 @@ $(document).ready(function(){
 
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
-			newtab: $("input[name='newtab']").is(':checked')
+			newtab: $("input[name='newtab']").is(':checked'),
+			activator: $('#select_activator option:selected').first().attr('value'),
 		});
 
 		location.reload();
@@ -269,8 +290,21 @@ $(document).ready(function(){
 
 	});
 
+	for (act in ACTIVATORS){
 
+		var name = ACTIVATORS[act];
 
+		$('#select_activator').append('<option value="' + act + '">'+name+'</option>'); 
+	}
+
+	$('#select_activator').change(function(){
+
+		var opt = $('#select_activator option:selected').first();
+
+		$('.activator_options').hide(100);
+		$('#activator_' + opt.attr('value')).show(100);
+
+	});
 
 	$('#show_customize').click(function(){
 		$('#customize').toggle();
@@ -315,7 +349,12 @@ $(document).ready(function(){
 
 <h4>Preview</h4>
 
-<div id="preview"></div>
+<table id="preview-table">
+<tr>
+	<td><div id="preview"></div></td>
+	<td valign="top"><div id="preview-button"></div></td>
+</tr>
+</table>
 
 
 <div id="customize">
@@ -329,6 +368,8 @@ $(document).ready(function(){
 	&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
 	...
 &lt;/ul&gt;
+
+&lt;div id="button"&gt;&lt;/div&gt;
 	</pre>
 
 	<textarea id="style"></textarea>
@@ -339,8 +380,19 @@ $(document).ready(function(){
 
 
 <div class="clearb"></div>
-<p id="mousebutton"><strong>Mouse Button to activate menu:</strong></p>
-<p>Left: <input type="radio" value="0" name="button" /> Middle: <input type="radio" value="1" name="button" /></p>
+
+
+<h4 id="activator_heading">Activate menu</h4>
+<select id="select_activator"></select>
+
+<div class="activator_options" id="activator_click">
+	<p>Left click: <input type="radio" value="0" name="button" /> Middle click: <input type="radio" value="1" name="button" /></p>
+</div>
+
+<div class="activator_options" id="activator_auto">
+	<p>A small button will appear when some text is selected and <br />you can open the menu by moving the mouse over the button.<p>
+</div>
+
 
 <p><strong>Open search in new tab:</strong><input type="checkbox" name="newtab" /></p>
 
@@ -407,6 +459,62 @@ $(document).ready(function(){
 }
 </textarea>
 
+<textarea class="theme_def" name="Animations" id="theme_7">
+#popup{
+ width: 13em;
+ -webkit-border-radius: 8px;
+}
+#popup img{
+ -webkit-border-radius: 8px;
+ -webkit-transition: all 0.2s ease-in;
+}
+#popup a:hover img{
+ -webkit-border-radius: 2px;
+ -webkit-box-shadow: 1px 1px 3px #303030;
+  -webkit-transform: rotate(360deg) scale(1.5);
+ margin-right: 10px;
+}
+#popup a{
+ -webkit-transition: all 0.2s ease-in;
+}
+#popup a:hover{
+ font-weight: bold;
+}
+</textarea>
+
+<textarea class="theme_def" name="Animations 2" id="theme_8">
+#popup .engine-name, #popup li:first-child{
+ display: none;
+}
+#popup a, #popup li{
+ display: inline; padding: 0.2em;
+}
+#popup img{
+ margin: 0; padding: 0;
+}
+#popup {
+ width: auto;
+ padding: 0.5em;
+ -webkit-border-radius: 5px;
+}
+#popup img{
+ -webkit-border-radius: 8px;
+ -webkit-transition: all 0.2s ease-in;
+}
+#popup a:hover img{
+ -webkit-border-radius: 2px;
+ -webkit-box-shadow: 1px 1px 3px #303030;
+  -webkit-transform: rotate(360deg) scale(1.5);
+ margin-right: 3px;
+}
+#popup a{
+ -webkit-transition: all 0.2s ease-in;
+}
+#popup a:hover{
+ font-weight: bold;
+ background: none;
+}
+</textarea>
 
 <!-- The is used to check if someone with an older version of the extension have changed the stylesheet.
  This cant be removed after a while when everybody have updgraded -->
