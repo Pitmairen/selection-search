@@ -326,7 +326,7 @@ function ClickActivator(pupup){
 			var rx = window.pageXOffset + rect.left;
 			var ry = window.pageYOffset + rect.top;
 
-			if (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx){
+			if (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx && e.pageX <= rx + rect.width){
 
 				var sel = PopUp.getSelection();
 				_popup.setSelection(sel)
