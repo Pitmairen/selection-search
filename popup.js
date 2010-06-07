@@ -138,7 +138,7 @@ function PopUp()
 		if (icon_url == undefined)
 			icon_url = '#';
 
-		var a = $('<a href="#"><img class="engine-img" src="'+ icon_url +
+		var a = $('<a href="#" title="'+engine.name+'"><img class="engine-img" src="'+ icon_url +
 				'" /><span class="engine-name">'+ engine.name + '</span></a>'
 			).data('search_url', engine.url).hover(function(){
 
