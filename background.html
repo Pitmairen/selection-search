@@ -9,6 +9,19 @@ localStorage['VERSION'] = '0.2.2';
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 
+	if(request.action == 'saveEngine'){
+
+
+		var engines = Storage.getSearchEngines();
+		engines.push(request.engine);
+
+		Storage.setSearchEngines(engines);
+		sendResponse({});
+		return;
+	}
+
+
+
 	resp = {}
 
 	resp.searchEngines = Storage.getSearchEngines();

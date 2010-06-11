@@ -99,6 +99,10 @@ a{
 	display: none;
 }
 
+#find-engines input[type='text']{
+	border: 1px solid #D4D4D4;
+}
+
 </style>
 <script src="storage.js"></script>
 <script src="popup.js"></script>
@@ -201,6 +205,8 @@ $(document).ready(function(){
 
 	});
 
+
+	$('#search-icon').append('<img src="'+chrome.extension.getURL('icon16.png')+'" width="16px" height="16px" />');
 
 	$('#new-engine').click(function(){
 
@@ -338,7 +344,21 @@ $(document).ready(function(){
 		<th>Delete</th>
 	</tr>
 </table>
-<p class="buttons"><input type="button" value="New Search Engine"  id="new-engine" /></p>
+<p class="buttons"><input type="button" value="Add New Search Engine"  id="new-engine" /></p>
+
+
+<h4>Find Search Engines</h4>
+
+<p class="info">With this form you can find new search engines. Look for this icon: <span id="search-icon"></span> in the search result and click it to add an engine.
+The search page must be completely loaded before the icon will show.
+Previously opened tabs must be reloaded to show the new engines.</p>
+
+<form id="find-engines" action="http://mycroft.mozdev.org/search-engines.html" method="get">
+	<input type="text" name="name" />
+	<input type="hidden" name="opensearch" value="yes" />
+	<input type="submit" value="Search mycroft.mozdev.org" />
+</form>
+
 
 
 

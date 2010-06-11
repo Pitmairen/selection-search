@@ -17,9 +17,17 @@
 	"content_scripts": [
 		{
 			"matches": ["http://*/*", "https://*/*"],
-			"js": ["jquery-1.4.2.min.js", "popup.js", "search.js"]
+			"js": ["jquery-1.4.2.min.js", "popup.js", "search.js"],
+			"run_at" : "document_end"
+		},
+		{
+			"matches": ["http://mycroft.mozdev.org/*"],
+			"js": ["jquery-1.4.2.min.js", "opensearch.js", "sites/mycroft.js"],
+			"run_at" : "document_end"
 		}
 	],
 
-    "permissions": []
+    "permissions": [
+		"http://mycroft.mozdev.org/"
+	]
 }
