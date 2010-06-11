@@ -119,11 +119,10 @@ function addNewEngine(name, url, icon_url){
 
 	var tr = $('<tr></tr>');
 
-	tr.append('<td><input class="name" type="text" value="'+name+'" /></td>');
-	tr.append('<td><input class="url" type="text" value="'+url+'" /></td>');
-	tr.append('<td><input class="icon_url" type="text" value="'+icon_url+'" /></td>');
-	tr.append('<td><a href="#" class="delete">X</a></td>');
-
+	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
+	tr.append($('<td></td>').append($('<input class="url" type="text" />').val(url)));
+	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
+	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a></td>')));
 
 	tr.find('input.icon_url').focus(function (){
 
