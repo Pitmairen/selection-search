@@ -138,14 +138,17 @@ function PopUp()
 		if (icon_url == undefined)
 			icon_url = '#';
 
-		var a = $('<a href="#" title="'+engine.name+'"><img class="engine-img" src="'+ icon_url +
-				'" /><span class="engine-name">'+ engine.name + '</span></a>'
-			).data('search_url', engine.url).hover(function(){
+		var a = $('<a href="#"></a>').append(
+				$('<img class="engine-img" />').attr('src', icon_url)
+			).append(
+				$('<span class="engine-name"></span').text(engine.name)
+			).attr('title', engine.name).data('search_url', engine.url).hover(function(){
 
 				var url = $(this).data('search_url').replace('%s', _lastSelection);
 
 				$(this).attr('href', url);
 			})
+
 
 		if(_that.options.newtab){
 			a.attr('target', '_blank');
