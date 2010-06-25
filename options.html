@@ -31,6 +31,9 @@ a.delete{
 	width: 100%;
 }
 #engines th:first-child{
+	width: 1em;
+}
+#engines th:nth-child(2){
 	width: 12em;
 }
 #engines th:last-child, #engines tr td:last-child{
@@ -103,10 +106,20 @@ a{
 	border: 1px solid #D4D4D4;
 }
 
+.drag-target{
+	cursor: move;
+	float: left;
+}
+
+.drag-moving{
+	background:#868686;
+}
+
 </style>
 <script src="storage.js"></script>
 <script src="popup.js"></script>
 <script src="jquery-1.4.2.min.js"></script>
+<script src="reorder.js"></script>
 <script>
 
 
@@ -123,6 +136,7 @@ function addNewEngine(name, url, icon_url){
 
 	var tr = $('<tr></tr>');
 
+	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
 	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
 	tr.append($('<td></td>').append($('<input class="url" type="text" />').val(url)));
 	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
@@ -146,6 +160,8 @@ function addNewEngine(name, url, icon_url){
 		return false;
 	});
 
+
+	Reorder.makeMovable(tr);
 
 	$('#engines').append(tr);
 
@@ -201,7 +217,6 @@ $(document).ready(function(){
 		$("#select_activator").change();
 
 		$('#select_theme').change();
-
 
 	});
 
@@ -337,7 +352,8 @@ $(document).ready(function(){
 
 
 <table id="engines">
-	<tr>
+	<tr class="drag-stop">
+		<th></th>
 		<th>Name</th>
 		<th>Search url</th>
 		<th>Icon url</th>
