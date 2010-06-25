@@ -357,6 +357,7 @@ function AutoActivator(pupup){
 
 	var _popup = popup;
 	var _lastTimer;
+	var _startedInInput = false;
 
 	this.setup = function(){
 
@@ -366,7 +367,9 @@ function AutoActivator(pupup){
 			if(_lastTimer != undefined)
 				window.clearTimeout(_lastTimer);
 
-	
+			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
+				_startedInInput = true;
+			
 			if(_popup.isActive())
 				_popup.hide();
 			if(_popup.buttonIsActive())
@@ -375,6 +378,13 @@ function AutoActivator(pupup){
 		});
 
 		$(document).mouseup(function(e){
+
+			if(_startedInInput){
+				_startedInInput = false;
+				return;
+			}
+				
+			_startedInInput = false;
 
 			if(e.button != 0 || _popup.isActive())
 				return;
