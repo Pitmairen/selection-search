@@ -116,7 +116,7 @@ function PopUp()
 				$('<img class="engine-img" />').attr('src', icon_url)
 			).append(
 				$('<span class="engine-name"></span').text(engine.name)
-			).attr('title', engine.name).data('search_url', engine.url).hover(function(){
+			).attr('title', engine.name).data('search_url', engine.url).mouseenter(function(){
 
 				var url = $(this).data('search_url').replace(/%s/g, _lastSelection);
 
