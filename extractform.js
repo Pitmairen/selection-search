@@ -8,9 +8,7 @@
 		18 : false, // Alt
 	}
 
-	var _activated = false;
 
-	
 	$(document).keydown(function(e){
 
 		if(e.which in _keys)
