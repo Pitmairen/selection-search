@@ -33,8 +33,8 @@ a.delete{
 #engines th:first-child{
 	width: 1em;
 }
-#engines th:nth-child(2){
-	width: 12em;
+#engines th:nth-child(2), td:nth-child(2){
+	width: 8em;
 }
 #engines th:last-child, #engines tr td:last-child{
 	width: 50px;
@@ -426,7 +426,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 	<pre id="html">
 &lt;ul id="popup"&gt;
-	&lt;li&gt;Selected Text&lt;/li&gt;
+	&lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
 	&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
 	...
 &lt;/ul&gt;

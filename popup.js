@@ -5,7 +5,12 @@ function PopUp()
 
 	var _popupId = Common.getId('popup');
 
-	var _popupNode = $('<ul><li></li></ul>');
+	var _popupNode = $('<ul></ul>');
+	_popupNode.append($('<li></li>').append(
+		$('<input type="text" />').bind('input', function(){
+			_lastSelection = $(this).val();
+		})
+	));
 
 	_popupNode.attr('id', _popupId).attr('class', Common.getCommonClass());
 	_popupNode.css({
@@ -195,7 +200,7 @@ function PopUp()
 
 
 	function _setTitle(title){
-		_popupNode.children().first().text(title);
+		_popupNode.children().first().children().first().val(title);
 	}
 
 	function _getSelection(){
