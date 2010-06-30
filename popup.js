@@ -3,20 +3,11 @@
 function PopUp()
 {
 
-	// generate a random id
-	var _randomId = (Math.random()*10).toString().replace('.', '');
-	var _popupId = 'context-search-popup-' + _randomId;
-
-	var _styleNode = $('<style type="text/css"></style>');
-
-	_styleNode.attr('id', 'context-search-style-' + _randomId);
-
-	$('head').first().append(_styleNode);
-
+	var _popupId = Common.getId('popup');
 
 	var _popupNode = $('<ul><li></li></ul>');
 
-	_popupNode.attr('id', _popupId);
+	_popupNode.attr('id', _popupId).attr('class', Common.getCommonClass());
 	_popupNode.css({
 		'position': 'absolute',
 		'display' :  'none',
@@ -25,11 +16,11 @@ function PopUp()
 
 	$('body').first().append(_popupNode);
 	
-	var _buttonId = 'context-search-button-' + _randomId;
+	var _buttonId = Common.getId('button');
 
 	var _buttonNode = $('<div></div>');
 
-	_buttonNode.attr('id', _buttonId);
+	_buttonNode.attr('id', _buttonId).attr('class', Common.getCommonClass());;
 	_buttonNode.css({
 		'position': 'absolute',
 		'display' :  'none',
@@ -46,7 +37,6 @@ function PopUp()
 	var _activator;
 
 	this.options = {};
-
 
 
 	_buttonNode.mouseover(function(e){
@@ -111,27 +101,6 @@ function PopUp()
 		_buttonActive = false;
 	}
 
-	this.setExtraCSSText = function (css){
-		_styleNode.contents(':gt(0)').remove();
-
-		_that.addCSSText(css);
-
-	}
-
-	this.setDefaultCSSText = function (css){
-
-		_that.addCSSText(css);
-
-	}
-
-	this.addCSSText = function (css){
-
-		css = css.replace(/#popup/g, '#' + _popupId);
-		css = css.replace(/#button/g, '#' + _buttonId);
-		_styleNode.append(document.createTextNode(css));
-
-	}
-
 	this.addSearchEngine = function(engine){
 
 		var icon_url = _getIconUrl(engine);
@@ -144,10 +113,21 @@ function PopUp()
 				$('<span class="engine-name"></span').text(engine.name)
 			).attr('title', engine.name).data('search_url', engine.url).hover(function(){
 
-				var url = $(this).data('search_url').replace('%s', _lastSelection);
+				var url = $(this).data('search_url').replace(/%s/g, _lastSelection);
 
 				$(this).attr('href', url);
 			})
+
+		//a.data('post', (engine.post != null && true) || false);
+		if(engine.post){
+			a.click(function(e){
+
+				PopUp.submitPostForm($(this).attr('href'), $(this).attr('target') == '_blank' || e.button == 1);
+
+				return false;
+			});
+
+		}
 
 
 		if(_that.options.newtab){
@@ -166,35 +146,7 @@ function PopUp()
 			e.stopPropagation();
 		});
 
-
-
 	}
-
-	this.load = function(onloaded){
-		chrome.extension.sendRequest({}, function(response){
-			_that.setDefaultCSSText(response.default_style);
-			if(response.extra_style)
-				_that.setExtraCSSText(response.extra_style);
-
-			_that.setOptions(response.options);
-
-			for (i in response.searchEngines){
-				var en = response.searchEngines[i];
-				_that.addSearchEngine(en);
-			}
-
-			if(response.options.activator == 'auto')
-				_that.setActivator(new AutoActivator(_that));
-			else
-				_that.setActivator(new ClickActivator(_that));
-			_that.bindEvents();
-
-
-			if(onloaded != undefined)
-				onloaded();
-		});
-	}
-
 
 	this.setActivator = function(act){
 
@@ -296,11 +248,38 @@ PopUp.getSelectionRect = function(){
 }
 
 
+PopUp.submitPostForm = function(url, newtab){
 
-function ClickActivator(pupup){
+	var parts = url.split('{POSTARGS}', 2);
+
+	if(parts.length != 2){
+		alert('Invalid url for a POST search.\nThe url must contain "{POSTARGS}"');
+		return;
+	}
+	
+	var form = $('<form></form>')
+		.attr('method', 'post')
+		.attr('action', parts[0]);
+
+	if(newtab)
+		form.attr('target', '_blank');
+
+	var query = parts[1].split('&');
+
+	for(var i=0; i<query.length; ++i){
+		var key_value = query[i].split('=', 2);
+		if(key_value.length != 2)
+			continue;
+		form.append($('<input type="hidden" name="'+key_value[0]+'" value="'+key_value[1]+'" />'));
+	}
+
+	form.submit();
+}
+
+
+function ClickActivator(_popup){
 
 	var _doubleClickTime = 0;
-	var _popup = popup;
 
 	this.setup = function(){
 
@@ -353,9 +332,8 @@ function ClickActivator(pupup){
 
 
 
-function AutoActivator(pupup){
+function AutoActivator(_popup){
 
-	var _popup = popup;
 	var _lastTimer;
 	var _startedInInput = false;
 
@@ -409,7 +387,7 @@ function AutoActivator(pupup){
 			var rect = PopUp.getSelectionRect();
 
 			var x = window.pageXOffset + rect.right;
-			var y = window.pageYOffset + rect.top - popup.buttonNode().height() - 20;
+			var y = window.pageYOffset + rect.top - _popup.buttonNode().height() - 20;
 
 			var sel = PopUp.getSelection();
 

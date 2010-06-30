@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Forms</title>
+</head>
+
+
+
+<h1>Normal GET</h1>
+<p>Absolute action</p>
+<form action="/search/">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>Normal GET</h1>
+<p>Relative action</p>
+<form action="search">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>Normal GET</h1>
+<p>Full url action</p>
+<form action="http://example.com/search/">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>GET with GET</h1>
+<p>parameters both in action and form body</p>
+<form action="/search/?a1=v3">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+
+<h1>Normal POST</h1>
+<p>Absolute action</p>
+<form action="/search/" method="post">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>Normal POST</h1>
+<p>Relative action</p>
+<form action="search" method="post">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>Normal POST</h1>
+<p>Full url action</p>
+<form action="http://example.com/search/" method="post">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+<h1>POST with GET</h1>
+<p>parameters both in action and form body</p>
+<form action="/search/?a1=v3" method="post">
+	<input type="text" name="q" value="" />
+	<input type="hidden" name="n1" value="v1" />
+	<input type="hidden" name="n2" value="v2" />
+</form>
+
+
+
+
+
+
+
+
+<p>Select this %s fnwjfnewkjnf w</p>
+
+
+
+
+
+
+
+
+</html>

@@ -53,6 +53,22 @@ var OpenSearch = {
 
 		if(template && name){
 
+			var method = _url.attr('method').toLowerCase() || 'get';
+
+			if(method == 'post'){
+
+				var _params = [];
+				_url.find('Param').each(function(){
+					
+					_params.push($(this).attr('name') + '=' + $(this).attr('value'))
+				});
+				_params = _params.join('&');
+
+				template += '!POSTARGS!' + _params; // We call it !POSTARGS! here to prevent it to ve replaced by the generic regexp below.
+
+			}
+
+
 			var url = template.replace(/{searchTerms}/g, '%s');
 
 			url = url.replace('{startPage?}', '');
@@ -61,6 +77,9 @@ var OpenSearch = {
 			url = url.replace('{startPage}', _url.attr('pageOffset') || 1);
 
 			url = url.replace(/{.*?}/g, '');
+
+			// Replace to real POSTARGS
+			url = url.replace('!POSTARGS!', '{POSTARGS}');
 			
 			var img = $(xml).find('Image[height=16][width=16]').first();
 			if(img.length == 0)
@@ -71,6 +90,9 @@ var OpenSearch = {
 			if(img.length != 0 && img.text().substr(0, 4) == 'http'){
 				en['icon_url'] = img.text();
 			}
+
+			if(method == 'post')
+				en.post = true;
 
 			ret['status'] = 'OK';
 			ret['engine'] = en;

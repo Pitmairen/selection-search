@@ -24,7 +24,7 @@
 	});
 
 
-	$('input:text[name],input:not([type])[name]').click(function(){
+	$('input:text[name],input:not([type])[name]').click(function(e){
 
 
 		if(!is_activated())
@@ -34,9 +34,12 @@
 
 		var method = form.attr('method') || 'get';
 
-		if(form.length == 0 || method.toLowerCase() != 'get' || !this.name)
-			return;
+		G_ENGINE_EDITOR.show(e.pageX, e.pageY);
 
+		if(form.length == 0 || !(method.toLowerCase() == 'get' || method.toLowerCase() == 'post') || !this.name){
+			G_ENGINE_EDITOR.showError('Error parsing form');
+			return;
+		}
 
 		var action = form.attr('action') || '';
 
@@ -52,19 +55,26 @@
 			return q;
 		});
 
-		var query = '?' + this_name + '=%s';
+		var query = this_name + '=%s';
 		if(params.length > 0)
 			query += '&' + jQuery.param(params);
 
-	
-		console.log(url + query);
+		if (method.toLowerCase() == 'post')
+			url = url + '{POSTARGS}'+query;
+		else
+			url = urlparse.urljoin(url, '?' + query);
 
+		var en = {
+			name : location.host,
+			url : url,
+			post: method.toLowerCase() == 'post',
+		}
 		var icon = $('head link[rel="shortcut icon"]').first().attr('href');
 
 		if (icon)
-			console.log(urlparse.urljoin(location.protocol + '//' + location.host + location.pathname, icon));
+			en.icon_url = urlparse.urljoin(location.protocol + '//' + location.host + location.pathname, icon);
 
-		
+		G_ENGINE_EDITOR.load(en);
 	});
 
 

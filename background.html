@@ -26,7 +26,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 
 	resp.searchEngines = Storage.getSearchEngines();
 
-	resp.default_style = document.getElementById('default-style').value;
+	resp.default_style = $('#default-style').text();
 	resp.extra_style = Storage.getStyle('');
 
 	resp.options = Storage.getOptions();
@@ -39,8 +39,107 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 </head>
 <body>
 
+<style id="default-style">
+.common li, .common span, .common a, .common input, .common img, .common .h4
+#popup, #engine-editor{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 10pt;
+	font-weight: normal;
+	text-decoration: none;
+	font-family: sans-serif;
+	vertical-align: baseline;
+	background: transparent;
+	color: #202020;
+	text-align: left;
+	line-height: normal;
+	white-space: normal;
+	-webkit-box-shadow: none;
+	-webkit-border-radius:0;
+	text-shadow: none;
+	float: none;
+}
+.common li, .common p, .common div, .common ul, .common h4{
+	display: block;
+}
+.common h4{
+	font-weight: bold;
+}
+.common ul{
+	list-style-type: none;
+}
+.common span, .common img{
+	display: inline;
+}
+.common input{
+	display: inline-block;
+	white-space: pre;
+}
 
-<textarea id="default-style">
+#engine-editor{
+	padding: 0.5em;
+	width: 35em;
+	font-size: 9pt;
+	background: #EDEDED;
+	border: 3px solid #878787;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 0px 0px 8px #B0B0B0;
+}
+
+#engine-editor input[type='text']{
+	width: 100%;
+	margin-bottom: 0.5em;
+	padding: 0.1em 0;
+	display: block;
+	border: 1px solid #A0A0A0;
+	background: #fff;
+	-webkit-border-radius: 2px;
+}
+#engine-editor input[type='button']{
+	width: auto;
+	display: inline-block;
+	margin-top: 0.5em;
+	margin-right: 0.5em;
+	padding: 0.2em 0.4em;
+	text-align: center;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#E0E0E0));
+	border: 1px solid #A0A0A0;
+	-webkit-border-radius: 2px;
+}
+#engine-editor input[type='button']:hover{
+	border: 1px solid #7C7C7C;
+}
+#engine-editor input[type='button']:active{
+	background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#F5F5F5));
+}
+#engine-editor input[type='button']:disabled{
+	color: #AAAAAA;
+	background: -webkit-gradient(linear, left top, left bottom, from(#E7E7E7), to(#D3D3D3));
+}
+#engine-editor h4{
+	margin: 0;
+	height: 1.5em;
+	font-size: 1.1em;
+	padding-bottom: 0.3em;
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #CECECE;
+}
+#engine-editor input.close{
+	float: right;
+	margin: 0;
+	height: 1.4em;
+	width: 1.4em;
+	padding-bottom: 0.3em;
+	vertical-align: middle;
+}
+#engine-editor span.title{
+	float: left;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+
 #popup{
  width: 12em;
  position: absolute;
@@ -77,14 +176,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
  white-space:nowrap;
  border-bottom: solid 1px #AEAAA7;
  margin-bottom: 0.5em;
- padding: 0.2em 0.8em;
+ padding: 0.2em 0.3em;
 }
 #popup a{
  margin: 1px;
  text-decoration: none;
  color: #202020;
  display: block;
- padding: 0.2em 0.8em;
+ padding: 0.2em 0.3em;
  -webkit-border-radius: 3px;
  font-family: sans-serif;
 }
@@ -92,7 +191,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
  background: #96B8E1;
 }
 #popup .engine-name{
- display: inline;
+ display: inline-block;
+ width: 8.5em;
+ overflow: hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
 }
 #button {
  background: #fafafa;
@@ -104,7 +207,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
  height: 16px;
  font-family: sans-serif;
 }
-</textarea>
+</style>
 
 
 

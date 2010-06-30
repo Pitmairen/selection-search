@@ -40,6 +40,10 @@ a.delete{
 	width: 50px;
 	text-align: center;
 }
+#engines th:nth-child(5){
+	width: 75px;
+	text-align: center;
+}
 #engines input{
 	width: 100%;
 	border: 1px solid #D4D4D4;
@@ -81,6 +85,7 @@ a.delete{
 	margin-bottom: 2em;
 	padding: 0.5em;
 	font-size: 9pt;
+	line-height: 1.5;
 }
 
 a{
@@ -116,9 +121,10 @@ a{
 }
 
 </style>
-<script src="storage.js"></script>
-<script src="popup.js"></script>
 <script src="jquery-1.4.2.min.js"></script>
+<script src="storage.js"></script>
+<script src="common.js"></script>
+<script src="popup.js"></script>
 <script src="reorder.js"></script>
 <script>
 
@@ -128,7 +134,7 @@ var ACTIVATORS = {
 	'auto' :  'Auto'
 }
 
-function addNewEngine(name, url, icon_url){
+function addNewEngine(name, url, icon_url, post){
 
 
 	icon_url = icon_url == undefined ||
@@ -140,8 +146,8 @@ function addNewEngine(name, url, icon_url){
 	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
 	tr.append($('<td></td>').append($('<input class="url" type="text" />').val(url)));
 	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
-	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a></td>')));
-
+	tr.append($('<td></td>').append($('<input class="post" type="checkbox" />').attr('checked', post)));
+	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>')));
 	tr.find('input.icon_url').focus(function (){
 
 		if ($(this).val() == '(Use default)')
@@ -183,9 +189,9 @@ $(document).ready(function(){
 	chrome.extension.sendRequest({}, function(response){
 
 		popup.setOptions(response.options);
-		popup.setDefaultCSSText(response.default_style);
+		Common.setStyleSheet(response.default_style);
 		if(response.extra_style)
-			popup.setExtraCSSText(response.extra_style);
+			Common.setStyleSheet(response.extra_style);
 
 		for (i in response.searchEngines){
 			var en = response.searchEngines[i];
@@ -193,7 +199,7 @@ $(document).ready(function(){
 			if(i < 3) // add 3 engines for preview
 				popup.addSearchEngine(en);
 
-			addNewEngine(en.name, en.url, en.icon_url);
+			addNewEngine(en.name, en.url, en.icon_url, en.post || false);
 
 		}
 
@@ -225,7 +231,7 @@ $(document).ready(function(){
 
 	$('#new-engine').click(function(){
 
-		addNewEngine('', '', '');
+		addNewEngine('', '', '', false);
 
 		return false;
 	});
@@ -240,15 +246,24 @@ $(document).ready(function(){
 			var en = {};
 
 			$(this).find('input').each(function(){
-				en[$(this).attr('class')] = $(this).val();
+				if ($(this).attr('class') == 'post')
+					en[$(this).attr('class')] = $(this).attr('checked');
+				else
+					en[$(this).attr('class')] = $(this).val();
 			});
 
 			if(en.icon_url == '(Use default)')
 				delete en.icon_url;
+			if(!en.post)
+				delete en.post;
 
+			if(en.name && en.url){
 
-			if(en.name && en.url)
+// 				if(en.post && en.url.indexOf('{POSTARGS}') == -1)
+// 					return;
+
 				new_engines.push(en);
+			}
 		});
 
 
@@ -279,7 +294,7 @@ $(document).ready(function(){
 
 	$('#update-preview').click(function(e){
 
-		popup.setExtraCSSText($('#style').val());
+		Common.setStyleSheet($('#style').val());
 
 		return false;
 	});
@@ -297,7 +312,7 @@ $(document).ready(function(){
 		var id = opt.attr('value');
 
 		if(id == 'current_style'){
-			popup.setExtraCSSText(CURRENT_STYLE)
+			Common.setStyleSheet(CURRENT_STYLE)
 			$("#style").val(CURRENT_STYLE);
 			return;
 		}
@@ -306,7 +321,7 @@ $(document).ready(function(){
 
 		$("#style").val(css);
 
-		popup.setExtraCSSText(css);
+		Common.setStyleSheet(css);
 
 	});
 
@@ -348,7 +363,10 @@ $(document).ready(function(){
 
 
 
-<p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.</p>
+<p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.
+<br />Searches that uses the POST method must contain a {POSTARGS} separator with the post arguments added after it, like this:
+http://example.com/search/{POSTARGS}q=%s&amp;type=123
+</p>
 
 
 <table id="engines">
@@ -357,6 +375,7 @@ $(document).ready(function(){
 		<th>Name</th>
 		<th>Search url</th>
 		<th>Icon url</th>
+		<th>POST</th>
 		<th>Delete</th>
 	</tr>
 </table>
@@ -365,7 +384,15 @@ $(document).ready(function(){
 
 <h4>Find Search Engines</h4>
 
-<p class="info">With this form you can find new search engines. Look for this icon: <span id="search-icon"></span> in the search result and click it to add an engine.
+<p class="info">
+<strong>CTRL+ALT + click:</strong><br />
+You can add new engines by finding a form and holding down CTRL+ALT on the keyboard and clicking inside the input where you would type you search query. <br />
+A popup should open where you can edit and save the search engine. This works for a lot of searches, but sometimes it doesn't work.
+
+
+<br /><br />
+<strong>mycroft.mozdev.org:</strong><br />
+With the form below you can search for new search engines at mycroft.mozdev.org. Look for this icon: <span id="search-icon"></span> in the search result and click it to add an engine.
 The search page must be completely loaded before the icon will show.
 Previously opened tabs must be reloaded to show the new engines.</p>
 
@@ -486,7 +513,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
  -webkit-border-radius: 6px;
  -webkit-box-shadow: 0px 1px 5px #979797
 }
-#popup a, #popup li{
+#popup a, #popup li, #popup .engine-name{
  color: #DDDDDD;
 }
 #popup a:hover{
