@@ -16,6 +16,7 @@ var Storage = new function (){
 		button: 1,
 		newtab: false,
 		activator: 'click',
+		remove_icons: 'placeholder',
 	};
 
 	var _that = this;
