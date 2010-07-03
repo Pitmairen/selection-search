@@ -77,7 +77,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 	display: inline-block;
 	white-space: pre;
 }
-
+.common a:after, .common a[href^="http"]:after {
+  content: '';
+}
 #engine-editor{
 	padding: 0.5em;
 	width: 35em;
