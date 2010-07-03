@@ -224,6 +224,10 @@ $(document).ready(function(){
 
 		$('#select_theme').change();
 
+
+		$('input[name=remove_icons][value='+response.options.remove_icons+']').attr('checked', true).change();
+		$('input[name=use_default_style]').attr('checked', response.options.use_default_style);
+
 	});
 
 
@@ -274,6 +278,8 @@ $(document).ready(function(){
 			button: parseInt($("input[name='button']:checked").val(), 10),
 			newtab: $("input[name='newtab']").is(':checked'),
 			activator: $('#select_activator option:selected').first().attr('value'),
+			remove_icons:$('input[name=remove_icons]:checked').val(),
+			use_default_style: $('input[name=use_default_style]').is(':checked'),
 		});
 
 		location.reload();
@@ -351,6 +357,15 @@ $(document).ready(function(){
 	$('#show_html').click(function(){
 		$('#html').toggle();
 		return false;
+	});
+
+
+	$('input[name=remove_icons]').change(function(){
+
+		if($(this).val() == 'https')
+			$('#use_default_style').show(100);
+		else
+			$('#use_default_style').hide(100);
 	});
 
 });
@@ -458,7 +473,28 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 <p><strong>Open search in new tab:</strong><input type="checkbox" name="newtab" /></p>
 
+
+
+
+<p><strong>Remove Icons:</strong></p>
+<p class="info">
+On some sites that uses https connection you will get warnings about insecure content when the icons are loaded.
+You can remove the icons if you don't want these warnings.
+</p>
+<p>Always show icons:<input name="remove_icons" type="radio" value="no" /> &nbsp;Always remove icons:<input type="radio" name="remove_icons" value="all" /> &nbsp;Remove icons only on https pages:<input type="radio" name="remove_icons" value="https" /></p>
+
+<div id="use_default_style" style="display: none;">
+<p class="info">If you use a icon only style it will not be very usable when the icons are removed. You can check this to get the default style on https pages</p>
+Use default style on https pages: <input type="checkbox" name="use_default_style" />
+</div>
+
+
+
+
 <p class="buttons" id="save-buttons"><input type="button" id="save" value="Save" /> <input type="button" id="restore" value="Restore defaults" /></p>
+
+
+
 
 <div class="clearb"></div>
 </div>

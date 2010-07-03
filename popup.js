@@ -112,9 +112,12 @@ function PopUp()
 		if (icon_url == undefined)
 			icon_url = '#';
 
-		var a = $('<a href="#"></a>').append(
-				$('<img class="engine-img" />').attr('src', icon_url)
-			).append(
+		var a = $('<a href="#"></a>');
+
+		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
+			a.append($('<img class="engine-img" />').attr('src', icon_url));
+
+		a.append(
 				$('<span class="engine-name"></span').text(engine.name)
 			).attr('title', engine.name).data('search_url', engine.url).mouseenter(function(){
 

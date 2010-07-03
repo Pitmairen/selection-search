@@ -6,9 +6,13 @@ chrome.extension.sendRequest({}, function(response){
 
 	Common.setStyleSheet(response.default_style);
 
-	if(response.extra_style)
-		Common.setStyleSheet(response.extra_style);
+	if(response.extra_style){
 
+		if(response.options.remove_icons == 'https' && location.href.substr(0, 5) == 'https' && response.options.use_default_style)
+			;
+		else
+			Common.setStyleSheet(response.extra_style);
+	}
 	G_POPUP.setOptions(response.options);
 
 	for (i in response.searchEngines){
