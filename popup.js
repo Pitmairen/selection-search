@@ -114,13 +114,9 @@ function PopUp()
 
 		var a = $('<a href="#"></a>');
 
-		if (_that.options.remove_icons == 'no')
+		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
 			a.append($('<img class="engine-img" />').attr('src', icon_url));
-		else if(_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'){
-			a.append($('<img class="engine-img" />').attr('src', icon_url));
-		}else if(_that.options.remove_icons == 'placeholder'){
-			a.append($('<img class="engine-img" />').attr('src', chrome.extension.getURL('icon16.png')));
-		}
+
 		a.append(
 				$('<span class="engine-name"></span').text(engine.name)
 			).attr('title', engine.name).data('search_url', engine.url).mouseenter(function(){
