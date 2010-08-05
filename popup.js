@@ -119,9 +119,20 @@ function PopUp()
 
 		a.append(
 				$('<span class="engine-name"></span').text(engine.name)
-			).attr('title', engine.name).data('search_url', engine.url).mouseenter(function(){
+			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
 
-				var url = $(this).data('search_url').replace(/%s/g, _lastSelection);
+				if($(this).data('engine-post')){
+					var parts = $(this).data('search_url').split('{POSTARGS}', 2);
+					if(parts.length == 2){
+						var url = parts[0].replace(/%s/g, encodeURIComponent(_lastSelection));
+						url += '{POSTARGS}' + parts[1].replace(/%s/g, _lastSelection);
+					}else{
+						var url = $(this).data('search_url').replace(/%s/g, encodeURIComponent(_lastSelection));
+					}
+				}
+				else{
+					var url = $(this).data('search_url').replace(/%s/g, encodeURIComponent(_lastSelection));
+				}
 
 				$(this).attr('href', url);
 			})
@@ -277,9 +288,10 @@ PopUp.submitPostForm = function(url, newtab){
 		.attr('method', 'post')
 		.attr('action', parts[0])
 
-	if(encoding)
+	if(encoding){
+		//form.attr('enctype', 'application/x-www-form-urlencoded;charset='+encoding);
 		form.attr('accept-charset', encoding);
-
+	}
 	if(newtab)
 		form.attr('target', '_blank');
 
