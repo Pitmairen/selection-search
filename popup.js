@@ -121,6 +121,7 @@ function PopUp()
 				$('<span class="engine-name"></span').text(engine.name)
 			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
 
+				//If its a post url we encode only the part before {POSTARGS}
 				if($(this).data('engine-post')){
 					var parts = $(this).data('search_url').split('{POSTARGS}', 2);
 					if(parts.length == 2){
