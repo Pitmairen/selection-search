@@ -58,7 +58,7 @@
 			query += '&' + jQuery.param(params);
 
 		if (method.toLowerCase() == 'post')
-			url = url + '{POSTARGS}'+query;
+			url = url + '{POSTARGS}'+query + '{POSTENCODING}'+(document.inputEncoding || 'UTF-8');
 		else
 			url = urlparse.urljoin(url, '?' + query);
 
