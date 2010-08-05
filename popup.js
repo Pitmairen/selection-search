@@ -258,16 +258,27 @@ PopUp.getSelectionRect = function(){
 
 PopUp.submitPostForm = function(url, newtab){
 
-	var parts = url.split('{POSTARGS}', 2);
+	var parts = url.split('{POSTENCODING}', 2);
+	var encoding = null;
+
+	if(parts.length == 2){
+		url = parts[0];
+		encoding = parts[1];
+	}
+
+	parts = url.split('{POSTARGS}', 2);
 
 	if(parts.length != 2){
 		alert('Invalid url for a POST search.\nThe url must contain "{POSTARGS}"');
 		return;
 	}
-	
+
 	var form = $('<form></form>')
 		.attr('method', 'post')
-		.attr('action', parts[0]);
+		.attr('action', parts[0])
+
+	if(encoding)
+		form.attr('accept-charset', encoding);
 
 	if(newtab)
 		form.attr('target', '_blank');
