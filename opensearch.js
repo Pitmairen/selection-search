@@ -65,6 +65,7 @@ var OpenSearch = {
 				_params = _params.join('&');
 
 				template += '!POSTARGS!' + _params; // We call it !POSTARGS! here to prevent it to be replaced by the generic regexp below.
+				template += '!POSTENCODING!' + ($(xml).find('InputEncoding').first().text() || 'UTF-8');
 
 			}
 
@@ -78,9 +79,10 @@ var OpenSearch = {
 
 			url = url.replace(/{.*?}/g, '');
 
-			// Replace to real POSTARGS
+			// Replace to real POSTARGS and POSTENCODING
 			url = url.replace('!POSTARGS!', '{POSTARGS}');
-			
+			url = url.replace('!POSTENCODING!', '{POSTENCODING}');
+
 			var img = $(xml).find('Image[height=16][width=16]').first();
 			if(img.length == 0)
 				img = $(xml).find('Image').first();
