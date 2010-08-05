@@ -64,7 +64,7 @@ var OpenSearch = {
 				});
 				_params = _params.join('&');
 
-				template += '!POSTARGS!' + _params; // We call it !POSTARGS! here to prevent it to ve replaced by the generic regexp below.
+				template += '!POSTARGS!' + _params; // We call it !POSTARGS! here to prevent it to be replaced by the generic regexp below.
 
 			}
 
