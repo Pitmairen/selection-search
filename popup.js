@@ -132,7 +132,24 @@ function PopUp()
 					}
 				}
 				else{
-					var url = $(this).data('search_url').replace(/%s/g, encodeURIComponent(_lastSelection));
+
+					var placeholder = $(this).data('search_url');
+
+
+					// Special case for only "%s" engine
+					// to allow opening of selected urls
+					var sel = '';
+					if(placeholder == '%s'){
+						if(!_lastSelection.match(/^(https?|ftp):\/\//))
+							sel = 'http://' + _lastSelection;
+						else
+							sel = _lastSelection;
+					}
+					else
+						sel = encodeURIComponent(_lastSelection);
+			
+
+					var url = $(this).data('search_url').replace(/%s/g, sel);
 				}
 
 				$(this).attr('href', url);
