@@ -339,9 +339,12 @@ function ClickActivator(_popup){
 				return;
 			}
 
-			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
-				return;
-
+			var in_input = false;
+			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1}){
+				if(!e.ctrlKey || !_popup.options.show_in_inputs)
+					return;
+				in_input = true;
+			}
 
 
 			if (!PopUp.hasSelection() || e.button != _popup.options.button)
@@ -357,7 +360,7 @@ function ClickActivator(_popup){
 			var rx = window.pageXOffset + rect.left;
 			var ry = window.pageYOffset + rect.top;
 
-			if (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx && e.pageX <= rx + rect.width){
+			if (in_input || (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx && e.pageX <= rx + rect.width)){
 
 				var sel = PopUp.getSelection();
 				_popup.setSelection(sel)
@@ -366,7 +369,6 @@ function ClickActivator(_popup){
 				e.stopPropagation();
 				e.preventDefault();
 			}
-	
 		});
 
 
@@ -394,36 +396,45 @@ function AutoActivator(_popup){
 			if(_lastTimer != undefined)
 				window.clearTimeout(_lastTimer);
 
-			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
-				_startedInInput = true;
-			
+			_startedInInput = false;
+
 			if(_popup.isActive())
 				_popup.hide();
 			if(_popup.buttonIsActive())
 				_popup.hideButton();
 
+
+			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1}){
+				_startedInInput = true;
+				if(!e.ctrlKey || !_popup.options.show_in_inputs)
+					return;
+
+				if(PopUp.hasSelection() && e.button == 0){
+
+					var sel = PopUp.getSelection();
+					_popup.setSelection(sel)
+					_popup.show(e.pageX, e.pageY);
+
+					e.stopPropagation();
+					e.preventDefault();
+
+				}
+			}
+
 		});
 
 		$(document).mouseup(function(e){
 
-			if(_startedInInput){
-				_startedInInput = false;
+			if(_startedInInput)
 				return;
-			}
-				
-			_startedInInput = false;
 
 			if(e.button != 0 || _popup.isActive())
-				return;
-			
-			if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1})
 				return;
 
 			if (PopUp.hasSelection()){
 				if(_lastTimer != undefined)
 					window.clearTimeout(_lastTimer);
 				_lastTimer = window.setTimeout(_tryShow, 300, e);
-
 			}
 		});
 
@@ -432,19 +443,18 @@ function AutoActivator(_popup){
 	function _tryShow(e){
 		if (PopUp.hasSelection()){
 
+			var sel = PopUp.getSelection();
+			_popup.setSelection(sel);
 
 			var rect = PopUp.getSelectionRect();
-
 			var x = window.pageXOffset + rect.right;
 			var y = window.pageYOffset + rect.top - _popup.buttonNode().height() - 20;
 
-			var sel = PopUp.getSelection();
-
-
-	
-			_popup.setSelection(sel)
 			_popup.showButton(x, y);
+
 			_lastTimer = undefined;
+
 		}
 	}
 }
+

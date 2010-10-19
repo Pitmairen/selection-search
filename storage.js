@@ -18,6 +18,7 @@ var Storage = new function (){
 		activator: 'click',
 		remove_icons: 'no',
 		use_default_style: false,
+		show_in_inputs: true,
 	};
 
 	var _that = this;

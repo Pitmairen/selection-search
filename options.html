@@ -7,7 +7,10 @@ body{
 	background: #FCF9F9;
 	font-family: sans-serif;
 }
-h4{text-align: left}
+h4{
+	text-align: left;
+	border-bottom: 1px solid #D4D4D4;
+}
 p.buttons{
 	margin: 0.5em 0;
 }
@@ -218,6 +221,8 @@ $(document).ready(function(){
 
 		$("input[name='newtab']").attr('checked', response.options.newtab);
 
+		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
+
 
 		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
 		$("#select_activator").change();
@@ -280,6 +285,7 @@ $(document).ready(function(){
 			activator: $('#select_activator option:selected').first().attr('value'),
 			remove_icons:$('input[name=remove_icons]:checked').val(),
 			use_default_style: $('input[name=use_default_style]').is(':checked'),
+			show_in_inputs: $('input[name=show_in_inputs]').is(':checked')
 		});
 
 		location.reload();
@@ -401,7 +407,7 @@ http://example.com/search/{POSTARGS}q=%s&amp;type=123
 
 <p class="info">
 <strong>CTRL+ALT + click:</strong><br />
-You can add new engines by finding a form and holding down CTRL+ALT on the keyboard and clicking inside the input where you would type you search query. <br />
+You can add new engines by finding a form and holding down <strong>CTRL</strong>+<strong>ALT</strong> on the keyboard and clicking inside the input where you would type you search query. <br />
 A popup should open where you can edit and save the search engine. This works for a lot of searches, but sometimes it doesn't work.
 
 
@@ -474,9 +480,9 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <p><strong>Open search in new tab:</strong><input type="checkbox" name="newtab" /></p>
 
 
+<br />
 
-
-<p><strong>Remove Icons:</strong></p>
+<h4>Remove Icons:</h4>
 <p class="info">
 On some sites that uses https connection you will get warnings about insecure content when the icons are loaded.
 You can remove the icons if you don't want these warnings.
@@ -488,6 +494,15 @@ You can remove the icons if you don't want these warnings.
 Use default style on https pages: <input type="checkbox" name="use_default_style" />
 </div>
 
+
+<br />
+<h4>Show in inputs and textareas:</h4>
+<p class="info">
+Enable this if you want to be able to select some text in an input or textarea and do a search.
+To show the popup you first have to select some text and then hold <strong>CTRL</strong> and click inside the input or textarea.
+When you use the auto activator you click with the left button, with the mouse activator you use the button you have chosen in the options.
+</p>
+<p>Show in inputs and textareas: <input type="checkbox" name="show_in_inputs" /></p>
 
 
 
