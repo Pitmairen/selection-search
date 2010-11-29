@@ -17,7 +17,7 @@ var Storage = new function (){
 		newtab: false,
 		activator: 'click',
 		remove_icons: 'https',
-		use_default_style: false,
+		use_default_style: true,
 		show_in_inputs: true,
 		background_tab: true,
 	};
