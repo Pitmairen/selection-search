@@ -4,6 +4,8 @@
 
     "description": "Search for the selected text in search engines",
 
+    "minimum_chrome_version": "6",
+
 	"icons": {
 		"16": "icon16.png",
 		"48": "icon48.png",
@@ -29,6 +31,8 @@
 	],
 
     "permissions": [
+        "contextMenus",
+        "tabs",
 		"http://mycroft.mozdev.org/"
 	]
 }

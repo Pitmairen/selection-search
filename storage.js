@@ -19,6 +19,7 @@ var Storage = new function (){
 		remove_icons: 'no',
 		use_default_style: false,
 		show_in_inputs: true,
+		background_tab: true,
 	};
 
 	var _that = this;

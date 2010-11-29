@@ -2,7 +2,8 @@
 var G_POPUP = new PopUp();
 var G_ENGINE_EDITOR = new EngineEditor();
 
-chrome.extension.sendRequest({}, function(response){
+chrome.extension.sendRequest({fromContentScript:true}, function(response){
+
 
 	Common.setStyleSheet(response.default_style);
 
@@ -13,8 +14,15 @@ chrome.extension.sendRequest({}, function(response){
 		else
 			Common.setStyleSheet(response.extra_style);
 	}
-	G_POPUP.setOptions(response.options);
 
+	if(response.options.activator == 'contextmenu'){
+
+		return;
+	}
+
+
+	G_POPUP.setOptions(response.options);
+	
 	for (i in response.searchEngines){
 		var en = response.searchEngines[i];
 		G_POPUP.addSearchEngine(en);
@@ -27,4 +35,3 @@ chrome.extension.sendRequest({}, function(response){
 
 	G_POPUP.bindEvents();
 });
-

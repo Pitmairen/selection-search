@@ -134,7 +134,8 @@ a{
 
 var ACTIVATORS = {
 	'click' : 'Mouse Click',
-	'auto' :  'Auto'
+	'auto' :  'Auto',
+	'contextmenu' : 'Context Menu'
 }
 
 function addNewEngine(name, url, icon_url, post){
@@ -220,6 +221,7 @@ $(document).ready(function(){
 		$("input[name='button']").filter("[value="+response.options.button+"]").attr('checked', true);
 
 		$("input[name='newtab']").attr('checked', response.options.newtab);
+		$("input[name='background_tab']").attr('checked', response.options.background_tab);
 
 		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
 
@@ -282,11 +284,15 @@ $(document).ready(function(){
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
 			newtab: $("input[name='newtab']").is(':checked'),
+			background_tab: $("input[name='background_tab']").is(':checked'),
 			activator: $('#select_activator option:selected').first().attr('value'),
 			remove_icons:$('input[name=remove_icons]:checked').val(),
 			use_default_style: $('input[name=use_default_style]').is(':checked'),
 			show_in_inputs: $('input[name=show_in_inputs]').is(':checked')
 		});
+
+
+		chrome.extension.sendRequest({action:"optionsChanged"});
 
 		location.reload();
 
@@ -476,6 +482,11 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	<p>A small button will appear when some text is selected and <br />you can open the menu by moving the mouse over the button.<p>
 </div>
 
+<div class="activator_options" id="activator_contextmenu">
+	<p>The search engines will be shown in the context menu when you right click on the selected text.</p>
+	<p>This option has som limits. The icons will not be shown and you can only click on one menu item before the menu closes.</p>
+	<p><strong>Open search in background tab:</strong><input type="checkbox" name="background_tab" /></p>
+</div>
 
 <p><strong>Open search in new tab:</strong><input type="checkbox" name="newtab" /></p>
 
