@@ -1,5 +1,5 @@
 
-(function(){
+function initFormExtractor(){
 
 	
 
@@ -87,5 +87,5 @@
 
 	}
 	
-})();
+}
 

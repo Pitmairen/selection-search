@@ -6,15 +6,21 @@ var Common = new function(){
 
 	var _generatedValues = {};
 
-	var _styleNode = $('<style type="text/css"></style>');
-
-	if ($('head').length > 0)
-		$('head').first().append(_styleNode);
-	else
-		$('body').append(_styleNode);
+	var _styleNode = null;
 
 	_that = this;
 
+	this.init = function(){
+
+		_styleNode = $('<style type="text/css"></style>');
+
+		if ($('head').length > 0)
+			$('head').first().append(_styleNode);
+		else
+			$('body').append(_styleNode);
+	}
+
+	
 	this.getId =function(id){
 		var new_id = id + '-' + _randomId;
 
