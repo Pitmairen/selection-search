@@ -1,28 +1,52 @@
 <html>
 <head>
+<title>Selection Search - Options</title>
 <style type="text/css">
 
 body{
 
-	background: #FCF9F9;
+	background: #fff;
 	font-family: sans-serif;
+	font-size: 80%;
 }
-h4{
+/*h4{
 	text-align: left;
 	border-bottom: 1px solid #D4D4D4;
-}
+}*/
 p.buttons{
 	margin: 0.5em 0;
 }
 
+#main-heading{
+	font-size: 150%;
+	padding-left: 85px;
+/* 	height: 128px; */
+	line-height: 72px;
+	  background-size:72px;
+	background: url("icon128.png") no-repeat left center;
+}
+.section-heading {
+  background:#ebeff9;
+  border-top:1px solid #b5c7de;
+  font-size:99%;
+  padding:3px 0 2px 5px;
+  font-weight:bold;
+	margin-top: 2em;
+}
+
+.subsection-heading {
+  background:#eee;
+	  font-size:80%;
+  border-top:1px solid #D4D4D4;
+  padding:2px 0 3px 5px;
+}
 
 #content{
 	margin: 0 auto;
 	width: 95%;
-	background: #E2EAFF;
-	border: 1px solid #D4D4D4;
-	-webkit-border-radius: 5px;
-	padding: 0.5em;
+	min-width: 800px;
+
+	padding-bottom: 6em;
 }
 a.delete{
 	text-decoration: none;
@@ -56,7 +80,7 @@ a.delete{
 	height: 15em;
 }
 #save-buttons{
-	margin-top: 2em;
+	margin-top: 4em;
 }
 
 
@@ -82,7 +106,7 @@ a.delete{
 }
 
 .info{
-	background:#F6F6F6;
+	background:#F0FFDC;
 	border: 1px solid #D1D1D1;
 	-webkit-border-radius: 5px;
 	margin-bottom: 2em;
@@ -120,7 +144,7 @@ a{
 }
 
 .drag-moving{
-	background:#868686;
+  background:#ddd;
 }
 
 </style>
@@ -390,8 +414,10 @@ $(document).ready(function(){
 
 <div id="content">
 
+<h1 id="main-heading">Selection Search Options</h1>
 
 
+<h2 class="section-heading">Search engines</h2>
 <p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.
 <br />Searches that uses the POST method must contain a {POSTARGS} separator with the post arguments added after it, like this:
 http://example.com/search/{POSTARGS}q=%s&amp;type=123
@@ -411,7 +437,7 @@ http://example.com/search/{POSTARGS}q=%s&amp;type=123
 <p class="buttons"><input type="button" value="Add New Search Engine"  id="new-engine" /></p>
 
 
-<h4>Find Search Engines</h4>
+<h2 class="section-heading">Find Search Engines</h2>
 
 <p class="info">
 <strong>CTRL+ALT + click:</strong><br />
@@ -426,7 +452,7 @@ The search page must be completely loaded before the icon will show.
 Previously opened tabs must be reloaded to show the new engines.</p>
 
 <form id="find-engines" action="http://mycroft.mozdev.org/search-engines.html" method="get">
-	<input type="text" name="name" />
+	<input type="text" name="name" placeholder="Search for new search engines" size="40" />
 	<input type="hidden" name="opensearch" value="yes" />
 	<input type="submit" value="Search mycroft.mozdev.org" />
 </form>
@@ -434,11 +460,11 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 
 
-<h4>Style</h4>
+<h2 class="section-heading">Styling</h2>
 
 <p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /></p>
 
-<h4>Preview</h4>
+<h4 class="subsection-heading">Preview</h4>
 
 <table id="preview-table">
 <tr>
@@ -473,7 +499,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <div class="clearb"></div>
 
 
-<h4 id="activator_heading">Activate menu</h4>
+<h2 class="section-heading" id="activator_heading">Menu Activation</h2>
 <select id="select_activator"></select>
 
 <div class="activator_options" id="activator_click">
@@ -490,12 +516,14 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	<p><strong>Open search in background tab:</strong><input type="checkbox" name="background_tab" /></p>
 </div>
 
-<p><strong>Open search in new tab:</strong><input type="checkbox" name="newtab" /></p>
+<h2 class="section-heading">Other Options</h2>
+
+<p>Open search in new tab:<input type="checkbox" name="newtab" /></p>
 
 
 <br />
 
-<h4>Remove Icons:</h4>
+<h4 class="subsection-heading">Remove Icons:</h4>
 <p class="info">
 On some sites that uses https connection you will get warnings about insecure content when the icons are loaded.
 You can remove the icons if you don't want these warnings.
@@ -509,7 +537,7 @@ Use default style on https pages: <input type="checkbox" name="use_default_style
 
 
 <br />
-<h4>Show in inputs and textareas:</h4>
+<h4 class="subsection-heading">Show in inputs and textareas:</h4>
 <p class="info">
 Enable this if you want to be able to select some text in an input or textarea and do a search.
 To show the popup you first have to select some text and then hold <strong>CTRL</strong> and click inside the input or textarea.
@@ -518,6 +546,7 @@ When you use the auto activator you click with the left button, with the mouse a
 <p>Show in inputs and textareas: <input type="checkbox" name="show_in_inputs" /></p>
 
 
+<!-- <h2 class="section-heading">Save</h2> -->
 
 <p class="buttons" id="save-buttons"><input type="button" id="save" value="Save" /> <input type="button" id="restore" value="Restore defaults" /></p>
 
