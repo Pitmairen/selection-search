@@ -147,19 +147,30 @@ a{
   background:#ddd;
 }
 
+#hotkey_info{
+	background: #FFE9DA;
+	position: absolute;
+	padding: 0.5em;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 3px;
+	-webkit-box-shadow: 0 0 3px #aaa;
+}
+
 </style>
 <script src="jquery-1.4.2.min.js"></script>
 <script src="storage.js"></script>
 <script src="common.js"></script>
 <script src="popup.js"></script>
 <script src="reorder.js"></script>
+<script src="hotkeys.js"></script>
 <script>
 
 
 var ACTIVATORS = {
 	'click' : 'Mouse Click',
 	'auto' :  'Auto',
-	'contextmenu' : 'Context Menu'
+	'contextmenu' : 'Context Menu',
+	'k_and_m' : 'Keyboard shortcut + Mouse click',
 }
 
 function addNewEngine(name, url, icon_url, post){
@@ -215,6 +226,7 @@ $(document).ready(function(){
 		Storage.setStyle('');
 
 	var CURRENT_STYLE = '';
+	var hotkey_editor = null;
 
 	chrome.extension.sendRequest({}, function(response){
 
@@ -261,6 +273,10 @@ $(document).ready(function(){
 		$('input[name=remove_icons][value='+response.options.remove_icons+']').attr('checked', true).change();
 		$('input[name=use_default_style]').attr('checked', response.options.use_default_style);
 
+
+		hotkey_editor = HotKeys.createHotkeyInput('#k_and_m_keys', response.options.k_and_m_combo.slice(0, -1));
+		$("#k_and_m_button").val(response.options.k_and_m_combo[response.options.k_and_m_combo.length-1]);
+
 	});
 
 
@@ -304,6 +320,10 @@ $(document).ready(function(){
 		});
 
 
+		var k_and_m_combo = hotkey_editor.getCombo();
+		k_and_m_combo.push(parseInt($("#k_and_m_button").val(), 10));
+
+
 		Storage.setSearchEngines(new_engines);
 		Storage.setStyle(jQuery.trim($('#style').val()));
 
@@ -314,7 +334,8 @@ $(document).ready(function(){
 			activator: $('#select_activator option:selected').first().attr('value'),
 			remove_icons:$('input[name=remove_icons]:checked').val(),
 			use_default_style: $('input[name=use_default_style]').is(':checked'),
-			show_in_inputs: $('input[name=show_in_inputs]').is(':checked')
+			show_in_inputs: $('input[name=show_in_inputs]').is(':checked'),
+			k_and_m_combo:k_and_m_combo
 		});
 
 
@@ -405,6 +426,21 @@ $(document).ready(function(){
 		else
 			$('#use_default_style').hide(100);
 	});
+
+
+	$('#k_and_m_keys').focus(function(){
+
+		var top = $(this).offset().top - $("#hotkey_info").outerHeight() - 5;
+
+		$("#hotkey_info").css({'top' : top+ 'px', 'left' : $(this).offset().left + 'px'});
+
+		$("#hotkey_info").show(100);
+	});
+
+	$('#k_and_m_keys').blur(function(){
+		$("#hotkey_info").hide(100);
+	});
+
 
 });
 </script>
@@ -503,6 +539,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <select id="select_activator"></select>
 
 <div class="activator_options" id="activator_click">
+	<p>The menu is activated by clicking on the selection with the mouse button you choose below.</p>
 	<p>Left click: <input type="radio" value="0" name="button" /> Middle click: <input type="radio" value="1" name="button" /></p>
 </div>
 
@@ -514,6 +551,23 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	<p>The search engines will be shown in the context menu when you right click on the selected text.</p>
 	<p>This option has som limits. The icons will not be shown, searches using POST method does not work, and you can only click on one menu item before the menu closes.</p>
 	<p><strong>Open search in background tab:</strong><input type="checkbox" name="background_tab" /></p>
+</div>
+
+<div class="activator_options" id="activator_k_and_m">
+
+	<p>The menu is activated by holding the keyboard combination you have choosen and clicking anywhere with the mouse button you have selected.</p>
+
+	<p>
+
+	<input type="text" id="k_and_m_keys" /> + 
+	<select id="k_and_m_button">
+		<option value="0">Left click</option>
+		<option value="1">Middle click</option>
+		<option value="2">Right click</option>
+	</select>
+	</p>
+
+	<div id="hotkey_info" style="display: none;">The names that are shown of the keys that are pressed isn't always correct, but it should still work correctly.</div>
 </div>
 
 <h2 class="section-heading">Other Options</h2>

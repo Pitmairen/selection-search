@@ -56,6 +56,8 @@ var G_ENGINE_EDITOR = null;
 
 		if(response.options.activator == 'auto')
 			G_POPUP.setActivator(new AutoActivator(G_POPUP));
+		else if(response.options.activator == 'k_and_m')
+			G_POPUP.setActivator(new KeyAndMouseActivator(G_POPUP));
 		else
 			G_POPUP.setActivator(new ClickActivator(G_POPUP));
 

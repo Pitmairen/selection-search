@@ -20,6 +20,7 @@ var Storage = new function (){
 		use_default_style: true,
 		show_in_inputs: true,
 		background_tab: true,
+		k_and_m_combo: [17, 0] // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
 	};
 
 	var _that = this;

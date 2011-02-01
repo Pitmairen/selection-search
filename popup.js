@@ -458,3 +458,76 @@ function AutoActivator(_popup){
 	}
 }
 
+
+
+function KeyAndMouseActivator(_popup){
+
+	var _keys = {}; // Keybard Combo
+	var _mouseButton = 0;
+
+	this.setup = function(){
+
+		var combo = _popup.options.k_and_m_combo;
+		var e = combo.length - 1;
+		for(var i=0; i<e; ++i){
+			_keys[combo[i]] = false;
+		}
+
+		_mouseButton = combo[combo.length-1];
+
+		// Disable context menu if right click is used
+		if(_mouseButton == 2){
+
+			$(document).bind('contextmenu', function (e){
+				if (PopUp.hasSelection() && is_keyboard_combo_activated() && _mouseButton == e.button)
+					return false;
+			});
+
+		}
+		$(document).keydown(function(e){
+
+			if(e.which in _keys)
+				_keys[e.which] = true;
+		});
+
+		$(document).keyup(function(e){
+
+			if(e.which in _keys)
+				_keys[e.which] = false;
+		});
+
+
+		$(document).mousedown(function(e){
+
+			if(_popup.isActive()){
+				_popup.hide();
+				return;
+			}
+
+
+			if (!PopUp.hasSelection() || !is_keyboard_combo_activated() || _mouseButton != e.button)
+				return;
+
+			var sel = PopUp.getSelection();
+			_popup.setSelection(sel)
+			_popup.show(e.pageX, e.pageY);
+
+			e.stopPropagation();
+			e.preventDefault();
+
+		});
+
+	}
+
+	function is_keyboard_combo_activated(){
+
+		for (key in _keys){
+			if(!_keys[key])
+				return false;
+		}
+		return true;
+
+	}
+
+}
+
