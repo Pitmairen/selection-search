@@ -162,6 +162,13 @@ function PopUp()
 				PopUp.submitPostForm($(this).attr('href'), $(this).attr('target') == '_blank' || e.button == 1);
 
 				return false;
+
+			}).mousedown(function(e){
+				if(e.button == 1){
+					PopUp.submitPostForm($(this).attr('href'), true);
+
+					return false;
+				}
 			});
 
 		}
