@@ -130,6 +130,8 @@ function PopUp()
 					}else{
 						var url = $(this).data('search_url').replace(/%s/g, encodeURIComponent(_lastSelection));
 					}
+
+					url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
 				}
 				else{
 
@@ -154,25 +156,6 @@ function PopUp()
 
 				$(this).attr('href', url);
 			})
-
-		//a.data('post', (engine.post != null && true) || false);
-		if(engine.post){
-			a.click(function(e){
-
-				PopUp.submitPostForm($(this).attr('href'), $(this).attr('target') == '_blank' || e.button == 1);
-
-				return false;
-
-			}).mousedown(function(e){
-				if(e.button == 1){
-					PopUp.submitPostForm($(this).attr('href'), true);
-
-					return false;
-				}
-			});
-
-		}
-
 
 		if(_that.options.newtab){
 			a.attr('target', '_blank');
@@ -291,46 +274,6 @@ PopUp.getSelectionRect = function(){
 	return undefined;
 }
 
-
-PopUp.submitPostForm = function(url, newtab){
-
-	var parts = url.split('{POSTENCODING}', 2);
-	var encoding = null;
-
-	if(parts.length == 2){
-		url = parts[0];
-		encoding = parts[1];
-	}
-
-	parts = url.split('{POSTARGS}', 2);
-
-	if(parts.length != 2){
-		alert('Invalid url for a POST search.\nThe url must contain "{POSTARGS}"');
-		return;
-	}
-
-	var form = $('<form></form>')
-		.attr('method', 'post')
-		.attr('action', parts[0])
-
-	if(encoding){
-		//form.attr('enctype', 'application/x-www-form-urlencoded;charset='+encoding);
-		form.attr('accept-charset', encoding);
-	}
-	if(newtab)
-		form.attr('target', '_blank');
-
-	var query = parts[1].split('&');
-
-	for(var i=0; i<query.length; ++i){
-		var key_value = query[i].split('=', 2);
-		if(key_value.length != 2)
-			continue;
-		form.append($('<input type="hidden" name="'+key_value[0]+'" value="'+key_value[1]+'" />'));
-	}
-
-	form.submit();
-}
 
 
 function ClickActivator(_popup){
