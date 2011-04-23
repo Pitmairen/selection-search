@@ -156,6 +156,38 @@ a{
 	-webkit-box-shadow: 0 0 3px #aaa;
 }
 
+#export-import a.selected{
+	text-decoration: underline;
+}
+
+#export-settings, #import-settings{
+	display: none;
+
+}
+#export-settings ul, #import-settings ul{
+	list-style-type: none;
+	padding: 0 0.5em;
+}
+#export-settings ul ul, #import-settings ul ul{
+	padding-left: 2em;
+}
+
+
+#export-settings textarea, #import-settings textarea{
+	-webkit-box-sizing:border-box;
+	resize: vertical;
+	width: 100%;
+}
+
+
+#import-replace-engines-opt{
+	display: none;
+}
+
+/*#encode-output{
+	margin-top: 0.8em;
+}*/
+
 </style>
 <script src="jquery-1.4.2.min.js"></script>
 <script src="storage.js"></script>
@@ -442,6 +474,196 @@ $(document).ready(function(){
 	});
 
 
+
+	function _load_export(){
+
+		
+		var export = {}
+
+		if($('#export-search-engines').is(':checked'))
+			export.searchEngines = Storage.getSearchEngines();
+		if($('#export-style').is(':checked'))
+			export.styleSheet =  Storage.getStyle();
+		if($('#export-options').is(':checked'))
+			export.options =  Storage.getOptions();
+
+		if(!jQuery.isEmptyObject(export)){
+
+			if(localStorage.hasOwnProperty('VERSION'))
+				export.VERSION = localStorage['VERSION'];
+
+			export = JSON.stringify(export);
+
+// 			if($('#encode-output').is(':checked'))
+			export = btoa(export);
+
+
+
+		}else
+			export = '';
+
+		$('#export-settings textarea').val(export);
+
+	}
+
+
+	function _do_import(){
+
+
+		var import = $('#import-settings textarea').val();
+
+		if(import.length == 0){
+			alert('No data to import');
+			return;
+		}
+
+		try{
+			import = JSON.parse(atob(import));
+		}catch(err){
+			import = null;
+		}
+		if(!import || jQuery.isEmptyObject(import)){
+			alert('Failed to import data');
+			return;
+		}
+
+
+		if( !$('#import-search-engines').is(':checked') &&
+			!$('#import-style').is(':checked') &&
+			!$('#import-options').is(':checked')){
+			alert('No data imported');
+			return;
+		}
+
+		var msg = [];
+
+		if($('#import-search-engines').is(':checked')){
+
+			if(!import.hasOwnProperty('searchEngines'))
+				msg.push('Search Engines: not available');
+			else{
+
+				msg.push('Search Engines: OK');
+
+				if($('#import-replace-engines').is(':checked')){
+					Storage.setSearchEngines(import.searchEngines);
+				}else{
+					var prev_engines = Storage.getSearchEngines();
+					Storage.setSearchEngines(prev_engines.concat(import.searchEngines));
+				}
+			}
+		}
+
+		if($('#import-style').is(':checked')){
+
+			if(!import.hasOwnProperty('styleSheet'))
+				msg.push('Styling: not available');
+			else{
+				msg.push('Styling: OK');
+				Storage.setStyle(import.styleSheet);
+			}
+
+		}
+
+		if($('#import-options').is(':checked')){
+
+			if(!import.hasOwnProperty('options'))
+				msg.push('Other settings: not available');
+			else{
+				msg.push('Other settings: OK');
+				Storage.setOptions(import.options);
+			}
+		}
+
+		alert('Settings has been imported.\n\n' + msg.join('\n'));
+
+		location.reload();
+
+	}
+
+
+	$('#export-settings-link').click(function(){
+
+		$(this).toggleClass('selected');
+
+		$('#import-settings').slideUp(200);
+	
+		$('#import-settings-link').removeClass('selected');
+
+
+		$('#export-settings').slideToggle(200, function(){
+
+
+
+			if($('#export-settings').is(':visible')){
+				_load_export();
+			}
+
+		});
+
+		var destination = $("body").offset().top + $("body").height();
+		$("body").animate({ scrollTop: destination},200);
+
+		return false;
+	});
+
+
+	$('#export-settings input').change(function(){
+		_load_export();
+	});
+
+	$('#export-settings textarea').click(function(){
+		this.select();
+	});
+
+
+	$('#import-settings-link').click(function(){
+
+		$(this).toggleClass('selected');
+
+
+		$('#export-settings').slideUp(200);
+
+	
+		$('#export-settings-link').removeClass('selected');
+		
+
+		$('#import-settings').slideToggle(200, function(){
+
+
+
+		});
+		var destination = $("body").offset().top + $("body").height();
+		$("body").animate({ scrollTop: destination},200);
+
+		return false;
+	});
+
+	$('#import-search-engines').change(function(){
+
+		if($(this).is(':checked'))
+			$('#import-replace-engines-opt').slideDown(100);
+		else
+			$('#import-replace-engines-opt').slideUp(100);
+
+	});
+
+
+	$('#import-submit').click(function(){
+
+		var msg = ['This will overwrite you existing settings'];
+
+		if($('#import-replace-engines').is(':checked'))
+			msg.push('\nand your search engines');
+
+		msg.push('.\n\nAre you sure you want to continue?');
+
+		if(confirm(msg.join('')))
+			_do_import();
+
+	});
+
+
 });
 </script>
 
@@ -599,6 +821,51 @@ When you use the auto activator you click with the left button, with the mouse a
 </p>
 <p>Show in inputs and textareas: <input type="checkbox" name="show_in_inputs" /></p>
 
+
+
+<h2 class="section-heading" id="export-import">Export / Import settings: <a href="#" id="export-settings-link">export</a> / <a href="#" id="import-settings-link">import</a></h2>
+
+<div id="export-settings">
+
+	<p class="info">Copy the data from the textarea below and store it somewhere, it can later be imported to restore your settings. <br />
+		You need to save your settings before you export. Any changes that has not been saved will not be exported.</p>
+
+	<ul>
+		<li><strong>Include:</strong>
+			<ul>
+			<li><input type="checkbox" id="export-search-engines" checked /><label for="export-search-engines">Search engines</label></li>
+			<li><input type="checkbox" id="export-style" checked /><label for="export-style">Styling</label></li>
+			<li><input type="checkbox" id="export-options" checked /><label for="export-options">Other settings</label></li>
+			</ul>
+		</li>
+<!-- 		<li><label for="encode-output"><strong>Encode output</strong></label> <input id="encode-output" type="checkbox"></li> -->
+	</ul>
+	<textarea rows="8"></textarea>
+
+</div>
+
+<div id="import-settings">
+
+	<p class="info">Paste the data you have previously exported into the textarea below and select the options you want to import and click the import button.</p>
+	</p>
+
+	<ul>
+		<li><strong>Import:</strong>
+			<ul>
+			<li><input type="checkbox" id="import-search-engines" /><label for="import-search-engines">Search engines</label>
+				<ul id="import-replace-engines-opt">
+					<li><input type="checkbox" id="import-replace-engines" /> <label for="import-replace-engines">Replace existing search engines</label></li>
+				</ul>
+			</li>
+			<li><input type="checkbox" id="import-style" /><label for="import-style">Styling</label></li>
+			<li><input type="checkbox" id="import-options" /><label for="import-options">Other settings</label></li>
+			<li><input type="button" id="import-submit" value="Import" /></li>
+			</ul>
+		</li>
+<!-- 		<li><label for="encode-output"><strong>Encode output</strong></label> <input id="encode-output" type="checkbox"></li> -->
+	</ul>
+	<textarea rows="8"></textarea>
+</div>
 
 <!-- <h2 class="section-heading">Save</h2> -->
 
