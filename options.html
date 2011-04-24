@@ -495,15 +495,23 @@ $(document).ready(function(){
 			export = JSON.stringify(export);
 
 // 			if($('#encode-output').is(':checked'))
-			export = btoa(export);
 
-
+			try{
+				export = btoa(export);
+			}catch(e){
+				export = '1e:' + btoa(encodeURI(export));
+			}
 
 		}else
 			export = '';
 
 		$('#export-settings textarea').val(export);
 
+	}
+
+	var _import_decoders = {
+		'1e' : function(v){return JSON.parse(decodeURI(atob(v)))},
+		'1' : function(v){return JSON.parse(atob(v))}
 	}
 
 
@@ -518,7 +526,21 @@ $(document).ready(function(){
 		}
 
 		try{
-			import = JSON.parse(atob(import));
+
+			var parts = import.split(':');
+
+			var decoder = '1';
+
+			if(parts.length == 2){
+				import = parts[1];
+				decoder = parts[0];
+			}
+
+			if(decoder in _import_decoders)
+				import = _import_decoders[decoder](import);
+			else
+				import = null;
+
 		}catch(err){
 			import = null;
 		}
