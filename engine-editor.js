@@ -40,7 +40,7 @@ function EngineEditor(){
 		'height' : '50px', 'width' : '100%',
 	});
 
-	$('body').append(_editorContainer);
+	$('html').append(_editorContainer);
 
 	_titleBar.find('.close').click(function(){
 		_that.hide();

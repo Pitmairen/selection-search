@@ -14,10 +14,12 @@ var Common = new function(){
 
 		_styleNode = $('<style type="text/css"></style>');
 
-		if ($('head').length > 0)
-			$('head').first().append(_styleNode);
-		else
-			$('body').append(_styleNode);
+		$('html').append(_styleNode);
+
+// 		if ($('head').length > 0)
+// 			$('head').first().append(_styleNode);
+// 		else
+// 			$('body').append(_styleNode);
 	}
 
 	

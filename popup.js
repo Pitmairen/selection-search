@@ -19,7 +19,7 @@ function PopUp()
 		'zIndex' :  9999999,
 	});
 
-	$('body').first().append(_popupNode);
+	$('html').append(_popupNode);
 	
 	var _buttonId = Common.getId('button');
 
@@ -32,8 +32,7 @@ function PopUp()
 		'zIndex' :  9999999,
 		'background-image' : 'url("' + chrome.extension.getURL('icon16.png') + '")',
 	});
-	$('body').first().append(_buttonNode);
-
+	$('html').append(_buttonNode);
 
 	var _that = this;
 	var _active = false;

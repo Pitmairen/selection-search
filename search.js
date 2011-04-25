@@ -6,10 +6,10 @@ var G_ENGINE_EDITOR = null;
 
 
 	var exclude = {
-				'acid3.acidtests.org':1,
+				'acid3.acidtests.org':1
 	};
 
-
+	
 	if(document.location.hostname in exclude)
 		return;
 
