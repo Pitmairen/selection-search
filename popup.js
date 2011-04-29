@@ -40,6 +40,26 @@ function PopUp()
 	var _lastSelection = '';
 	var _activator;
 
+
+
+	var _urlVariables = [
+// 		[/%PAGE_HOSTNAME/g,  encodeURIComponent(location.hostname)],
+		[/%PAGE_HOST/g, encodeURIComponent(location.host)],
+		[/%PAGE_URL/g, encodeURIComponent(location.href)],
+		[/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
+// 		[/%PAGE_PATH/g, encodeURIComponent(location.pathname)],
+	]
+
+// 	var _domain = location.hostname.split('.');
+// 	if(_domain.length > 1)
+// 		_domain = _domain.slice(1).join('.');
+// 	else
+// 		_domain = location.hostname;
+// 
+// 	_urlVariables.push([/%PAGE_DOMAIN/g, encodeURIComponent(_domain)]);
+// 
+// 	delete _domain;
+	
 	this.options = {};
 
 
@@ -120,21 +140,26 @@ function PopUp()
 				$('<span class="engine-name"></span').text(engine.name)
 			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
 
+				var search_url = $(this).data('search_url');
+				for(var i=0; i<_urlVariables.length; ++i){
+					search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
+				}
+	
 				//If its a post url we encode only the part before {POSTARGS}
 				if($(this).data('engine-post')){
-					var parts = $(this).data('search_url').split('{POSTARGS}', 2);
+					var parts = search_url.split('{POSTARGS}', 2);
 					if(parts.length == 2){
 						var url = parts[0].replace(/%s/g, encodeURIComponent(_lastSelection));
 						url += '{POSTARGS}' + parts[1].replace(/%s/g, _lastSelection);
 					}else{
-						var url = $(this).data('search_url').replace(/%s/g, encodeURIComponent(_lastSelection));
+						var url = search_url.replace(/%s/g, encodeURIComponent(_lastSelection));
 					}
 
 					url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
 				}
 				else{
 
-					var placeholder = $(this).data('search_url');
+					var placeholder = search_url;
 
 
 					// Special case for only "%s" engine
@@ -150,7 +175,7 @@ function PopUp()
 						sel = encodeURIComponent(_lastSelection);
 			
 
-					var url = $(this).data('search_url').replace(/%s/g, sel);
+					var url = search_url.replace(/%s/g, sel);
 				}
 
 				$(this).attr('href', url);

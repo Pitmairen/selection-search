@@ -53,6 +53,18 @@ a.delete{
 	color: #CA171A;
 	font-weight: bold;
 }
+#show-more-variables{
+	font-size: 0.9em;
+}
+#more-variables{
+	display: none;
+	font-size: 0.85em;
+}
+
+dt{
+	font-weight: bold;
+}
+
 #engines{
 
 	width: 100%;
@@ -686,6 +698,23 @@ $(document).ready(function(){
 	});
 
 
+
+	$('#show-more-variables').click(function(){
+
+		if($(this).data('old-text')){
+			$(this).text($(this).data('old-text')).removeData('old-text');
+		}else{
+			$(this).data('old-text', $(this).text()).text('Hide');
+		}
+
+		
+
+
+		$('#more-variables').slideToggle();
+
+		return false;
+	});
+
 });
 </script>
 
@@ -700,9 +729,26 @@ $(document).ready(function(){
 <h2 class="section-heading">Search engines</h2>
 <p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.
 <br />Searches that uses the POST method must contain a {POSTARGS} separator with the post arguments added after it, like this:
-http://example.com/search/{POSTARGS}q=%s&amp;type=123
-</p>
+http://example.com/search/{POSTARGS}q=%s&amp;type=123. <a href="#" id="show-more-variables">More Variables</a>
 
+</p>
+<div id="more-variables" class="info">
+<strong>Example url:</strong> https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe
+<dl>
+	<dt>%PAGE_HOST</dt>
+		<dd>The hostname and port of the current page. (chrome.google.com)</dd>
+<!--	<dt>%PAGE_HOSTNAME</dt>
+		<dd>The hostname of the current page. (chrome.google.com)</dd>-->
+<!--	<dt>%PAGE_DOMAIN</dt>
+		<dd>The domain of the current page. (google.com)</dd>-->
+	<dt>%PAGE_URL</dt>
+		<dd>The entire URL of the current page. (https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>
+<!--	<dt>%PAGE_PATH</dt>
+		<dd>The path name of the current page. (/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>-->
+	<dt>%PAGE_ORIGIN</dt>
+		<dd>The protocol and hostname of the current page. (https://chrome.google.com)</dd>
+</dl>
+</div>
 
 <table id="engines">
 	<tr class="drag-stop">
