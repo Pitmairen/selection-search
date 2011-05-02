@@ -329,10 +329,15 @@ function ClickActivator(_popup){
 				return;
 
 
+			var rx = window.pageXOffset;
+			var ry = window.pageYOffset;
+			
 			var rect = PopUp.getSelectionRect();
 
-			var rx = window.pageXOffset + rect.left;
-			var ry = window.pageYOffset + rect.top;
+			if(rect){
+				rx += rect.left;
+				ry += rect.top;
+			}
 
 			if (in_input || (e.pageY >= ry && e.pageY <= ry + rect.height && e.pageX >= rx && e.pageX <= rx + rect.width)){
 
