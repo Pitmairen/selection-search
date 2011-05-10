@@ -4,7 +4,6 @@ var G_ENGINE_EDITOR = null;
 
 (function(){
 
-
 	var exclude = {
 				'acid3.acidtests.org':1
 	};
@@ -41,16 +40,18 @@ var G_ENGINE_EDITOR = null;
 				Common.setStyleSheet(response.extra_style);
 		}
 
-		if(response.options.activator == 'contextmenu'){
+		if(response.options.activator == 'disabled'){
 
 			return;
 		}
 
 
 		G_POPUP.setOptions(response.options);
-
+		var separate_menus = response.options.separate_menus;
 		for (i in response.searchEngines){
 			var en = response.searchEngines[i];
+			if(separate_menus && en.hide_in_popup)
+				continue;
 			G_POPUP.addSearchEngine(en);
 		}
 

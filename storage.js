@@ -20,7 +20,9 @@ var Storage = new function (){
 		use_default_style: true,
 		show_in_inputs: true,
 		background_tab: true,
-		k_and_m_combo: [17, 0] // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
+		k_and_m_combo: [17, 0], // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
+		context_menu: 'disabled',
+		separate_menus: false
 	};
 
 	var _that = this;
@@ -138,6 +140,32 @@ var Storage = new function (){
 
 	function _removeValue(key){
 		localStorage.removeItem(key);
+	}
+
+
+
+
+	// Storage Upgrades:
+
+	
+	this.storage_upgrades = function(){
+
+		v0_5_9__v0_6_0();
+
+	}
+
+
+	// v0.5.9 -> v0.6.0
+	function v0_5_9__v0_6_0(){
+
+		var opts = _that.getOptions();
+
+		if(opts.activator == 'contextmenu'){
+			opts.activator = 'disabled';
+			opts.context_menu = 'enabled';
+
+			_that.setOptions(opts);
+		}
 	}
 }
 

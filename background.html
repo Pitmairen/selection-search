@@ -4,6 +4,9 @@
 <script src="storage.js"></script>
 <script>
 
+Storage.storage_upgrades();
+
+
 // Added in version 0.1.4
 localStorage['VERSION'] = '0.5.9';
 
@@ -53,7 +56,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 function _update_context_menu(){
 	_remove_context_menu();
 
-	if(Storage.getOptions().activator == 'contextmenu')
+	if(Storage.getOptions().context_menu == 'enabled')
 		_create_context_menu();
 
 }
@@ -101,10 +104,13 @@ function _create_context_menu(){
 	var _engines = Storage.getSearchEngines();
 
 	var _opts = Storage.getOptions();
+	var _separate_menus = _opts.separate_menus;
 
 	for (i in _engines){
 		var _en = _engines[i];
 
+		if(_separate_menus && _en.hide_in_ctx)
+			continue;
 		
 		var _mid = chrome.contextMenus.create({
 			'title' : _en.name,
@@ -114,7 +120,6 @@ function _create_context_menu(){
 			'onclick' : function (info, tab){
 
 				var _clicked_en = _engine_mapping[info.menuItemId];
-
 
 				var url = '';
 
@@ -160,7 +165,7 @@ function _remove_context_menu(){
 }
 
 
-if(Storage.getOptions().activator == 'contextmenu')
+if(Storage.getOptions().context_menu == 'enabled')
 	_create_context_menu();
 
 

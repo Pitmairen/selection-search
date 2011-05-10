@@ -1,722 +1,14 @@
 <html>
 <head>
 <title>Selection Search - Options</title>
-<style type="text/css">
-
-body{
-
-	background: #fff;
-	font-family: sans-serif;
-	font-size: 80%;
-}
-/*h4{
-	text-align: left;
-	border-bottom: 1px solid #D4D4D4;
-}*/
-p.buttons{
-	margin: 0.5em 0;
-}
-
-#main-heading{
-	font-size: 150%;
-	padding-left: 85px;
-/* 	height: 128px; */
-	line-height: 72px;
-	  background-size:72px;
-	background: url("icon128.png") no-repeat left center;
-}
-.section-heading {
-  background:#ebeff9;
-  border-top:1px solid #b5c7de;
-  font-size:99%;
-  padding:3px 0 2px 5px;
-  font-weight:bold;
-	margin-top: 2em;
-}
-
-.subsection-heading {
-  background:#eee;
-	  font-size:80%;
-  border-top:1px solid #D4D4D4;
-  padding:2px 0 3px 5px;
-}
-
-#content{
-	margin: 0 auto;
-	width: 95%;
-	min-width: 800px;
-
-	padding-bottom: 6em;
-}
-a.delete{
-	text-decoration: none;
-	color: #CA171A;
-	font-weight: bold;
-}
-#show-more-variables{
-	font-size: 0.9em;
-}
-#more-variables{
-	display: none;
-	font-size: 0.85em;
-}
-
-dt{
-	font-weight: bold;
-}
-
-#engines{
-
-	width: 100%;
-}
-#engines th:first-child{
-	width: 1em;
-}
-#engines th:nth-child(2), td:nth-child(2){
-	width: 8em;
-}
-#engines th:last-child, #engines tr td:last-child{
-	width: 50px;
-	text-align: center;
-}
-#engines th:nth-child(5){
-	width: 75px;
-	text-align: center;
-}
-#engines input{
-	width: 100%;
-	border: 1px solid #D4D4D4;
-}
-#style{
-	width: 100%;
-	height: 15em;
-}
-#save-buttons{
-	margin-top: 4em;
-}
-
-
-#preview{
-
-	float: left;
-}
-#preview-button{
-	margin-left: 2em;
-}
-
-
-#html{
-	display: none;
-}
-
-#mousebutton{
-	margin-top: 2em;
-}
-
-.clearb{
-	clear: both;
-}
-
-.info{
-	background:#F0FFDC;
-	border: 1px solid #D1D1D1;
-	-webkit-border-radius: 5px;
-	margin-bottom: 2em;
-	padding: 0.5em;
-	font-size: 9pt;
-	line-height: 1.5;
-}
-
-a{
-	color: #2E6DAC;
-	text-decoration: none;
-}
-#activator_heading{
-	margin-bottom: 0.5em;
-}
-.theme_def, .activator_options{
-	display: none;
-}
-.activator_options{
-	margin-left: 3em;
-	margin-bottom: 2em;
-}
-
-#customize{
-	display: none;
-}
-
-#find-engines input[type='text']{
-	border: 1px solid #D4D4D4;
-}
-
-.drag-target{
-	cursor: move;
-	float: left;
-}
-
-.drag-moving{
-  background:#ddd;
-}
-
-#hotkey_info{
-	background: #FFE9DA;
-	position: absolute;
-	padding: 0.5em;
-	border: 1px solid #aaa;
-	-webkit-border-radius: 3px;
-	-webkit-box-shadow: 0 0 3px #aaa;
-}
-
-#export-import a.selected{
-	text-decoration: underline;
-}
-
-#export-settings, #import-settings{
-	display: none;
-
-}
-#export-settings ul, #import-settings ul{
-	list-style-type: none;
-	padding: 0 0.5em;
-}
-#export-settings ul ul, #import-settings ul ul{
-	padding-left: 2em;
-}
-
-
-#export-settings textarea, #import-settings textarea{
-	-webkit-box-sizing:border-box;
-	resize: vertical;
-	width: 100%;
-}
-
-
-#import-replace-engines-opt{
-	display: none;
-}
-
-/*#encode-output{
-	margin-top: 0.8em;
-}*/
-
-</style>
+<link type="text/css" rel="stylesheet" href="options.css" />
 <script src="jquery-1.4.2.min.js"></script>
 <script src="storage.js"></script>
 <script src="common.js"></script>
 <script src="popup.js"></script>
 <script src="reorder.js"></script>
 <script src="hotkeys.js"></script>
-<script>
-
-
-var ACTIVATORS = {
-	'click' : 'Mouse Click',
-	'auto' :  'Auto',
-	'contextmenu' : 'Context Menu',
-	'k_and_m' : 'Keyboard shortcut + Mouse click',
-}
-
-function addNewEngine(name, url, icon_url, post){
-
-
-	icon_url = icon_url == undefined ||
-				icon_url.length == 0 ? '(Use default)' : icon_url;
-
-	var tr = $('<tr></tr>');
-
-	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
-	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
-	tr.append($('<td></td>').append($('<input class="url" type="text" />').val(url)));
-	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
-	tr.append($('<td></td>').append($('<input class="post" type="checkbox" />').attr('checked', post)));
-	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>')));
-	tr.find('input.icon_url').focus(function (){
-
-		if ($(this).val() == '(Use default)')
-			$(this).val('');
-
-	}).blur(function (){
-
-		if (!$(this).val())
-			$(this).val('(Use default)');
-
-	});
-
-	tr.find('a.delete').click(function(){
-
-		$(this).parent().parent().remove();
-		return false;
-	});
-
-
-	Reorder.makeMovable(tr);
-
-	$('#engines').append(tr);
-
-}
-
-$(document).ready(function(){
-
-	Common.init();
-
-	var popup = new PopUp();
-
-
-	// The style system has changed.
-	// Check if the user has changed the style. If it hasn't we can clear the stored style.
-	var stored_style = Storage.getStyle('');
-	if (stored_style == $('#old-default-style').val())
-		Storage.setStyle('');
-
-	var CURRENT_STYLE = '';
-	var hotkey_editor = null;
-
-	chrome.extension.sendRequest({}, function(response){
-
-		popup.setOptions(response.options);
-		Common.setStyleSheet(response.default_style);
-		if(response.extra_style)
-			Common.setStyleSheet(response.extra_style);
-
-		for (i in response.searchEngines){
-			var en = response.searchEngines[i];
-
-			if(i < 3) // add 3 engines for preview
-				popup.addSearchEngine(en);
-
-			addNewEngine(en.name, en.url, en.icon_url, en.post || false);
-
-		}
-
-
-		if(response.extra_style){
-
-			CURRENT_STYLE= response.extra_style;
-			$('#select_theme').prepend('<option selected="selected" value="current_style">&lt;Current Style&gt;</option>');
-		}
-
-		$('#preview').append(popup.getForPreview());
-		$('#preview-button').append(popup.getButtonForPreview());
-
-
-		$("input[name='button']").filter("[value="+response.options.button+"]").attr('checked', true);
-
-		$("input[name='newtab']").attr('checked', response.options.newtab);
-		$("input[name='background_tab']").attr('checked', response.options.background_tab);
-
-		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
-
-
-		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
-		$("#select_activator").change();
-
-		$('#select_theme').change();
-
-
-		$('input[name=remove_icons][value='+response.options.remove_icons+']').attr('checked', true).change();
-		$('input[name=use_default_style]').attr('checked', response.options.use_default_style);
-
-
-		hotkey_editor = HotKeys.createHotkeyInput('#k_and_m_keys', response.options.k_and_m_combo.slice(0, -1));
-		$("#k_and_m_button").val(response.options.k_and_m_combo[response.options.k_and_m_combo.length-1]);
-
-	});
-
-
-	$('#search-icon').append('<img src="'+chrome.extension.getURL('icon16.png')+'" width="16px" height="16px" />');
-
-	$('#new-engine').click(function(){
-
-		addNewEngine('', '', '', false);
-
-		return false;
-	});
-
-
-	$('#save').click(function(){
-
-
-		var new_engines = [];
-		$('#engines tr:gt(0)').each(function(){
-
-			var en = {};
-
-			$(this).find('input').each(function(){
-				if ($(this).attr('class') == 'post')
-					en[$(this).attr('class')] = $(this).attr('checked');
-				else
-					en[$(this).attr('class')] = $(this).val();
-			});
-
-			if(en.icon_url == '(Use default)')
-				delete en.icon_url;
-			if(!en.post)
-				delete en.post;
-
-			if(en.name && en.url){
-
-// 				if(en.post && en.url.indexOf('{POSTARGS}') == -1)
-// 					return;
-
-				new_engines.push(en);
-			}
-		});
-
-
-		var k_and_m_combo = hotkey_editor.getCombo();
-		k_and_m_combo.push(parseInt($("#k_and_m_button").val(), 10));
-
-
-		Storage.setSearchEngines(new_engines);
-		Storage.setStyle(jQuery.trim($('#style').val()));
-
-		Storage.setOptions({
-			button: parseInt($("input[name='button']:checked").val(), 10),
-			newtab: $("input[name='newtab']").is(':checked'),
-			background_tab: $("input[name='background_tab']").is(':checked'),
-			activator: $('#select_activator option:selected').first().attr('value'),
-			remove_icons:$('input[name=remove_icons]:checked').val(),
-			use_default_style: $('input[name=use_default_style]').is(':checked'),
-			show_in_inputs: $('input[name=show_in_inputs]').is(':checked'),
-			k_and_m_combo:k_and_m_combo
-		});
-
-
-		chrome.extension.sendRequest({action:"optionsChanged"});
-
-		location.reload();
-
-	});
-
-
-	$('#restore').click(function(){
-
-
-		if(confirm("This will delete all your search engines and reset all the changes you have made")){
-
-			Storage.clear();
-			location.reload();
-		}
-		return false;
-	});
-
-	$('#update-preview').click(function(e){
-
-		Common.setStyleSheet($('#style').val());
-
-		return false;
-	});
-
-	var theme_select = $('#select_theme');
-
-	$('.theme_def').each(function(){
-		theme_select.append('<option value="' + $(this).attr('id')+'">'+$(this).attr('name')+'</option>');
-	});
-
-	theme_select.change(function(){
-
-		var opt = $('#select_theme option:selected').first();
-
-		var id = opt.attr('value');
-
-		if(id == 'current_style'){
-			Common.setStyleSheet(CURRENT_STYLE)
-			$("#style").val(CURRENT_STYLE);
-			return;
-		}
-
-		var css = $('textarea#' + id).val();
-
-		$("#style").val(css);
-
-		Common.setStyleSheet(css);
-
-	});
-
-	for (act in ACTIVATORS){
-
-		var name = ACTIVATORS[act];
-
-		$('#select_activator').append('<option value="' + act + '">'+name+'</option>'); 
-	}
-
-	$('#select_activator').change(function(){
-
-		var opt = $('#select_activator option:selected').first();
-
-		$('.activator_options').hide(100);
-		$('#activator_' + opt.attr('value')).show(100);
-
-	});
-
-	$('#show_customize').click(function(){
-		$('#customize').toggle();
-
-		return false;
-	});
-
-
-	$('#show_html').click(function(){
-		$('#html').toggle();
-		return false;
-	});
-
-
-	$('input[name=remove_icons]').change(function(){
-
-		if($(this).val() == 'https')
-			$('#use_default_style').show(100);
-		else
-			$('#use_default_style').hide(100);
-	});
-
-
-	$('#k_and_m_keys').focus(function(){
-
-		var top = $(this).offset().top - $("#hotkey_info").outerHeight() - 5;
-
-		$("#hotkey_info").css({'top' : top+ 'px', 'left' : $(this).offset().left + 'px'});
-
-		$("#hotkey_info").show(100);
-	});
-
-	$('#k_and_m_keys').blur(function(){
-		$("#hotkey_info").hide(100);
-	});
-
-
-
-	function _load_export(){
-
-		
-		var export = {}
-
-		if($('#export-search-engines').is(':checked'))
-			export.searchEngines = Storage.getSearchEngines();
-		if($('#export-style').is(':checked'))
-			export.styleSheet =  Storage.getStyle();
-		if($('#export-options').is(':checked'))
-			export.options =  Storage.getOptions();
-
-		if(!jQuery.isEmptyObject(export)){
-
-			if(localStorage.hasOwnProperty('VERSION'))
-				export.VERSION = localStorage['VERSION'];
-
-			export = JSON.stringify(export);
-
-// 			if($('#encode-output').is(':checked'))
-
-			try{
-				export = btoa(export);
-			}catch(e){
-				export = '1e:' + btoa(encodeURI(export));
-			}
-
-		}else
-			export = '';
-
-		$('#export-settings textarea').val(export);
-
-	}
-
-	var _import_decoders = {
-		'1e' : function(v){return JSON.parse(decodeURI(atob(v)))},
-		'1' : function(v){return JSON.parse(atob(v))}
-	}
-
-
-	function _do_import(){
-
-
-		var import = $('#import-settings textarea').val();
-
-		if(import.length == 0){
-			alert('No data to import');
-			return;
-		}
-
-		try{
-
-			var parts = import.split(':');
-
-			var decoder = '1';
-
-			if(parts.length == 2){
-				import = parts[1];
-				decoder = parts[0];
-			}
-
-			if(decoder in _import_decoders)
-				import = _import_decoders[decoder](import);
-			else
-				import = null;
-
-		}catch(err){
-			import = null;
-		}
-		if(!import || jQuery.isEmptyObject(import)){
-			alert('Failed to import data');
-			return;
-		}
-
-
-		if( !$('#import-search-engines').is(':checked') &&
-			!$('#import-style').is(':checked') &&
-			!$('#import-options').is(':checked')){
-			alert('No data imported');
-			return;
-		}
-
-		var msg = [];
-
-		if($('#import-search-engines').is(':checked')){
-
-			if(!import.hasOwnProperty('searchEngines'))
-				msg.push('Search Engines: not available');
-			else{
-
-				msg.push('Search Engines: OK');
-
-				if($('#import-replace-engines').is(':checked')){
-					Storage.setSearchEngines(import.searchEngines);
-				}else{
-					var prev_engines = Storage.getSearchEngines();
-					Storage.setSearchEngines(prev_engines.concat(import.searchEngines));
-				}
-			}
-		}
-
-		if($('#import-style').is(':checked')){
-
-			if(!import.hasOwnProperty('styleSheet'))
-				msg.push('Styling: not available');
-			else{
-				msg.push('Styling: OK');
-				Storage.setStyle(import.styleSheet);
-			}
-
-		}
-
-		if($('#import-options').is(':checked')){
-
-			if(!import.hasOwnProperty('options'))
-				msg.push('Other settings: not available');
-			else{
-				msg.push('Other settings: OK');
-				Storage.setOptions(import.options);
-			}
-		}
-
-		alert('Settings has been imported.\n\n' + msg.join('\n'));
-
-		location.reload();
-
-	}
-
-
-	$('#export-settings-link').click(function(){
-
-		$(this).toggleClass('selected');
-
-		$('#import-settings').slideUp(200);
-	
-		$('#import-settings-link').removeClass('selected');
-
-
-		$('#export-settings').slideToggle(200, function(){
-
-
-
-			if($('#export-settings').is(':visible')){
-				_load_export();
-			}
-
-		});
-
-		var destination = $("body").offset().top + $("body").height();
-		$("body").animate({ scrollTop: destination},200);
-
-		return false;
-	});
-
-
-	$('#export-settings input').change(function(){
-		_load_export();
-	});
-
-	$('#export-settings textarea').click(function(){
-		this.select();
-	});
-
-
-	$('#import-settings-link').click(function(){
-
-		$(this).toggleClass('selected');
-
-
-		$('#export-settings').slideUp(200);
-
-	
-		$('#export-settings-link').removeClass('selected');
-		
-
-		$('#import-settings').slideToggle(200, function(){
-
-
-
-		});
-		var destination = $("body").offset().top + $("body").height();
-		$("body").animate({ scrollTop: destination},200);
-
-		return false;
-	});
-
-	$('#import-search-engines').change(function(){
-
-		if($(this).is(':checked'))
-			$('#import-replace-engines-opt').slideDown(100);
-		else
-			$('#import-replace-engines-opt').slideUp(100);
-
-	});
-
-
-	$('#import-submit').click(function(){
-
-		var msg = ['This will overwrite you existing settings'];
-
-		if($('#import-replace-engines').is(':checked'))
-			msg.push('\nand your search engines');
-
-		msg.push('.\n\nAre you sure you want to continue?');
-
-		if(confirm(msg.join('')))
-			_do_import();
-
-	});
-
-
-
-	$('#show-more-variables').click(function(){
-
-		if($(this).data('old-text')){
-			$(this).text($(this).data('old-text')).removeData('old-text');
-		}else{
-			$(this).data('old-text', $(this).text()).text('Hide');
-		}
-
-		
-
-
-		$('#more-variables').slideToggle();
-
-		return false;
-	});
-
-});
-</script>
+<script src="options.js"></script>
 
 </head>
 <body>
@@ -727,13 +19,14 @@ $(document).ready(function(){
 
 
 <h2 class="section-heading">Search engines</h2>
-<p class="info">The search url must start with http:// and contain the special string "%s" which will be replaced with the selected text.
-<br />Searches that uses the POST method must contain a {POSTARGS} separator with the post arguments added after it, like this:
-http://example.com/search/{POSTARGS}q=%s&amp;type=123. <a href="#" id="show-more-variables">More Variables</a>
+<p class="info">The search url must start with http:// and contain the special string <strong>%s</strong> which will be replaced with the selected text.
+<br />Searches that uses the POST method must contain a <strong>{POSTARGS}</strong> separator with the post arguments added after it, like this:
+http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;type=123. <a href="#" id="show-more-variables">More Variables</a>
 
 </p>
 <div id="more-variables" class="info">
 <strong>Example url:</strong> https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe
+<p class="only-popup-msg">Currently this variables does not work in the Context Menu, only in the popup.</p>
 <dl>
 	<dt>%PAGE_HOST</dt>
 		<dd>The hostname and port of the current page. (chrome.google.com)</dd>
@@ -786,62 +79,25 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 
 
-<h2 class="section-heading">Styling</h2>
-
-<p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /></p>
-
-<h4 class="subsection-heading">Preview</h4>
-
-<table id="preview-table">
-<tr>
-	<td><div id="preview"></div></td>
-	<td valign="top"><div id="preview-button"></div></td>
-</tr>
-</table>
 
 
-<div id="customize">
-	<div class="clearb"></div>
 
-	<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.</p>
+<h2 class="section-heading" id="activator_heading">Popup Menu</h2>
 
-	<pre id="html">
-&lt;ul id="popup"&gt;
-	&lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
-	&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-	...
-&lt;/ul&gt;
+<div class="section">
 
-&lt;div id="button"&gt;&lt;/div&gt;
-	</pre>
-
-	<textarea id="style"></textarea>
-	<p class="buttons"><input id="update-preview" type="button" value="Update Preview" /> <input type="button" id="show_html" value="Show HTML" /></p>
-
-
-</div>
-
-
-<div class="clearb"></div>
-
-
-<h2 class="section-heading" id="activator_heading">Menu Activation</h2>
 <select id="select_activator"></select>
 
 <div class="activator_options" id="activator_click">
 	<p>The menu is activated by clicking on the selection with the mouse button you choose below.</p>
-	<p>Left click: <input type="radio" value="0" name="button" /> Middle click: <input type="radio" value="1" name="button" /></p>
+	<p class="section-option"><label for="opt-button0">Left click:</label> <input id="opt-button0" type="radio" value="0" name="button" /> <label for="opt-button1">Middle click:</label> <input id="opt-button1" type="radio" value="1" name="button" /></p>
 </div>
 
 <div class="activator_options" id="activator_auto">
 	<p>A small button will appear when some text is selected and <br />you can open the menu by moving the mouse over the button.<p>
 </div>
 
-<div class="activator_options" id="activator_contextmenu">
-	<p>The search engines will be shown in the context menu when you right click on the selected text.</p>
-	<p>This option has som limits. The icons will not be shown and you can only click on one menu item before the menu closes.</p>
-	<p><strong>Open search in background tab:</strong><input type="checkbox" name="background_tab" /></p>
-</div>
+
 
 <div class="activator_options" id="activator_k_and_m">
 
@@ -860,36 +116,122 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	<div id="hotkey_info" style="display: none;">The names that are shown of the keys that are pressed isn't always correct, but it should still work correctly.</div>
 </div>
 
-<h2 class="section-heading">Other Options</h2>
+	<a href="#" id="show-advanced-popup-opts">Advanced Settings</a>
 
-<p>Open search in new tab:<input type="checkbox" name="newtab" /></p>
+	<div id="popup-advanced-options">
+
+	<h4 class="subsection-heading">Styling</h4>
+
+	<p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /></p>
+
+	<h4 class="subsection-heading">Preview</h4>
+
+	<table id="preview-table">
+	<tr>
+		<td><div id="preview"></div></td>
+		<td valign="top"><div id="preview-button"></div></td>
+	</tr>
+	</table>
 
 
-<br />
+	<div id="customize">
+		<div class="clearb"></div>
 
-<h4 class="subsection-heading">Remove Icons:</h4>
-<p class="info">
-On some sites that uses https connection you will get warnings about insecure content when the icons are loaded.
-You can remove the icons if you don't want these warnings.
-</p>
-<p>Always show icons:<input name="remove_icons" type="radio" value="no" /> &nbsp;Always remove icons:<input type="radio" name="remove_icons" value="all" /> &nbsp;Remove icons only on https pages:<input type="radio" name="remove_icons" value="https" /></p>
+		<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.</p>
 
-<div id="use_default_style" style="display: none;">
-<p class="info">If you use a icon only style it will not be very usable when the icons are removed. You can check this to get the default style on https pages</p>
-Use default style on https pages: <input type="checkbox" name="use_default_style" />
+		<pre id="html">
+	&lt;ul id="popup"&gt;
+		&lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+		...
+	&lt;/ul&gt;
+
+	&lt;div id="button"&gt;&lt;/div&gt;
+		</pre>
+
+		<textarea id="style"></textarea>
+		<p class="buttons"><input id="update-preview" type="button" value="Update Preview" /> <input type="button" id="show_html" value="Show HTML" /></p>
+
+
+	</div>
+
+
+	<div class="clearb"></div>
+
+
+	<h4 class="subsection-heading" id="head-remove-icons">Remove Icons:</h4>
+
+	<div class="subsection">
+		<p class="info">
+		On some sites that uses https connection you will get warnings about insecure content when the icons are loaded.
+		You can remove the icons if you don't want these warnings.
+		</p>
+		<p class="section-option"><label for="remove-icons-no">Always show icons:</label><input id="remove-icons-no" name="remove_icons" type="radio" value="no" /> &nbsp;<label for="remove-icons-all">Always remove icons:</label><input id="remove-icons-all" type="radio" name="remove_icons" value="all" /> &nbsp;<label for="remove-icons-https">Remove icons only on https pages:</label><input id="remove-icons-https" type="radio" name="remove_icons" value="https" /></p>
+
+		<div class="subsection" id="use_default_style" style="display: none;">
+		<p class="info">If you use a icon only style it will not be very usable when the icons are removed. You can check this to get the default style on https pages</p>
+		<p class="section-option"><label for="opt-use-default-style">Use default style on https pages:</label> <input id="opt-use-default-style" type="checkbox" name="use_default_style" />
+		</div>
+
+	</div>
+<!-- 	<br /> -->
+	<h4 class="subsection-heading" id="head-show-in-input">Show in inputs and textareas:</h4>
+
+	<div class="subsection">
+		<p class="info">
+		Enable this if you want to be able to select some text in an input or textarea and do a search.
+		To show the popup you first have to select some text and then hold <strong>CTRL</strong> and click inside the input or textarea.
+		When you use the auto activator you click with the left button, with the mouse activator you use the button you have chosen in the options.
+		</p>
+		<p class="section-option"><label for="opt-show-in-inputs">Show in inputs and textareas:</label> <input id="opt-show-in-inputs" type="checkbox" name="show_in_inputs" /></p>
+
+	</div>
+
+	</div>
+
 </div>
 
 
-<br />
-<h4 class="subsection-heading">Show in inputs and textareas:</h4>
-<p class="info">
-Enable this if you want to be able to select some text in an input or textarea and do a search.
-To show the popup you first have to select some text and then hold <strong>CTRL</strong> and click inside the input or textarea.
-When you use the auto activator you click with the left button, with the mouse activator you use the button you have chosen in the options.
-</p>
-<p>Show in inputs and textareas: <input type="checkbox" name="show_in_inputs" /></p>
 
 
+
+
+
+
+
+
+
+
+<h2 class="section-heading">Context Menu</h2>
+<div class="section">
+<select id="contextmenu_option"></select>
+
+<div id="contextmenu_active">
+	<p>The search engines will be shown in the context menu when you right click on the selected text.
+	This option has som limits, the icons will not be shown and you can only click on one menu item before the menu closes.</p>
+	<p class="section-option"><label for="opt-background-tab">Open search in background tab:</label><input id="opt-background-tab" type="checkbox" name="background_tab" /> (only useful if "Open search in new tab" is checked below)</p>
+</div>
+
+</div>
+
+<h2 class="section-heading">Other Options</h2>
+<div class="section">
+<p class="section-option"><label for="opt-newtab">Open search in new tab:</label><input id="opt-newtab" type="checkbox" name="newtab" /></p>
+
+
+
+<p class="section-option"><label for="opt-separate-engines">Separate search engines for Popup and Context Menu:</label><input id="opt-separate-engines" type="checkbox" /> &nbsp;<span id="wrap-edit-separate-engines">[<a href="#" id="edit-separate-engines">edit</a>]</span></p>
+<div id="wrap-separate-engines">
+<table id="separate-engines">
+	<tr>
+		<th></th>
+		<th>Popup</th>
+		<th>Context Menu</th>
+	</tr>
+</table>
+</div>
+
+</div>
 
 <h2 class="section-heading" id="export-import">Export / Import settings: <a href="#" id="export-settings-link">export</a> / <a href="#" id="import-settings-link">import</a></h2>
 
