@@ -22,6 +22,11 @@ var Reorder = new function(){
 	}
 
 
+	this.initElements = function(elms){
+
+		_setBackgrounds(elms);
+	}
+
 	$(document).mouseup(function(){
 
 		if(_clicked_drag){
@@ -46,20 +51,138 @@ var Reorder = new function(){
 			if ((_current_tr.prev().offset().top + _current_tr.prev().height()/2) > e.pageY){
 
 				_moveSeparationTable(_current_tr.index(),  _current_tr.index() - 1);
-				
-				_current_tr.prev().before(_current_tr);
+
+
+				var prev = _current_tr.prev();
+
+
+
+				if(_current_tr.hasClass('menu-folder')){
+
+					
+					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).andSelf().add($('#end-'+_current_tr.attr('id')));
+
+					prev.before(elms);
+
+					var level = prev.data('level');
+
+					var diff = level - _current_tr.data('level');
+
+					elms.each(function(){
+						$(this).data('level', $(this).data('level') + diff);
+					});
+					_current_tr.data('level', level);
+					
+					_setBackgrounds(elms);
+				}
+				else{
+
+					prev.before(_current_tr);
+
+					_current_tr.data('level', prev.data('level'));
+
+					_setBackgrounds(_current_tr);
+				}
 			}
 		}else if(_prev_y < e.pageY && _current_tr.next().length > 0){
 			if ((_current_tr.next().offset().top + _current_tr.next().height()/2) < e.pageY){
 
 
 				_moveSeparationTable(_current_tr.index(), _current_tr.index() + 1);
-				_current_tr.next().after(_current_tr);
+
+
+				if(_current_tr.hasClass('menu-folder')){
+
+					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).andSelf().add($('#end-'+_current_tr.attr('id')));
+
+					var end = $('#end-'+_current_tr.attr('id')).next();
+
+					if(end.length == 0)
+						return;
+					
+					end.after(elms);
+
+					var level = $('#end-'+_current_tr.attr('id')).next().data('level') || 0;
+
+					var diff = level - _current_tr.data('level');
+					
+					elms.each(function(){
+						$(this).data('level', $(this).data('level') + diff);
+					});
+					_current_tr.data('level', level);
+
+
+					_setBackgrounds(elms);
+				}
+				else{
+
+					var next = _current_tr.next();
+					next.after(_current_tr);
+					next = _current_tr.next();
+					_current_tr.data('level', next.data('level') || 0);
+
+					_setBackgrounds(_current_tr);
+				}
 			}
+
 		}
 
 		_prev_y = e.pageY;
 	});
+
+
+	function _setBackgrounds(elms){
+
+		elms.each(function(){
+
+			var el = $(this);
+			var level = el.data('level');
+
+			el.find('td:eq(1)').css('padding-left', (level * 16) + 'px');
+			
+			
+			var backgrounds = [];
+
+			for(var i = level; i >= 0; --i){
+
+				
+				if(i == level){
+
+
+					var bg;
+
+					if(el.hasClass('menu-folder')){
+						backgrounds.push('url("tree-left.png") no-repeat '+((i)*16)+'px 10px');
+
+					}
+
+	
+					if(el.hasClass('menu-folder-end'))
+						bg = 'url("tree-end.png") no-repeat '+((i-1)*16)+'px center';
+					else
+						bg = 'url("tree.png") no-repeat '+((i-1)*16)+'px center';
+					
+				
+					backgrounds.push(bg);
+					
+				}
+				else{
+					backgrounds.push('url("tree-left.png") no-repeat '+((i-1)*16 )+'px center');
+				}
+
+			}
+
+			backgrounds.reverse();
+			el.find('td:eq(1)').css('background', backgrounds.join(','));
+			
+
+			
+		});
+
+		
+	}
+
+	
 
 
 	/* also move the searchengines in the separation table */

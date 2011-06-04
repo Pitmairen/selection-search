@@ -78,12 +78,15 @@ dt{
 #engines{
 	margin-top: 0.5em;
 	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0.1em 0;
 }
+
 #engines th:first-child{
 	width: 1em;
 }
-#engines th:nth-child(2), td:nth-child(2){
-	width: 8em;
+#engines th:nth-child(2), #engines td:nth-child(2){
+	width: 10em;
 }
 #engines th:last-child, #engines tr td:last-child{
 	width: 50px;
@@ -97,6 +100,16 @@ dt{
 	width: 100%;
 	border: 1px solid #D4D4D4;
 }
+
+
+
+.menu-folder-end td:nth-child(2){
+	padding: 0.5em 0;
+}
+
+
+
+
 
 #wrap-separate-engines, #wrap-edit-separate-engines{
 	display: none;

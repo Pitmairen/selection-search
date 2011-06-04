@@ -13,8 +13,9 @@ var CONTEXTMENU_OPTIONS = {
 	'disabled' : 'Disabled',
 	'enabled' :  'Enabled'
 }
+var _G_folder_id_count = 0;
 
-function addNewEngine(name, url, icon_url, post){
+function addNewEngine(name, url, icon_url, post, is_folder){
 
 
 	icon_url = icon_url == undefined ||
@@ -24,9 +25,17 @@ function addNewEngine(name, url, icon_url, post){
 
 	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
 	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name).bind('input', updateSeparateTable)));
-	tr.append($('<td></td>').append($('<input class="url" type="text" />').val(url)));
+
+
+	var _url = $('<input class="url" type="text" />');
+	if(!is_folder)
+		_url.val(url)
+	else
+		_url.val('Folder').attr('disabled', true);
+
+	tr.append($('<td></td>').append(_url));
 	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
-	tr.append($('<td></td>').append($('<input class="post" type="checkbox" />').attr('checked', post)));
+	tr.append($('<td></td>').append($('<input class="post" type="checkbox" />').attr('checked', post).attr('disabled', is_folder)));
 	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>')));
 	tr.find('input.icon_url').focus(function (){
 
@@ -42,24 +51,60 @@ function addNewEngine(name, url, icon_url, post){
 
 	tr.find('a.delete').click(function(){
 
-		$(this).parent().parent().remove();
+		var tr = $(this).parent().parent();
+
+		if(tr.hasClass('menu-folder')){
+
+			var elms = tr.nextUntil('#end-'+tr.attr('id'));
+
+			$('#end-'+tr.attr('id')).remove();
+
+
+			elms.each(function(){$(this).data('level', $(this).data('level')-1);});
+			
+			Reorder.initElements(elms);
+			
+			
+		}
+		
+		tr.remove();
 		return false;
 	});
 
 
 	Reorder.makeMovable(tr);
 
+
 	$('#engines').append(tr);
 
+	tr.data('level', 0);
+
+	if(!is_folder)
+		return;
+
+	tr.addClass('menu-folder');
+
+	var id = 'folder-'+(++_G_folder_id_count);
+	tr.attr('id', id);
+
+	var end = $('<tr id="end-'+id+'" class="menu-folder-end"><td></td><td colspan="5"></td></tr>').data('level', tr.data('level')+1);
+
+
+	Reorder.initElements(tr);
+	Reorder.initElements(end);
+	
+	$('#engines').append(end);
+
+	
 }
 
-function addNewEngineSeparateSelectionTable(name, popup, ctx){
+function addNewEngineSeparateSelectionTable(name, popup, ctx, is_folder){
 	var tr = $('<tr></tr>');
 
 
 	tr.append($('<td></td>').text(name));
-	tr.append($('<td></td>').append($('<input class="hide_in_popup" type="checkbox">').attr('checked', popup)));
-	tr.append($('<td></td>').append($('<input class="hide_in_ctx" type="checkbox">').attr('checked', ctx)));
+	tr.append($('<td></td>').append($('<input class="hide_in_popup" type="checkbox">').attr('checked', !is_folder && popup).attr('disabled', is_folder)));
+	tr.append($('<td></td>').append($('<input class="hide_in_ctx" type="checkbox">').attr('checked', !is_folder && ctx).attr('disabled', is_folder)));
 
 	$('#separate-engines').append(tr);
 }
@@ -102,8 +147,8 @@ $(document).ready(function(){
 			if(i < 3) // add 3 engines for preview
 				popup.addSearchEngine(en);
 
-			addNewEngine(en.name, en.url, en.icon_url, en.post || false);
-			addNewEngineSeparateSelectionTable(en.name, !Boolean(en.hide_in_popup), !Boolean(en.hide_in_ctx));
+			addNewEngine(en.name, en.url, en.icon_url, en.post || false, false);
+			addNewEngineSeparateSelectionTable(en.name, !Boolean(en.hide_in_popup), !Boolean(en.hide_in_ctx), false);
 		}
 
 
@@ -153,12 +198,19 @@ $(document).ready(function(){
 
 	$('#new-engine').click(function(){
 
-		addNewEngine('', '', '', false);
-		addNewEngineSeparateSelectionTable(name, true, true);
+		addNewEngine('', '', '', false, false);
+		addNewEngineSeparateSelectionTable('', true, true, false);
 
 		return false;
 	});
 
+	$('#new-folder').click(function(){
+
+		addNewEngine('New Folder', '', '', false, true);
+		addNewEngineSeparateSelectionTable('New Folder', true, true, true);
+
+		return false;
+	});
 
 	$('#save').click(function(){
 
