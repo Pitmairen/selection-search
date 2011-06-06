@@ -99,23 +99,36 @@ function _create_context_menu(){
 		return chrome.extension.getURL('postsearch.html') + '?url=' + encodeURIComponent(url);
 	}
 
-	var _engine_mapping = {};
 
-	var _engines = Storage.getSearchEngines();
+	function _addEngine(engine, parent){
 
-	var _opts = Storage.getOptions();
-	var _separate_menus = _opts.separate_menus;
 
-	for (i in _engines){
-		var _en = _engines[i];
+		if(engine.is_folder){
 
-		if(_separate_menus && _en.hide_in_ctx)
-			continue;
-		
+			var _mid = chrome.contextMenus.create({
+				'title' : engine.name,
+				'contexts' : ['selection'],
+				'parentId' : parent
+			});
+
+			for (i in engine.engines){
+
+				var _en = engine.engines[i];
+
+				if(_separate_menus && _en.hide_in_ctx)
+					continue;
+
+				_addEngine(_en, _mid);
+			}
+
+			return;
+		}
+
+
 		var _mid = chrome.contextMenus.create({
-			'title' : _en.name,
+			'title' : engine.name,
 			'contexts' : ['selection'],
-			'parentId' : _rootMenu,
+			'parentId' : parent,
 
 			'onclick' : function (info, tab){
 
@@ -146,11 +159,30 @@ function _create_context_menu(){
 
 				}
 			}
-	
+
 
 		});
 
-		_engine_mapping[_mid] = _en;
+		_engine_mapping[_mid] = engine;
+	}
+
+
+
+	var _engine_mapping = {};
+
+	var _engines = Storage.getSearchEngines();
+
+	var _opts = Storage.getOptions();
+	var _separate_menus = _opts.separate_menus;
+
+
+	for (i in _engines){
+		var _en = _engines[i];
+
+		if(_separate_menus && _en.hide_in_ctx)
+			continue;
+
+		_addEngine(_en, _rootMenu);
 	}
 
 	return _rootMenu;
