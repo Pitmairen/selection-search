@@ -267,6 +267,8 @@ function PopUp()
 PopUp.getIconUrlFromEngine = function(engine) {
 	if(engine.icon_url != undefined)
 		return engine.icon_url;
+	else if(engine.is_folder)
+		return chrome.extension.getURL('folder.png');
 	return PopUp.getIconUrl(engine.url);
 }
 PopUp.getIconUrl = function(url) {
