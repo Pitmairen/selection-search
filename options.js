@@ -222,12 +222,13 @@ $(document).ready(function(){
 	$('#save').click(function(){
 
 
-		var new_engines = [];
+		var folder_stack = [{engines:[]}]; // folder stack with the root item
+
 		var sep_engine = $('#separate-engines tr').first();
 		$('#engines tr:gt(0)').each(function(index){
 
 			sep_engine = sep_engine.next();
-			
+
 			var en = {};
 
 			$(this).find('input').each(function(){
@@ -242,19 +243,35 @@ $(document).ready(function(){
 			if(!en.post)
 				delete en.post;
 
-			if(en.name && en.url){
 
-// 				if(en.post && en.url.indexOf('{POSTARGS}') == -1)
-// 					return;
+			if($(this).hasClass('menu-folder')){
+
+				en.is_folder = true;
+				en.engines = [];
+
+				folder_stack[folder_stack.length-1].engines.push(en);
+				folder_stack.push(en);
+
+			}
+			else if($(this).hasClass('menu-folder-end')){
+				folder_stack.pop()
+// 				current_folder = null;
+			}
+			else if(en.name && en.url){
+
 
 				if(!sep_engine.find('.hide_in_popup').is(':checked'))
 					en.hide_in_popup = true;
 				if(!sep_engine.find('.hide_in_ctx').is(':checked'))
 					en.hide_in_ctx = true;
 
-				new_engines.push(en);
+				folder_stack[folder_stack.length-1].engines.push(en);
 			}
 		});
+
+		// When we get here only the root item should vbe left
+		var new_engines = folder_stack[0].engines;
+
 
 
 		var k_and_m_combo = hotkey_editor.getCombo();
