@@ -17,8 +17,16 @@ var _G_folder_id_count = 0;
 var _G_engine_id_count = 0;
 
 
-function addNewEngine(name, url, icon_url, post, is_folder){
+function addNewEngine(en, level){
 
+
+	var name = en.name,
+		url = en.url,
+		icon_url = en.icon_url,
+		post = en.post || false,
+		is_folder = en.is_folder || false;
+
+	level = level || 0;
 
 	icon_url = icon_url == undefined ||
 				icon_url.length == 0 ? '(Use default)' : icon_url;
@@ -79,12 +87,14 @@ function addNewEngine(name, url, icon_url, post, is_folder){
 
 	$('#engines').append(tr);
 
-	tr.data('level', 0);
+	tr.data('level', level);
+
 
 	if(!is_folder){
 
 		tr.attr('id', 'search-engine-'+(++_G_engine_id_count));
 		tr.addClass('search-engine');
+		Reorder.initElements(tr);
 
 		return;
 	}
@@ -94,7 +104,16 @@ function addNewEngine(name, url, icon_url, post, is_folder){
 	var id = 'folder-'+(++_G_folder_id_count);
 	tr.attr('id', id);
 
-	var end = $('<tr id="end-'+id+'" class="menu-folder-end"><td></td><td colspan="5"></td></tr>').data('level', tr.data('level')+1);
+
+	var engines = en.engines || [];
+	
+	for(var i=0,e=engines.length; i<e; ++i){
+		addNewEngine(engines[i], level+1);
+	}
+	
+
+	
+	var end = $('<tr id="end-'+id+'" class="menu-folder-end"><td></td><td colspan="5"></td></tr>').data('level', level+1);
 
 
 	Reorder.initElements(tr);
@@ -154,7 +173,8 @@ $(document).ready(function(){
 			if(i < 3) // add 3 engines for preview
 				popup.addSearchEngine(en);
 
-			addNewEngine(en.name, en.url, en.icon_url, en.post || false, false);
+
+			addNewEngine(en, 0);
 			addNewEngineSeparateSelectionTable(en.name, !Boolean(en.hide_in_popup), !Boolean(en.hide_in_ctx), false);
 		}
 
@@ -205,15 +225,14 @@ $(document).ready(function(){
 
 	$('#new-engine').click(function(){
 
-		addNewEngine('', '', '', false, false);
+		addNewEngine({name:'', url:'', icon_url:''}, 0);
 		addNewEngineSeparateSelectionTable('', true, true, false);
 
 		return false;
 	});
 
 	$('#new-folder').click(function(){
-
-		addNewEngine('New Folder', '', '', false, true);
+		addNewEngine({name:'New Folder', url:'', icon_url:'', is_folder:true}, 0);
 		addNewEngineSeparateSelectionTable('New Folder', true, true, true);
 
 		return false;
