@@ -14,6 +14,8 @@ var CONTEXTMENU_OPTIONS = {
 	'enabled' :  'Enabled'
 }
 var _G_folder_id_count = 0;
+var _G_engine_id_count = 0;
+
 
 function addNewEngine(name, url, icon_url, post, is_folder){
 
@@ -79,8 +81,13 @@ function addNewEngine(name, url, icon_url, post, is_folder){
 
 	tr.data('level', 0);
 
-	if(!is_folder)
+	if(!is_folder){
+
+		tr.attr('id', 'search-engine-'+(++_G_engine_id_count));
+		tr.addClass('search-engine');
+
 		return;
+	}
 
 	tr.addClass('menu-folder');
 
