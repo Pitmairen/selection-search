@@ -290,7 +290,9 @@ function PopUp()
 
 		if(engine.is_folder)
 			return _addFolder(engine, node, level+1);
-
+		if(engine.is_separator)
+			return _addSeparator(engine, node, level);
+		
 		var icon_url = _getIconUrl(engine);
 		if (icon_url == undefined)
 			icon_url = '#';
@@ -354,6 +356,12 @@ function PopUp()
 
 	}
 
+
+	function _addSeparator(engine, node, level){
+
+		node.append($('<li class="engine-separator"></li>'))
+
+	}
 
 	function _showSubmenu(node, parent){
 

@@ -124,6 +124,17 @@ function _create_context_menu(){
 			return;
 		}
 
+		else if(engine.is_separator){
+
+			var _mid = chrome.contextMenus.create({
+				'type' : 'separator',
+				'contexts' : ['selection'],
+				'parentId' : parent
+			});
+
+			return;
+		}
+
 
 		var _mid = chrome.contextMenus.create({
 			'title' : engine.name,
@@ -380,6 +391,11 @@ if(Storage.getOptions().context_menu == 'enabled')
  width: 16px;
  height: 16px;
  font-family: sans-serif;
+}
+#popup .engine-separator{
+ height: 1px;
+ margin: 3px 0;
+ background: #AEAAA7;
 }
 </style>
 

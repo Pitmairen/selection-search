@@ -22,6 +22,10 @@ function addNewEngine(en, level){
 	++_G_engine_id_count;
 
 
+	if(en.is_separator){
+		return _addSeparator(en, level);
+	}
+
 	var name = en.name,
 		url = en.url,
 		icon_url = en.icon_url,
@@ -61,92 +65,7 @@ function addNewEngine(en, level){
 	});
 
 
-	var options_popup = $('<div class="engine-options-popup"></div>');
-
-
-	options_popup.append($('<a href="#" class="close-popup"></a>').click(function(){
-
-			options_popup.fadeOut(100);
-			return false;
-
-		})
-	);
-
-	
-	options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" />');
-
-	options_popup.append('<hr /><p><strong>Show in:</strong></p>');
-
-	options_popup.append('<p><input class="hide_in_ctx" id="engine-opt-ctx-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-ctx-'+_G_engine_id_count+'">Context menu</label></p>');
-	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
-	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
-
-	if(!en.hide_in_popup){
-		options_popup.find('.hide_in_popup').attr('checked', true);
-	}
-	if(!en.hide_in_ctx){
-		options_popup.find('.hide_in_ctx').attr('checked', true);
-	}
-	if(en.post){
-		options_popup.find('.post').attr('checked', true);
-	}
-		
-	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
-
-		function(){
-			$(this).parent().parent().addClass('options-hover');
-		},
-		function(){
-			$(this).parent().parent().removeClass('options-hover');
-		}
-	).click(function(){
-
-		$('.engine-options-popup').not(options_popup).hide();
-	
-		var x = $(this).offset().left - options_popup.outerWidth()-4;
-		var y = $(this).offset().top;
-
-		options_popup.css({top:y+'px', left:x+'px'});
-		options_popup.fadeToggle(100);
-		return false;
-	});
-	
-	tr.append($('<td></td>').append(opt_link).append(options_popup.hide()));
-
-	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>').hover(
-
-		function(){
-			$(this).parent().parent().addClass('options-hover');
-		},
-		function(){
-			$(this).parent().parent().removeClass('options-hover');
-		}
-
-	).click(function(){
-
-		var tr = $(this).parent().parent();
-
-		if(tr.hasClass('menu-folder')){
-
-			var elms = tr.nextUntil('#end-'+tr.attr('id'));
-
-			$('#end-'+tr.attr('id')).remove();
-
-
-			elms.each(function(){$(this).data('level', $(this).data('level')-1);});
-
-			Reorder.initElements(elms);
-
-
-		}
-
-		tr.remove();
-		return false;
-	})
-
-	
-	));
-
+	_addEngineOptions(en, tr);
 
 	Reorder.makeMovable(tr);
 
@@ -191,7 +110,119 @@ function addNewEngine(en, level){
 }
 
 
+function _addSeparator(en, level){
 
+	var tr = $('<tr class="menu-separator"></tr>');
+
+	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
+
+	
+	tr.append('<td colspan="3"><div class="separator-bg"></div></td>').data('level', level);
+
+	_addEngineOptions(en, tr);
+
+	
+	Reorder.initElements(tr);
+	Reorder.makeMovable(tr);
+	$('#engines').append(tr);
+
+
+}
+
+function _addEngineOptions(en, tr){
+
+	
+	var options_popup = $('<div class="engine-options-popup"></div>');
+
+
+	options_popup.append($('<a href="#" class="close-popup"></a>').click(function(){
+
+			options_popup.fadeOut(100);
+			return false;
+
+		})
+	);
+
+
+	options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" />');
+
+	options_popup.append('<hr /><p><strong>Show in:</strong></p>');
+
+	options_popup.append('<p><input class="hide_in_ctx" id="engine-opt-ctx-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-ctx-'+_G_engine_id_count+'">Context menu</label></p>');
+	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
+	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
+
+	if(!en.hide_in_popup){
+		options_popup.find('.hide_in_popup').attr('checked', true);
+	}
+	if(!en.hide_in_ctx){
+		options_popup.find('.hide_in_ctx').attr('checked', true);
+	}
+	if(en.post){
+		options_popup.find('.post').attr('checked', true);
+	}
+
+	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
+
+		function(){
+			$(this).parent().parent().addClass('options-hover');
+		},
+		function(){
+			$(this).parent().parent().removeClass('options-hover');
+		}
+	).click(function(){
+
+		$('.engine-options-popup').not(options_popup).hide();
+
+		var x = $(this).offset().left - options_popup.outerWidth()-4;
+		var y = $(this).offset().top;
+
+		options_popup.css({top:y+'px', left:x+'px'});
+		options_popup.fadeToggle(100);
+		return false;
+	});
+
+	tr.append($('<td class="engine-options"></td>').append(opt_link).append(options_popup.hide()));
+
+
+
+
+	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>').hover(
+
+		function(){
+			$(this).parent().parent().addClass('options-hover');
+		},
+		function(){
+			$(this).parent().parent().removeClass('options-hover');
+		}
+
+	).click(function(){
+
+		var tr = $(this).parent().parent();
+
+		if(tr.hasClass('menu-folder')){
+
+			var elms = tr.nextUntil('#end-'+tr.attr('id'));
+
+			$('#end-'+tr.attr('id')).remove();
+
+
+			elms.each(function(){$(this).data('level', $(this).data('level')-1);});
+
+			Reorder.initElements(elms);
+
+
+		}
+
+		tr.remove();
+		return false;
+	})
+
+
+	));
+
+	
+}
 
 $(document).ready(function(){
 
@@ -283,7 +314,14 @@ $(document).ready(function(){
 
 		return false;
 	});
+	
+	$('#new-separator').click(function(){
+		addNewEngine({is_separator:true}, 0);
 
+		return false;
+	});
+
+	
 	$('#save').click(function(){
 
 
@@ -325,6 +363,11 @@ $(document).ready(function(){
 				folder_stack[folder_stack.length-1].engines.push(en);
 				folder_stack.push(en);
 
+			}
+			else if($(this).hasClass('menu-separator')){
+				en.is_separator = true;
+
+				folder_stack[folder_stack.length-1].engines.push(en);
 			}
 			else if($(this).hasClass('menu-folder-end')){
 				folder_stack.pop()

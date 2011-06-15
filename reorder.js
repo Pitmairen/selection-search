@@ -132,8 +132,7 @@ var Reorder = new function(){
 			var level = el.data('level');
 
 			el.find('td:eq(1)').css('padding-left', (level * 16) + 'px');
-			
-			
+
 			var backgrounds = [];
 
 			for(var i = level; i >= 0; --i){

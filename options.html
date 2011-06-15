@@ -54,7 +54,7 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 		<th>Delete</th>
 	</tr>
 </table>
-<p class="buttons"><input type="button" value="Add New Search Engine"  id="new-engine" /> <input type="button" value="Add New Folder"  id="new-folder" /></p>
+<p class="buttons"><input type="button" value="Add New Search Engine"  id="new-engine" /> <input type="button" value="Add New Folder"  id="new-folder" /> <input type="button" value="Add New Separator"  id="new-separator" /></p>
 
 
 <h2 class="section-heading">Find Search Engines</h2>
@@ -144,6 +144,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	&lt;ul id="popup"&gt;
 		&lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
 		&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="engine-separator"&gt;&lt;/li&gt;
 		...
 	&lt;/ul&gt;
 
@@ -301,6 +302,9 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 #popup #popup{
  white-space:nowrap;
 }
+#popup .engine-separator{
+ width: 1px; height: 20px; margin: 0 3px; padding: 0; vertical-align: middle;
+}
 /*CONFIG_START{"submenu_position":"topright","submenu_corner":"bottomleft"}CONFIG_END*/
 </textarea>
 
@@ -400,6 +404,9 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 }
 #popup #popup{
  white-space:nowrap;
+}
+#popup .engine-separator{
+ width: 1px; height: 20px; margin: 0 3px; padding: 0; vertical-align: middle;
 }
 /*CONFIG_START{"submenu_position":"topright","submenu_corner":"bottomleft"}CONFIG_END*/
 </textarea>

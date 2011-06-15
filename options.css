@@ -97,7 +97,7 @@ hr{
 	width: 25px;
 	text-align: center;
 }
-#engines th:nth-child(5), #engines td:nth-child(5){
+#engines th:nth-child(5), #engines td.engine-options{
 	width: 35px;
 	text-align: center;
 }
@@ -110,6 +110,16 @@ hr{
 .menu-folder-end td:nth-child(2){
 	padding: 0.5em 0;
 }
+
+.menu-separator{
+	height: 26px;
+}
+.separator-bg{
+	height: 3px;
+	margin-top: 1px;
+	background: #808080;
+}
+
 
 
 
