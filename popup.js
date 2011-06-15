@@ -264,7 +264,7 @@ function PopUp()
 
 		node.append(
 
-			$('<li></li>').css('position', 'relative').append(a).append(_folderNode).mouseleave(function(e){
+			$('<li class="engine-submenu"></li>').css('position', 'relative').append(a).append(_folderNode).mouseleave(function(e){
 
 
 				if(timer_id){
