@@ -226,9 +226,10 @@ function PopUp()
 
 
 		var timer_id = null;
+		var hide_id = null;
+		var is_visible = false; // This is used to prevent flickering when going from submenu back to the a
 
 		a.mouseenter(function(e){
-
 
 			var that = this;
 
@@ -240,6 +241,11 @@ function PopUp()
 			timer_id = setTimeout(function(){
 
 				timer_id = null;
+
+				if(is_visible)
+					return;
+
+				is_visible = true;
 				_showSubmenu(_folderNode, that);
 
 			}, 150);
@@ -254,7 +260,7 @@ function PopUp()
 		});
 
 
-		var hide_id = null;
+		
 
 		node.append(
 
@@ -269,6 +275,7 @@ function PopUp()
 				var that = this;
 				hide_id = setTimeout(function(){
 					hide_id = null;
+					is_visible = false;
 					$(that).find('ul').fadeOut(200);
 				}, 200);
 
