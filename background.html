@@ -103,7 +103,7 @@ function _create_context_menu(){
 	function _addEngine(engine, parent){
 
 
-		if(engine.is_folder){
+		if(engine.is_submenu){
 
 			var _mid = chrome.contextMenus.create({
 				'title' : engine.name,

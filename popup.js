@@ -288,7 +288,7 @@ function PopUp()
 
 	function _addSearchEngine(engine, node, level){
 
-		if(engine.is_folder)
+		if(engine.is_submenu)
 			return _addFolder(engine, node, level+1);
 		if(engine.is_separator)
 			return _addSeparator(engine, node, level);
@@ -382,7 +382,7 @@ function PopUp()
 PopUp.getIconUrlFromEngine = function(engine) {
 	if(engine.icon_url != undefined)
 		return engine.icon_url;
-	else if(engine.is_folder)
+	else if(engine.is_submenu)
 		return chrome.extension.getURL('folder.png');
 	return PopUp.getIconUrl(engine.url);
 }

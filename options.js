@@ -30,7 +30,7 @@ function addNewEngine(en, level){
 		url = en.url,
 		icon_url = en.icon_url,
 		post = en.post || false,
-		is_folder = en.is_folder || false;
+		is_folder = en.is_submenu || false;
 
 	level = level || 0;
 
@@ -47,7 +47,7 @@ function addNewEngine(en, level){
 	if(!is_folder)
 		_url.val(url)
 	else
-		_url.val('Folder').attr('disabled', true);
+		_url.val('Submenu').attr('disabled', true);
 
 	tr.append($('<td></td>').append(_url));
 	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
@@ -144,7 +144,7 @@ function _addEngineOptions(en, tr){
 	);
 
 
-	if(!en.is_folder && !en.is_separator)
+	if(!en.is_submenu && !en.is_separator)
 		options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" /><hr />');
 
 	options_popup.append('<p><strong>Show in:</strong></p>');
@@ -311,7 +311,7 @@ $(document).ready(function(){
 	});
 
 	$('#new-folder').click(function(){
-		addNewEngine({name:'New Folder', url:'', icon_url:'', is_folder:true}, 0);
+		addNewEngine({name:'New Submenu', url:'', icon_url:'', is_submenu:true}, 0);
 
 		return false;
 	});
@@ -358,7 +358,7 @@ $(document).ready(function(){
 
 			if($(this).hasClass('menu-folder')){
 
-				en.is_folder = true;
+				en.is_submenu = true;
 				en.engines = [];
 
 				folder_stack[folder_stack.length-1].engines.push(en);
