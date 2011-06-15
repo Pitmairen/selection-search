@@ -41,7 +41,6 @@ function PopUp()
 	var _activator;
 
 
-
 	var _urlVariables = [
 // 		[/%PAGE_HOSTNAME/g,  encodeURIComponent(location.hostname)],
 		[/%PAGE_HOST/g, encodeURIComponent(location.host)],
@@ -74,118 +73,40 @@ function PopUp()
 		if(_buttonActive)
 			_that.hideButton();
 
-		var wwidth =  $(window).width() - 5;
-		var wheight = $(window).height() - 5;
+		var pos = Common.calculateWindowPosition(_popupNode, x, y);
 
-		if (x - window.pageXOffset + _popupNode.outerWidth() > wwidth)
-			x -= (x - window.pageXOffset + _popupNode.outerWidth()) - wwidth;
-		else if(x - window.pageXOffset < 5)
-			x = window.pageXOffset + 5;
-	
-		if (y - window.pageYOffset + _popupNode.outerHeight() > wheight)
-			y -= (y - window.pageYOffset + _popupNode.outerHeight()) - wheight;
-		else if(y - window.pageYOffset < 5)
-			y = window.pageYOffset + 5
-
-		_popupNode.css({'top': y + 'px', 'left': x + 'px'});
-		_popupNode.show(200);
+		_popupNode.css({'top': pos.y + 'px', 'left': pos.x + 'px'});
+		_popupNode.fadeIn(200);
 		_active = true;
 
 
 	}
 
+	
 	this.showButton = function(x, y){
 
-		var wwidth =  $(window).width() - 5;
-		var wheight = $(window).height() - 5;
+		var pos = Common.calculateWindowPosition(_buttonNode, x, y);
 
-		if (x - window.pageXOffset + _buttonNode.outerWidth() > wwidth)
-			x -= (x - window.pageXOffset + _buttonNode.outerWidth()) - wwidth;
-		else if(x - window.pageXOffset < 5)
-			x = window.pageXOffset + 5;
-
-		if (y - window.pageYOffset + _buttonNode.outerHeight() > wheight)
-			y -= (y - window.pageYOffset + _buttonNode.outerHeight()) - wheight;
-		else if(y - window.pageYOffset < 5)
-			y = window.pageYOffset + 5
-
-		_buttonNode.css({'top': y + 'px', 'left': x + 'px'});
-		_buttonNode.show(100);
+		_buttonNode.css({'top': pos.y + 'px', 'left': pos.x + 'px'});
+		_buttonNode.fadeIn(100);
 
 		_buttonActive = true;
 	}
 
 	this.hide = function (){
-		_popupNode.hide(200);
+
+		_popupNode.fadeOut(200);
 		_active = false;
 	}
 
 	this.hideButton = function(){
-		_buttonNode.hide(100);
+		_buttonNode.fadeOut(100);
 		_buttonActive = false;
 	}
 
 	this.addSearchEngine = function(engine){
 
-		var icon_url = _getIconUrl(engine);
-		if (icon_url == undefined)
-			icon_url = '#';
-
-		var a = $('<a href="#"></a>');
-
-		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
-			a.append($('<img class="engine-img" />').attr('src', icon_url));
-
-		a.append(
-				$('<span class="engine-name"></span').text(engine.name)
-			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
-
-				var search_url = $(this).data('search_url');
-				for(var i=0; i<_urlVariables.length; ++i){
-					search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
-				}
-	
-				//If its a post url we encode only the part before {POSTARGS}
-				if($(this).data('engine-post')){
-					var parts = search_url.split('{POSTARGS}', 2);
-					if(parts.length == 2){
-						var url = parts[0].replace(/%s/g, encodeURIComponent(_lastSelection));
-						url += '{POSTARGS}' + parts[1].replace(/%s/g, _lastSelection);
-					}else{
-						var url = search_url.replace(/%s/g, encodeURIComponent(_lastSelection));
-					}
-
-					url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
-				}
-				else{
-
-					var placeholder = search_url;
-
-
-					// Special case for only "%s" engine
-					// to allow opening of selected urls
-					var sel = '';
-					if(placeholder == '%s'){
-						if(!_lastSelection.match(/^(https?|ftp):\/\//))
-							sel = 'http://' + _lastSelection;
-						else
-							sel = _lastSelection;
-					}
-					else
-						sel = encodeURIComponent(_lastSelection);
-			
-
-					var url = search_url.replace(/%s/g, sel);
-				}
-
-				$(this).attr('href', url);
-			})
-
-		if(_that.options.newtab){
-			a.attr('target', '_blank');
-		}
-		
-		_popupNode.append($('<li></li>').append(a));
+		_addSearchEngine(engine, _popupNode, 0);
 
 	}
 
@@ -261,6 +182,185 @@ function PopUp()
 		return PopUp.getIconUrlFromEngine(engine);
 
 	}
+
+	function _addFolder(engine, node, level){
+
+		var icon_url = _getIconUrl(engine);
+		if (icon_url == undefined)
+			icon_url = '#';
+
+		var a = $('<a href="#"></a>');
+
+		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
+			a.append($('<img class="engine-img" />').attr('src', icon_url));
+
+		a.append(
+				$('<span class="engine-name"></span').text(engine.name)
+			).attr('title', engine.name);
+
+
+
+		var _folderId = Common.getId('popup');
+
+		var _folderNode = $('<ul></ul>');
+		_folderNode.append($('<li></li>').hide());
+
+		_folderNode.attr('id', _folderId).attr('class', Common.getCommonClass());
+		_folderNode.css({
+			'position': 'absolute',
+			'display': 'none',
+			'zIndex' :  9999999 + level,
+		});
+
+
+		for(var i in engine.engines){
+			_addSearchEngine(engine.engines[i], _folderNode, level+1);
+		}
+
+
+		var timer_id = null;
+
+		a.mouseenter(function(e){
+
+
+			var that = this;
+
+			if(timer_id){
+				clearTimeout(timer_id);
+				timer_id= null;
+			}
+
+			timer_id = setTimeout(function(){
+
+				timer_id = null;
+				_showSubmenu(_folderNode, that);
+
+			}, 150);
+
+		});
+
+
+
+		a.click(function(e){
+
+			return false;
+		});
+
+
+		var hide_id = null;
+
+		node.append(
+
+			$('<li></li>').css('position', 'relative').append(a).append(_folderNode).mouseleave(function(e){
+
+
+				if(timer_id){
+					clearTimeout(timer_id);
+					timer_id = null;
+				}
+
+				var that = this;
+				hide_id = setTimeout(function(){
+					hide_id = null;
+					$(that).find('ul').fadeOut(200);
+				}, 200);
+
+
+			}).mouseenter(function(e){
+
+				if(hide_id){
+					clearTimeout(hide_id);
+					hide_id = null;
+				}
+
+			})
+		);
+	}
+
+
+
+	function _addSearchEngine(engine, node, level){
+
+		if(engine.is_folder)
+			return _addFolder(engine, node, level+1);
+
+		var icon_url = _getIconUrl(engine);
+		if (icon_url == undefined)
+			icon_url = '#';
+
+		var a = $('<a href="#"></a>');
+
+		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
+			a.append($('<img class="engine-img" />').attr('src', icon_url));
+
+		a.append(
+				$('<span class="engine-name"></span').text(engine.name)
+			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
+
+
+				var search_url = $(this).data('search_url');
+				for(var i=0; i<_urlVariables.length; ++i){
+					search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
+				}
+
+				//If its a post url we encode only the part before {POSTARGS}
+				if($(this).data('engine-post')){
+					var parts = search_url.split('{POSTARGS}', 2);
+					if(parts.length == 2){
+						var url = parts[0].replace(/%s/g, encodeURIComponent(_lastSelection));
+						url += '{POSTARGS}' + parts[1].replace(/%s/g, _lastSelection);
+					}else{
+						var url = search_url.replace(/%s/g, encodeURIComponent(_lastSelection));
+					}
+
+					url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
+				}
+				else{
+
+					var placeholder = search_url;
+
+
+					// Special case for only "%s" engine
+					// to allow opening of selected urls
+					var sel = '';
+					if(placeholder == '%s'){
+						if(!_lastSelection.match(/^(https?|ftp):\/\//))
+							sel = 'http://' + _lastSelection;
+						else
+							sel = _lastSelection;
+					}
+					else
+						sel = encodeURIComponent(_lastSelection);
+
+
+					var url = search_url.replace(/%s/g, sel);
+				}
+
+				$(this).attr('href', url);
+			})
+
+		if(_that.options.newtab){
+			a.attr('target', '_blank');
+		}
+
+		node.append($('<li></li>').append(a));
+
+	}
+
+
+	function _showSubmenu(node, parent){
+
+
+		var pos = Common.calculateSubmenuPosition(node, $(parent));
+
+
+		node.css({'top': pos.y + 'px', 'left': pos.x + 'px'});
+
+		node.fadeIn(200);
+	}
+
+
+
 
 }
 
