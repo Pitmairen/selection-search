@@ -19,6 +19,8 @@ var _G_engine_id_count = 0;
 
 function addNewEngine(en, level){
 
+	++_G_engine_id_count;
+
 
 	var name = en.name,
 		url = en.url,
@@ -34,7 +36,7 @@ function addNewEngine(en, level){
 	var tr = $('<tr></tr>');
 
 	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
-	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name).bind('input', updateSeparateTable)));
+	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
 
 
 	var _url = $('<input class="url" type="text" />');
@@ -45,8 +47,7 @@ function addNewEngine(en, level){
 
 	tr.append($('<td></td>').append(_url));
 	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
-	tr.append($('<td></td>').append($('<input class="post" type="checkbox" />').attr('checked', post).attr('disabled', is_folder)));
-	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>')));
+
 	tr.find('input.icon_url').focus(function (){
 
 		if ($(this).val() == '(Use default)')
@@ -59,7 +60,69 @@ function addNewEngine(en, level){
 
 	});
 
-	tr.find('a.delete').click(function(){
+
+	var options_popup = $('<div class="engine-options-popup"></div>');
+
+
+	options_popup.append($('<a href="#" class="close-popup"></a>').click(function(){
+
+			options_popup.fadeOut(100);
+			return false;
+
+		})
+	);
+
+	
+	options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" />');
+
+	options_popup.append('<hr /><p><strong>Show in:</strong></p>');
+
+	options_popup.append('<p><input class="hide_in_ctx" id="engine-opt-ctx-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-ctx-'+_G_engine_id_count+'">Context menu</label></p>');
+	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
+	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
+
+	if(en.hide_in_popup){
+		options_popup.find('.hide_in_popup').attr('checked', true);
+	}
+	if(en.hide_in_ctx){
+		options_popup.find('.hide_in_ctx').attr('checked', true);
+	}
+	if(en.post){
+		options_popup.find('.post').attr('checked', true);
+	}
+		
+	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
+
+		function(){
+			$(this).parent().parent().addClass('options-hover');
+		},
+		function(){
+			$(this).parent().parent().removeClass('options-hover');
+		}
+	).click(function(){
+
+		$('.engine-options-popup').not(options_popup).hide();
+	
+		var x = $(this).offset().left - options_popup.outerWidth()-4;
+		var y = $(this).offset().top;
+
+		options_popup.css({top:y+'px', left:x+'px'});
+		options_popup.fadeToggle(100);
+		return false;
+	});
+	
+	tr.append($('<td></td>').append(opt_link).append(options_popup.hide()));
+
+	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>').hover(
+
+		function(){
+			$(this).parent().parent().addClass('options-hover');
+		},
+		function(){
+			$(this).parent().parent().removeClass('options-hover');
+		}
+
+	).click(function(){
 
 		var tr = $(this).parent().parent();
 
@@ -71,15 +134,18 @@ function addNewEngine(en, level){
 
 
 			elms.each(function(){$(this).data('level', $(this).data('level')-1);});
-			
+
 			Reorder.initElements(elms);
-			
-			
+
+
 		}
-		
+
 		tr.remove();
 		return false;
-	});
+	})
+
+	
+	));
 
 
 	Reorder.makeMovable(tr);
@@ -92,7 +158,7 @@ function addNewEngine(en, level){
 
 	if(!is_folder){
 
-		tr.attr('id', 'search-engine-'+(++_G_engine_id_count));
+		tr.attr('id', 'search-engine-'+(_G_engine_id_count));
 		tr.addClass('search-engine');
 		Reorder.initElements(tr);
 
@@ -124,30 +190,13 @@ function addNewEngine(en, level){
 	
 }
 
-function addNewEngineSeparateSelectionTable(name, popup, ctx, is_folder){
-	var tr = $('<tr></tr>');
 
-
-	tr.append($('<td></td>').text(name));
-	tr.append($('<td></td>').append($('<input class="hide_in_popup" type="checkbox">').attr('checked', !is_folder && popup).attr('disabled', is_folder)));
-	tr.append($('<td></td>').append($('<input class="hide_in_ctx" type="checkbox">').attr('checked', !is_folder && ctx).attr('disabled', is_folder)));
-
-	$('#separate-engines').append(tr);
-}
-
-function updateSeparateTable(){
-
-	var index = $(this).parents('tr').index();
-
-	$('#separate-engines tr').eq(index).find('td').first().text($(this).val());
-	
-}
 
 
 $(document).ready(function(){
 
 	Common.init();
-
+	
 	var popup = new PopUp();
 
 
@@ -175,7 +224,6 @@ $(document).ready(function(){
 
 
 			addNewEngine(en, 0);
-			addNewEngineSeparateSelectionTable(en.name, !Boolean(en.hide_in_popup), !Boolean(en.hide_in_ctx), false);
 		}
 
 
@@ -226,14 +274,12 @@ $(document).ready(function(){
 	$('#new-engine').click(function(){
 
 		addNewEngine({name:'', url:'', icon_url:''}, 0);
-		addNewEngineSeparateSelectionTable('', true, true, false);
 
 		return false;
 	});
 
 	$('#new-folder').click(function(){
 		addNewEngine({name:'New Folder', url:'', icon_url:'', is_folder:true}, 0);
-		addNewEngineSeparateSelectionTable('New Folder', true, true, true);
 
 		return false;
 	});
@@ -243,16 +289,13 @@ $(document).ready(function(){
 
 		var folder_stack = [{engines:[]}]; // folder stack with the root item
 
-		var sep_engine = $('#separate-engines tr').first();
 		$('#engines tr:gt(0)').each(function(index){
-
-			sep_engine = sep_engine.next();
 
 			var en = {};
 
 			$(this).find('input').each(function(){
-				if ($(this).attr('class') == 'post')
-					en[$(this).attr('class')] = $(this).attr('checked');
+				if ($(this).attr('type') == 'checkbox')
+					en[$(this).attr('class')] = $(this).is(':checked');
 				else
 					en[$(this).attr('class')] = $(this).val();
 			});
@@ -261,6 +304,10 @@ $(document).ready(function(){
 				delete en.icon_url;
 			if(!en.post)
 				delete en.post;
+			if(!en.hide_in_popup)
+				delete en.hide_in_popup;
+			if(!en.hide_in_ctx)
+				delete en.hide_in_ctx;
 
 
 			if($(this).hasClass('menu-folder')){
@@ -277,12 +324,6 @@ $(document).ready(function(){
 // 				current_folder = null;
 			}
 			else if(en.name && en.url){
-
-
-				if(!sep_engine.find('.hide_in_popup').is(':checked'))
-					en.hide_in_popup = true;
-				if(!sep_engine.find('.hide_in_ctx').is(':checked'))
-					en.hide_in_ctx = true;
 
 				folder_stack[folder_stack.length-1].engines.push(en);
 			}
@@ -449,16 +490,8 @@ $(document).ready(function(){
 
 		$('#wrap-edit-separate-engines').toggle($(this).is(':checked'));
 
-		if(!$(this).is(':checked'))
-			$('#wrap-separate-engines').slideUp();
-		
 	});
 
-	$('#edit-separate-engines').click(function(){
-
-		$('#wrap-separate-engines').slideToggle();
-		return false;
-	});
 	
 
 	function _load_export(){
