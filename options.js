@@ -144,9 +144,10 @@ function _addEngineOptions(en, tr){
 	);
 
 
-	options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" />');
+	if(!en.is_folder && !en.is_separator)
+		options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" /><hr />');
 
-	options_popup.append('<hr /><p><strong>Show in:</strong></p>');
+	options_popup.append('<p><strong>Show in:</strong></p>');
 
 	options_popup.append('<p><input class="hide_in_ctx" id="engine-opt-ctx-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-ctx-'+_G_engine_id_count+'">Context menu</label></p>');
 	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
