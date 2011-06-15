@@ -81,10 +81,10 @@ function addNewEngine(en, level){
 	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
 	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
 
-	if(en.hide_in_popup){
+	if(!en.hide_in_popup){
 		options_popup.find('.hide_in_popup').attr('checked', true);
 	}
-	if(en.hide_in_ctx){
+	if(!en.hide_in_ctx){
 		options_popup.find('.hide_in_ctx').attr('checked', true);
 	}
 	if(en.post){
@@ -304,10 +304,17 @@ $(document).ready(function(){
 				delete en.icon_url;
 			if(!en.post)
 				delete en.post;
-			if(!en.hide_in_popup)
+
+
+			if(en.hide_in_popup)
 				delete en.hide_in_popup;
-			if(!en.hide_in_ctx)
+			else
+				en.hide_in_popup = true;
+		
+			if(en.hide_in_ctx)
 				delete en.hide_in_ctx;
+			else
+				en.hide_in_ctx = true;
 
 
 			if($(this).hasClass('menu-folder')){

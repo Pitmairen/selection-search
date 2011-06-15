@@ -212,9 +212,16 @@ function PopUp()
 			'zIndex' :  9999999 + level,
 		});
 
-
+		var separate_menus = _that.options.separate_menus;
 		for(var i in engine.engines){
+
+
+			if(separate_menus && engine.engines[i].hide_in_popup)
+				continue;
+			
 			_addSearchEngine(engine.engines[i], _folderNode, level+1);
+
+			
 		}
 
 
