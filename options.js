@@ -625,6 +625,8 @@ $(document).ready(function(){
 
 		alert('Settings has been imported.\n\n' + msg.join('\n'));
 
+		chrome.extension.sendRequest({action:"optionsChanged"});
+		
 		location.reload();
 
 	}
