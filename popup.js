@@ -256,6 +256,37 @@ function PopUp()
 
 		a.click(function(e){
 
+			if(!engine.openall)
+				return false;
+
+
+			function get_all_links(en, urls){
+	
+				for(var i in en.engines){
+
+					var e = en.engines[i];
+
+					if(separate_menus && e.hide_in_popup)
+						continue;
+
+					
+					if(e.is_submenu){
+						urls = get_all_links(e, urls);
+					}else{
+						urls.push(_createSearchUrl(e.url, _lastSelection, e.post));
+					}
+				}
+
+				return urls;
+
+			}
+
+			
+			var urls_to_open = get_all_links(engine, []);
+// 			console.log(urls_to_open);
+
+			chrome.extension.sendRequest({action:'openUrls', urls:urls_to_open});
+
 			return false;
 		});
 
@@ -314,43 +345,7 @@ function PopUp()
 			).attr('title', engine.name).data('search_url', engine.url).data('engine-post', engine.post || false).mouseenter(function(){
 
 
-				var search_url = $(this).data('search_url');
-				for(var i=0; i<_urlVariables.length; ++i){
-					search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
-				}
-
-				//If its a post url we encode only the part before {POSTARGS}
-				if($(this).data('engine-post')){
-					var parts = search_url.split('{POSTARGS}', 2);
-					if(parts.length == 2){
-						var url = parts[0].replace(/%s/g, encodeURIComponent(_lastSelection));
-						url += '{POSTARGS}' + parts[1].replace(/%s/g, _lastSelection);
-					}else{
-						var url = search_url.replace(/%s/g, encodeURIComponent(_lastSelection));
-					}
-
-					url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
-				}
-				else{
-
-					var placeholder = search_url;
-
-
-					// Special case for only "%s" engine
-					// to allow opening of selected urls
-					var sel = '';
-					if(placeholder == '%s'){
-						if(!_lastSelection.match(/^(https?|ftp):\/\//))
-							sel = 'http://' + _lastSelection;
-						else
-							sel = _lastSelection;
-					}
-					else
-						sel = encodeURIComponent(_lastSelection);
-
-
-					var url = search_url.replace(/%s/g, sel);
-				}
+				var url = _createSearchUrl($(this).data('search_url'), _lastSelection, $(this).data('engine-post'));
 
 				$(this).attr('href', url);
 			})
@@ -382,6 +377,51 @@ function PopUp()
 	}
 
 
+
+	function _createSearchUrl(search_url, selection, is_post){
+
+
+		for(var i=0; i<_urlVariables.length; ++i){
+			search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
+		}
+		var url = '';
+		//If its a post url we encode only the part before {POSTARGS}
+		if(is_post){
+			var parts = search_url.split('{POSTARGS}', 2);
+			if(parts.length == 2){
+				url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+				url += '{POSTARGS}' + parts[1].replace(/%s/g, selection);
+			}else{
+				url = search_url.replace(/%s/g, encodeURIComponent(selection));
+			}
+
+			url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
+		}
+		else{
+
+			var placeholder = search_url;
+
+
+			// Special case for only "%s" engine
+			// to allow opening of selected urls
+			var sel = '';
+			if(placeholder == '%s'){
+				if(!selection.match(/^(https?|ftp):\/\//))
+					sel = 'http://' + selection;
+				else
+					sel = selection;
+			}
+			else
+				sel = encodeURIComponent(selection);
+
+
+			url = search_url.replace(/%s/g, sel);
+		}
+
+
+		return url;
+
+	}
 
 
 }

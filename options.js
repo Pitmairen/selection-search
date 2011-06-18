@@ -153,6 +153,18 @@ function _addEngineOptions(en, tr){
 	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
 	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
 
+
+	if(en.is_submenu){
+
+		options_popup.append('<hr /><input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" /><label for="engine-opt-openall-'+_G_engine_id_count+'">Open all on click</label>');
+		options_popup.append('<p class="separate-menus-msg">When this is checked all search engines in this submenu will be opened at once.</p>');
+
+		if(en.openall){
+			options_popup.find('.openall').attr('checked', true);
+		}
+	}
+
+
 	if(!en.hide_in_popup){
 		options_popup.find('.hide_in_popup').attr('checked', true);
 	}
@@ -358,6 +370,9 @@ $(document).ready(function(){
 
 			if($(this).hasClass('menu-folder')){
 
+				if(!en.openall)
+					delete en.openall;
+				
 				en.is_submenu = true;
 				en.engines = [];
 

@@ -36,6 +36,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 		return;
 	}
 
+	else if(request.action == 'openUrls'){
+
+		_openAllUrls(request.urls);
+
+		sendResponse({});
+		return;
+	}
+
 
 	resp = {}
 
@@ -52,6 +60,18 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 });
 
 
+
+function _openAllUrls(urls){
+
+	var opt = Storage.getOptions();
+
+	for(var i=0; i<urls.length; ++i){
+		chrome.tabs.create({
+			'url' : urls[i],
+			'selected' : !opt.background_tab,
+		});
+	}
+}
 
 function _update_context_menu(){
 	_remove_context_menu();
@@ -99,6 +119,14 @@ function _create_context_menu(){
 		return chrome.extension.getURL('postsearch.html') + '?url=' + encodeURIComponent(url);
 	}
 
+	function _createSearchUrl(en, selection){
+
+		if(en.post)
+			return _getPostUrl(en.url, selection);
+		else
+			return _getUrl(en.url, selection);
+	}
+
 
 	function _addEngine(engine, parent){
 
@@ -110,6 +138,43 @@ function _create_context_menu(){
 				'contexts' : ['selection'],
 				'parentId' : parent
 			});
+
+			if(engine.openall){
+
+
+				chrome.contextMenus.create({
+					'title' : 'Open all',
+					'contexts' : ['selection'],
+					'parentId' : _mid,
+
+					'onclick' : function (info, tab){
+
+						function get_all_links(en, urls){
+
+							for(var i in en.engines){
+
+								var e = en.engines[i];
+								if(_separate_menus && e.hide_in_ctx)
+									continue;
+								if(e.is_submenu){
+									urls = get_all_links(e, urls);
+								}else{
+									urls.push(_createSearchUrl(e, info.selectionText));
+								}
+							}
+							return urls;
+						}
+
+						_openAllUrls(get_all_links(engine, []));
+					}
+				});
+				chrome.contextMenus.create({
+					'type' : 'separator',
+					'contexts' : ['selection'],
+					'parentId' : _mid
+				});
+			}
+
 
 			for (i in engine.engines){
 
