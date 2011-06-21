@@ -156,11 +156,27 @@ function _addEngineOptions(en, tr){
 
 	if(en.is_submenu){
 
-		options_popup.append('<hr /><input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" /><label for="engine-opt-openall-'+_G_engine_id_count+'">Open all on click</label>');
-		options_popup.append('<p class="separate-menus-msg">When this is checked all search engines in this submenu will be opened at once.</p>');
+		var hide_menu = $('<input class="hidemenu" id="engine-opt-hidemenu-'+_G_engine_id_count+'" type="checkbox" />');
+		
+		var hide_menu_wrap = $('<div></div>').append(hide_menu);
+		hide_menu_wrap.append('<label for="engine-opt-hidemenu-'+_G_engine_id_count+'">Don\'t show menu</label>').append('<p class="separate-menus-msg">When this is checked the submenu will not open on mouse over. It will just open all searches inside on click.</p>');
+		
+
+		var open_all = $('<input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" />').change(function(){
+
+			hide_menu_wrap.toggle($(this).is(':checked'));
+		});
+
+		
+		options_popup.append('<hr />').append(open_all).append('<label for="engine-opt-openall-'+_G_engine_id_count+'">Open all on click</label>');
+		options_popup.append('<p class="separate-menus-msg" style="margin-bottom: 0.8em;">When this is checked all search engines in this submenu will be opened at once.</p>');
+		options_popup.append(hide_menu_wrap.hide());
+
 
 		if(en.openall){
-			options_popup.find('.openall').attr('checked', true);
+			open_all.attr('checked', true).change();
+
+			hide_menu.attr('checked', en.hidemenu);
 		}
 	}
 
@@ -370,9 +386,14 @@ $(document).ready(function(){
 
 			if($(this).hasClass('menu-folder')){
 
-				if(!en.openall)
+				if(!en.openall){
 					delete en.openall;
-				
+					delete en.hidemenu;
+				}
+				else if(!en.hidemenu){
+					delete en.hidemenu;
+				}
+
 				en.is_submenu = true;
 				en.engines = [];
 

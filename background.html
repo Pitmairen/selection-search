@@ -133,6 +133,38 @@ function _create_context_menu(){
 
 		if(engine.is_submenu){
 
+			if(engine.openall && engine.hidemenu){
+
+				chrome.contextMenus.create({
+						'title' : engine.name,
+						'contexts' : ['selection'],
+						'parentId' : parent,
+
+						'onclick' : function (info, tab){
+
+							function get_all_links(en, urls){
+
+								for(var i in en.engines){
+
+									var e = en.engines[i];
+									if(_separate_menus && e.hide_in_ctx)
+										continue;
+									if(e.is_submenu){
+										urls = get_all_links(e, urls);
+									}else{
+										urls.push(_createSearchUrl(e, info.selectionText));
+									}
+								}
+								return urls;
+							}
+
+							_openAllUrls(get_all_links(engine, []));
+						}
+					});
+
+				return;
+			}
+
 			var _mid = chrome.contextMenus.create({
 				'title' : engine.name,
 				'contexts' : ['selection'],

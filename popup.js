@@ -231,6 +231,8 @@ function PopUp()
 
 		a.mouseenter(function(e){
 
+			if(engine.hidemenu)
+				return;
 			var that = this;
 
 			if(timer_id){
@@ -297,6 +299,8 @@ function PopUp()
 
 			$('<li class="engine-submenu"></li>').css('position', 'relative').append(a).append(_folderNode).mouseleave(function(e){
 
+				if(engine.hidemenu)
+					return;
 
 				if(timer_id){
 					clearTimeout(timer_id);
