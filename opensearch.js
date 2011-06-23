@@ -42,7 +42,7 @@ var OpenSearch = {
 		
 		var name = $(xml).find('ShortName').first().text();
 
-		var _url = $(xml).find('Url[type=text/html]').first();
+		var _url = $(xml).find('Url[type="text/html"]').first();
 
 		if(_url.length == 0){
 			ret['msg'] = 'Unsupported url mimetype';
