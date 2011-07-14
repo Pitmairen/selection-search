@@ -624,33 +624,33 @@ $(document).ready(function(){
 	function _do_import(){
 
 
-		var import = $('#import-settings textarea').val();
+		var to_import = $('#import-settings textarea').val();
 
-		if(import.length == 0){
+		if(to_import.length == 0){
 			alert('No data to import');
 			return;
 		}
 
 		try{
 
-			var parts = import.split(':');
+			var parts = to_import.split(':');
 
 			var decoder = '1';
 
 			if(parts.length == 2){
-				import = parts[1];
+				to_import = parts[1];
 				decoder = parts[0];
 			}
 
 			if(decoder in _import_decoders)
-				import = _import_decoders[decoder](import);
+				to_import = _import_decoders[decoder](to_import);
 			else
-				import = null;
+				to_import = null;
 
 		}catch(err){
-			import = null;
+			to_import = null;
 		}
-		if(!import || jQuery.isEmptyObject(import)){
+		if(!to_import || jQuery.isEmptyObject(to_import)){
 			alert('Failed to import data');
 			return;
 		}
@@ -667,39 +667,39 @@ $(document).ready(function(){
 
 		if($('#import-search-engines').is(':checked')){
 
-			if(!import.hasOwnProperty('searchEngines'))
+			if(!to_import.hasOwnProperty('searchEngines'))
 				msg.push('Search Engines: not available');
 			else{
 
 				msg.push('Search Engines: OK');
 
 				if($('#import-replace-engines').is(':checked')){
-					Storage.setSearchEngines(import.searchEngines);
+					Storage.setSearchEngines(to_import.searchEngines);
 				}else{
 					var prev_engines = Storage.getSearchEngines();
-					Storage.setSearchEngines(prev_engines.concat(import.searchEngines));
+					Storage.setSearchEngines(prev_engines.concat(to_import.searchEngines));
 				}
 			}
 		}
 
 		if($('#import-style').is(':checked')){
 
-			if(!import.hasOwnProperty('styleSheet'))
+			if(!to_import.hasOwnProperty('styleSheet'))
 				msg.push('Styling: not available');
 			else{
 				msg.push('Styling: OK');
-				Storage.setStyle(import.styleSheet);
+				Storage.setStyle(to_import.styleSheet);
 			}
 
 		}
 
 		if($('#import-options').is(':checked')){
 
-			if(!import.hasOwnProperty('options'))
+			if(!to_import.hasOwnProperty('options'))
 				msg.push('Other settings: not available');
 			else{
 				msg.push('Other settings: OK');
-				Storage.setOptions(import.options);
+				Storage.setOptions(to_import.options);
 			}
 		}
 
