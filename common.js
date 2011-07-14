@@ -39,10 +39,10 @@ var Common = new function(){
 	}
 
 	this.getCommonClass = function(){
-		var class = 'common-' + _randomId;
+		var class_ = 'common-' + _randomId;
 		if (!('.common' in _generatedValues))
-			_generatedValues['.common'] = '.'+class;
-		return class;
+			_generatedValues['.common'] = '.'+class_;
+		return class_;
 	},
 
 	this.replaceCSS = function(content){

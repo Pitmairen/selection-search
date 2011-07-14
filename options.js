@@ -584,34 +584,34 @@ $(document).ready(function(){
 	function _load_export(){
 
 
-		var export = {}
+		var to_export = {}
 
 		if($('#export-search-engines').is(':checked'))
-			export.searchEngines = Storage.getSearchEngines();
+			to_export.searchEngines = Storage.getSearchEngines();
 		if($('#export-style').is(':checked'))
-			export.styleSheet =  Storage.getStyle();
+			to_export.styleSheet =  Storage.getStyle();
 		if($('#export-options').is(':checked'))
-			export.options =  Storage.getOptions();
+			to_export.options =  Storage.getOptions();
 
-		if(!jQuery.isEmptyObject(export)){
+		if(!jQuery.isEmptyObject(to_export)){
 
 			if(localStorage.hasOwnProperty('VERSION'))
-				export.VERSION = localStorage['VERSION'];
+				to_export.VERSION = localStorage['VERSION'];
 
-			export = JSON.stringify(export);
+			to_export = JSON.stringify(to_export);
 
 // 			if($('#encode-output').is(':checked'))
 
 			try{
-				export = btoa(export);
+				to_export = btoa(to_export);
 			}catch(e){
-				export = '1e:' + btoa(encodeURI(export));
+				to_export = '1e:' + btoa(encodeURI(to_export));
 			}
 
 		}else
-			export = '';
+			to_export = '';
 
-		$('#export-settings textarea').val(export);
+		$('#export-settings textarea').val(to_export);
 
 	}
 
