@@ -39,7 +39,7 @@ function PopUp()
 	var _buttonActive = false;
 	var _lastSelection = '';
 	var _activator;
-
+	var _iconsLoaded = false;
 
 	var _urlVariables = [
 // 		[/%PAGE_HOSTNAME/g,  encodeURIComponent(location.hostname)],
@@ -67,12 +67,17 @@ function PopUp()
 		_that.show(_buttonNode.offset().left, _buttonNode.offset().top);
 	});
 
+
+
 	
 	this.show = function (x, y){
 
 		if(_buttonActive)
 			_that.hideButton();
 
+		if(!_iconsLoaded){
+			_loadIcons();
+		}
 		var pos = Common.calculateWindowPosition(_popupNode, x, y);
 
 		_popupNode.css({'top': pos.y + 'px', 'left': pos.x + 'px'});
@@ -118,6 +123,11 @@ function PopUp()
 			e.stopPropagation();
 		});
 
+
+		// Load icons after the page has been loaded
+		$(document).ready(function(){
+			setTimeout(_loadIcons, 500);
+		});
 	}
 
 	this.setActivator = function(act){
@@ -192,7 +202,7 @@ function PopUp()
 		var a = $('<a href="#"></a>');
 
 		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
-			a.append($('<img class="engine-img" />').attr('src', icon_url));
+			a.append($('<img class="engine-img" />').attr('_src', icon_url));
 
 		a.append(
 				$('<span class="engine-name"></span').text(engine.name)
@@ -342,7 +352,7 @@ function PopUp()
 		var a = $('<a href="#"></a>');
 
 		if(_that.options.remove_icons == 'no' || (_that.options.remove_icons == 'https' && location.href.substr(0, 5) != 'https'))
-			a.append($('<img class="engine-img" />').attr('src', icon_url));
+			a.append($('<img class="engine-img" />').attr('_src', icon_url));
 
 		a.append(
 				$('<span class="engine-name"></span').text(engine.name)
@@ -381,6 +391,20 @@ function PopUp()
 	}
 
 
+
+	function _loadIcons(){
+
+		if(_iconsLoaded)
+			return;
+		_iconsLoaded = true;
+		
+		$('img[_src]', _popupNode).each(function(){
+
+			$(this).attr('src', $(this).attr('_src')).removeAttr('_src');
+		});
+		
+
+	}
 
 	function _createSearchUrl(search_url, selection, is_post){
 
