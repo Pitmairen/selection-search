@@ -139,6 +139,7 @@ function PopUp()
 
 		_setTitle('Lorem ipsum dolor sit amet, consectetur');
 		_popupNode.css({'position': 'static', 'display': 'block'});
+		_loadIcons();
 		return _popupNode;
 
 	}
