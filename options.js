@@ -303,7 +303,7 @@ $(document).ready(function(){
 		$("input[name='background_tab']").attr('checked', response.options.background_tab);
 
 		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
-
+		$("input[name='hide-on-click']").attr('checked', response.options.hide_on_click);
 
 		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
 		$("#select_activator").change();
@@ -438,7 +438,8 @@ $(document).ready(function(){
 			show_in_inputs: $('input[name=show_in_inputs]').is(':checked'),
 			k_and_m_combo:k_and_m_combo,
 			context_menu: $('#contextmenu_option option:selected').first().attr('value'),
-			separate_menus: $('#opt-separate-engines').is(':checked')
+			separate_menus: $('#opt-separate-engines').is(':checked'),
+			hide_on_click: $("input[name='hide-on-click']").is(':checked')
 		});
 
 

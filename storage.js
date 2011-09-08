@@ -22,7 +22,8 @@ var Storage = new function (){
 		background_tab: true,
 		k_and_m_combo: [17, 0], // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
 		context_menu: 'disabled',
-		separate_menus: false
+		separate_menus: false,
+		hide_on_click: false
 	};
 
 	var _that = this;

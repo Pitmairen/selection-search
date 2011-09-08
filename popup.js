@@ -101,6 +101,10 @@ function PopUp()
 	this.hide = function (){
 
 		_popupNode.fadeOut(200);
+
+		_popupNode.find('ul').hide();
+
+		
 		_active = false;
 	}
 
@@ -300,6 +304,11 @@ function PopUp()
 
 			chrome.extension.sendRequest({action:'openUrls', urls:urls_to_open});
 
+
+			if(_that.options.hide_on_click && _that.isActive()){
+				_that.hide();
+			}
+
 			return false;
 		});
 
@@ -363,7 +372,12 @@ function PopUp()
 				var url = _createSearchUrl($(this).data('search_url'), _lastSelection, $(this).data('engine-post'));
 
 				$(this).attr('href', url);
-			})
+			}).click(function(){
+
+				if(_that.options.hide_on_click && _that.isActive())
+					_that.hide();
+
+			});
 
 		if(_that.options.newtab){
 			a.attr('target', '_blank');
