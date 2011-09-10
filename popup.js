@@ -379,8 +379,25 @@ function PopUp()
 
 			});
 
-		if(_that.options.newtab){
-			a.attr('target', '_blank');
+
+		
+		if(engine.url.substr(0, 11) !== 'javascript:'){
+
+			if(_that.options.newtab){
+
+				if(_that.options.background_tab){
+					a.click(function(){
+
+						chrome.extension.sendRequest({action:'openUrls', urls:[$(this).attr('href')]});
+
+						return false;
+					});
+				}
+				else
+					a.attr('target', '_blank');
+
+			}
+
 		}
 
 		node.append($('<li></li>').append(a));
