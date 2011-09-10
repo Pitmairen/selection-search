@@ -46,6 +46,7 @@ function PopUp()
 		[/%PAGE_HOST/g, encodeURIComponent(location.host)],
 		[/%PAGE_URL/g, encodeURIComponent(location.href)],
 		[/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
+		[/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]
 // 		[/%PAGE_PATH/g, encodeURIComponent(location.pathname)],
 	]
 
@@ -444,6 +445,12 @@ function PopUp()
 		for(var i=0; i<_urlVariables.length; ++i){
 			search_url = search_url.replace(_urlVariables[i][0], _urlVariables[i][1]);
 		}
+
+
+		if(search_url.match(/%PAGE_QS_VAR\(.+?\)/)){
+			search_url = _replaceQueryStringVars(search_url);
+		}
+
 		var url = '';
 		//If its a post url we encode only the part before {POSTARGS}
 		if(is_post){
@@ -483,6 +490,33 @@ function PopUp()
 
 	}
 
+
+	function _replaceQueryStringVars(search_url){
+
+		var qs_map = {}
+		if(location.search.length != 0){
+			var qs = location.search.substr(1);
+			jQuery.each(qs.split('&'), function(index, value){
+
+				var qs_var = value.split('=');
+
+				if (qs_var.length == 2){
+					qs_map[qs_var[0]] = qs_var[1];
+				}
+			});
+		}
+
+		search_url = search_url.replace(/%PAGE_QS_VAR\((.+?)\)/g, function(m, qs_key){
+			if (qs_key in qs_map){
+
+				if(qs_map[qs_key].substr(0, 11) === 'javascript:')
+					return '';
+				return encodeURIComponent(qs_map[qs_key]);
+			}
+			return '';
+		});
+		return search_url;
+	}
 
 }
 

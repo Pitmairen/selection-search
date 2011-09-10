@@ -25,7 +25,7 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 
 </p>
 <div id="more-variables" class="info">
-<strong>Example url:</strong> https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe
+<strong>Example url:</strong> https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe?key1=value1&key2=value2
 <p class="only-popup-msg">Currently this variables does not work in the Context Menu, only in the popup.</p>
 <dl>
 	<dt>%PAGE_HOST</dt>
@@ -40,6 +40,12 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 		<dd>The path name of the current page. (/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>-->
 	<dt>%PAGE_ORIGIN</dt>
 		<dd>The protocol and hostname of the current page. (https://chrome.google.com)</dd>
+
+	<dt>%PAGE_QUERY_STRING</dt>
+		<dd>The query string of the current page (key1=value1&key2=value2)</dd>
+
+	<dt>%PAGE_QS_VAR(name)</dt>
+		<dd>A query string variable from the current page (%PAGE_QS_VAR(key1) == value1)</dd>
 </dl>
 </div>
 
