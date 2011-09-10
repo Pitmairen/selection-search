@@ -46,10 +46,16 @@ function PopUp()
 		[/%PAGE_HOST/g, encodeURIComponent(location.host)],
 		[/%PAGE_URL/g, encodeURIComponent(location.href)],
 		[/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
-		[/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]
 // 		[/%PAGE_PATH/g, encodeURIComponent(location.pathname)],
 	]
 
+
+	if(location.search.substr(0, 12) == '?javascript:')
+		_urlVariables.push([/%PAGE_QUERY_STRING/g, '']);
+	else
+		_urlVariables.push([/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]);
+
+	
 // 	var _domain = location.hostname.split('.');
 // 	if(_domain.length > 1)
 // 		_domain = _domain.slice(1).join('.');
