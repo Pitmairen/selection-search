@@ -325,6 +325,8 @@ $(document).ready(function(){
 
 
 		$("#opt-separate-engines").attr('checked', response.options.separate_menus).change();
+
+		$("#opt-disable-extractform").attr('checked', response.options.disable_formextractor);
 		
 	});
 
@@ -439,7 +441,8 @@ $(document).ready(function(){
 			k_and_m_combo:k_and_m_combo,
 			context_menu: $('#contextmenu_option option:selected').first().attr('value'),
 			separate_menus: $('#opt-separate-engines').is(':checked'),
-			hide_on_click: $("input[name='hide-on-click']").is(':checked')
+			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
+			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
 		});
 
 

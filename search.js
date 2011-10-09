@@ -18,18 +18,18 @@ var G_ENGINE_EDITOR = null;
 
 	G_POPUP = new PopUp();
 
-	if(document.location.hostname != 'mail.google.com'){
-
-		G_ENGINE_EDITOR = new EngineEditor();
-
-		initFormExtractor();
-	}
-
 
 	chrome.extension.sendRequest({fromContentScript:true}, function(response){
 
 
+		if(document.location.hostname != 'mail.google.com'){
 
+			G_ENGINE_EDITOR = new EngineEditor();
+
+			if(!response.options.disable_formextractor)
+				initFormExtractor();
+		}
+	
 		Common.setStyleSheet(response.default_style);
 
 		if(response.extra_style){
