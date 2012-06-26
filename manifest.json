@@ -19,13 +19,13 @@
 	"content_scripts": [
 		{
 			"matches": ["http://*/*", "https://*/*"],
-			"js": ["jquery-1.4.2.min.js", "urlparse.js", "common.js", "popup.js", "engine-editor.js", "extractform.js", "search.js"],
+			"js": ["jquery-1.7.2.min.js", "urlparse.js", "common.js", "popup.js", "engine-editor.js", "extractform.js", "search.js"],
 			"run_at" : "document_end",
 			"all_frames" : true
 		},
 		{
 			"matches": ["http://mycroft.mozdev.org/*"],
-			"js": ["jquery-1.4.2.min.js", "opensearch.js", "sites/mycroft.js"],
+			"js": ["jquery-1.7.2.min.js", "opensearch.js", "sites/mycroft.js"],
 			"run_at" : "document_end"
 		}
 	],
