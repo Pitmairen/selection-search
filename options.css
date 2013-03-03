@@ -18,8 +18,8 @@ p.buttons{
 	padding-left: 85px;
 /* 	height: 128px; */
 	line-height: 72px;
-	  background-size:72px;
 	background: url("icon128.png") no-repeat left center;
+	background-size:72px;
 }
 .section-heading {
   background:#ebeff9;
