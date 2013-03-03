@@ -28,7 +28,7 @@
 			"all_frames" : true
 		},
 		{
-			"matches": ["http://mycroft.mozdev.org/*"],
+			"matches": ["http://mycroftproject.com/*"],
 			"js": ["jquery-1.7.2.min.js", "opensearch.js", "sites/mycroft.js"],
 			"run_at" : "document_end"
 		}
@@ -36,8 +36,7 @@
 
     "permissions": [
         "contextMenus",
-        "tabs",
-		"http://mycroft.mozdev.org/"
+        "tabs"
 	],
 
 	"web_accessible_resources": [

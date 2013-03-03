@@ -48,8 +48,8 @@ $('a[onClick^=addOpenSearch]').each(function(){
 
 			G_ENGINE_EDITOR.show(e.pageX, e.pageY-50);
 
-			
-			loadOpenSearch("http://mycroft.mozdev.org/installos.php/" + params[3] + "/" + params[0] + ".xml");
+
+			loadOpenSearch("http://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
 			return false;
 		})
 	);
@@ -61,8 +61,8 @@ $('a[onClick^=addEngine]').each(function(){
 	$(this).before('<span style="display: inline-block; width: 16px; height: 16px; margin: 0 8px;"></span>');
 });
 
-$('#NOTES-table .NOTEheader').after(
-	$('<tr class="NOTEbody"><td><img class="icon" title="Chrome Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('icon16.png')+'" />'+
+$('table.altrowgw:last tr:first-child').after(
+	$('<tr><td><img class="icon" title="Chrome Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('icon16.png')+'" />'+
 	' Add search engine to Chrome <a href="https://chrome.google.com/extensions/detail/gipnlpdeieaidmmeaichnddnmjmcakoe">Selection Search</a> extension.</td></tr>')
 );
 
