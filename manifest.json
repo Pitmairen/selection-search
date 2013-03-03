@@ -1,6 +1,7 @@
 {
     "name": "Selection Search",
     "version": "0.7.11",
+	"manifest_version" : 2,
 
     "description": "Search for the selected text in search engines",
 
@@ -14,7 +15,10 @@
 
 	"options_page": "options.html",
 
-    "background_page": "background.html",
+    "background": {
+		"page" : "background.html",
+		"persistent" : true
+	},
 
 	"content_scripts": [
 		{
@@ -34,5 +38,14 @@
         "contextMenus",
         "tabs",
 		"http://mycroft.mozdev.org/"
+	],
+
+	"web_accessible_resources": [
+		"folder.png",
+		"icon16.png",
+		"close.png",
+		"ajax-loader.gif"
 	]
+
+
 }
