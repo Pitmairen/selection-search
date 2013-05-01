@@ -91,22 +91,22 @@ function addNewEngine(en, level){
 
 
 	var engines = en.engines || [];
-	
+
 	for(var i=0,e=engines.length; i<e; ++i){
 		addNewEngine(engines[i], level+1);
 	}
-	
 
-	
+
+
 	var end = $('<tr id="end-'+id+'" class="menu-folder-end"><td></td><td colspan="5"></td></tr>').data('level', level+1);
 
 
 	Reorder.initElements(tr);
 	Reorder.initElements(end);
-	
+
 	$('#engines').append(end);
 
-	
+
 }
 
 
@@ -116,12 +116,12 @@ function _addSeparator(en, level){
 
 	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
 
-	
+
 	tr.append('<td colspan="3"><div class="separator-bg"></div></td>').data('level', level);
 
 	_addEngineOptions(en, tr);
 
-	
+
 	Reorder.initElements(tr);
 	Reorder.makeMovable(tr);
 	$('#engines').append(tr);
@@ -131,7 +131,7 @@ function _addSeparator(en, level){
 
 function _addEngineOptions(en, tr){
 
-	
+
 	var options_popup = $('<div class="engine-options-popup"></div>');
 
 
@@ -157,17 +157,17 @@ function _addEngineOptions(en, tr){
 	if(en.is_submenu){
 
 		var hide_menu = $('<input class="hidemenu" id="engine-opt-hidemenu-'+_G_engine_id_count+'" type="checkbox" />');
-		
+
 		var hide_menu_wrap = $('<div></div>').append(hide_menu);
 		hide_menu_wrap.append('<label for="engine-opt-hidemenu-'+_G_engine_id_count+'">Don\'t show menu</label>').append('<p class="separate-menus-msg">When this is checked the submenu will not open on mouse over. It will just open all searches inside on click.</p>');
-		
+
 
 		var open_all = $('<input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" />').change(function(){
 
 			hide_menu_wrap.toggle($(this).is(':checked'));
 		});
 
-		
+
 		options_popup.append('<hr />').append(open_all).append('<label for="engine-opt-openall-'+_G_engine_id_count+'">Open all on click</label>');
 		options_popup.append('<p class="separate-menus-msg" style="margin-bottom: 0.8em;">When this is checked all search engines in this submenu will be opened at once.</p>');
 		options_popup.append(hide_menu_wrap.hide());
@@ -181,11 +181,19 @@ function _addEngineOptions(en, tr){
 	}
 
 
+	var enable_sync = $('<input class="nosync" id="engine-opt-sync-'+_G_engine_id_count+'" type="checkbox" />');
+
+	options_popup.append('<hr />').append(enable_sync).append('<label for="engine-opt-sync-'+_G_engine_id_count+'">Synchronize</label>');
+
+
 	if(!en.hide_in_popup){
 		options_popup.find('.hide_in_popup').attr('checked', true);
 	}
 	if(!en.hide_in_ctx){
 		options_popup.find('.hide_in_ctx').attr('checked', true);
+	}
+	if(!en.nosync){
+		options_popup.find('.nosync').attr('checked', true);
 	}
 	if(en.post){
 		options_popup.find('.post').attr('checked', true);
@@ -250,13 +258,13 @@ function _addEngineOptions(en, tr){
 
 	));
 
-	
+
 }
 
 $(document).ready(function(){
 
 	Common.init();
-	
+
 	var popup = new PopUp();
 
 
@@ -327,7 +335,12 @@ $(document).ready(function(){
 		$("#opt-separate-engines").attr('checked', response.options.separate_menus).change();
 
 		$("#opt-disable-extractform").attr('checked', response.options.disable_formextractor);
-		
+
+
+		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
+		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
+		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
+
 	});
 
 
@@ -345,14 +358,14 @@ $(document).ready(function(){
 
 		return false;
 	});
-	
+
 	$('#new-separator').click(function(){
 		addNewEngine({is_separator:true}, 0);
 
 		return false;
 	});
 
-	
+
 	$('#save').click(function(){
 
 
@@ -379,11 +392,16 @@ $(document).ready(function(){
 				delete en.hide_in_popup;
 			else
 				en.hide_in_popup = true;
-		
+
 			if(en.hide_in_ctx)
 				delete en.hide_in_ctx;
 			else
 				en.hide_in_ctx = true;
+
+			if(en.nosync)
+				delete en.nosync;
+			else
+				en.nosync = true;
 
 
 			if($(this).hasClass('menu-folder')){
@@ -428,6 +446,7 @@ $(document).ready(function(){
 
 
 		Storage.setSearchEngines(new_engines);
+
 		Storage.setStyle(jQuery.trim($('#style').val()));
 
 		Storage.setOptions({
@@ -446,7 +465,16 @@ $(document).ready(function(){
 		});
 
 
+		Storage.setSyncOptions({
+			sync_engines: $('#opt-sync-engines').is(':checked'),
+			sync_settings: $("#opt-sync-settings").is(':checked'),
+			sync_style: $('#opt-sync-style').is(':checked'),
+		});
+
+
 		chrome.extension.sendRequest({action:"optionsChanged"});
+
+
 
 		location.reload();
 
@@ -513,7 +541,7 @@ $(document).ready(function(){
 			$('#show-advanced-popup-opts').hide();
 		else
 			$('#show-advanced-popup-opts').show();
-		
+
 		$('.activator_options').hide(100);
 		$('#activator_' + opt.attr('value')).show(100);
 
@@ -583,7 +611,7 @@ $(document).ready(function(){
 
 	});
 
-	
+
 
 	function _load_export(){
 
@@ -710,7 +738,7 @@ $(document).ready(function(){
 		alert('Settings has been imported.\n\n' + msg.join('\n'));
 
 		chrome.extension.sendRequest({action:"optionsChanged"});
-		
+
 		location.reload();
 
 	}

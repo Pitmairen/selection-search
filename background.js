@@ -3,10 +3,12 @@ Storage.storage_upgrades();
 
 
 // Added in version 0.1.4
-localStorage['VERSION'] = '0.7.12';
+localStorage['VERSION'] = '0.7.13';
 
 // Id of the root menu when the contextmenu activator is used.
 var G_rootMenuId = null;
+
+
 
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
@@ -20,6 +22,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 		Storage.setSearchEngines(engines);
 
 		_update_context_menu();
+		Sync.saveStorage(Storage);
 		sendResponse({});
 		return;
 	}
@@ -27,6 +30,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 	else if(request.action == 'optionsChanged'){
 
 		_update_context_menu();
+		Sync.saveStorage(Storage);
 		sendResponse({});
 		return;
 	}
@@ -43,6 +47,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 	resp = {}
 
 	resp.options = Storage.getOptions();
+	resp.sync_options = Storage.getSyncOptions();
 
 	resp.searchEngines = Storage.getSearchEngines();
 
@@ -303,5 +308,38 @@ function _remove_context_menu(){
 if(Storage.getOptions().context_menu == 'enabled')
 	_create_context_menu();
 
+
+
+
+chrome.storage.sync.get(null, function(items){
+
+	if(chrome.runtime.lastError !== undefined){
+
+		var notification = webkitNotifications.createNotification(
+		  'icon48.png',
+		  'Synchronization Error',
+		  'Failed to load synced settings ('+chrome.runtime.lastError+')'
+		);
+
+		notification.show();
+		return;
+	}
+
+	Sync.loadStorage(Storage, items);
+	_update_context_menu();
+
+});
+
+
+
+chrome.storage.onChanged.addListener(function(changes, type){
+
+	if(type != 'sync')
+		return;
+
+	Sync.updateStorage(Storage, changes);
+	_update_context_menu();
+
+});
 
 

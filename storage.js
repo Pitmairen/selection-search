@@ -5,13 +5,14 @@ var Storage = new function (){
 	_STYLE_KEY = 'styleSheet';
 	_BUTTON_KEY = 'button'; // Used in previous versions
 	_OPTIONS_KEY = 'options';
+	_SYNC_KEY = 'sync';
 
 	var _defaultEngines = searchEngines = [
 		{name: 'Google', url: 'http://google.com/search?q=%s'},
 		{name: 'Youtube', url: 'http://www.youtube.com/results?search_query=%s'},
 		{name: 'Stackoverflow', url: 'http://stackoverflow.com/search?q=%s'}
 	];
-	
+
 	var _defaultOptions = {
 		button: 1,
 		newtab: false,
@@ -27,8 +28,14 @@ var Storage = new function (){
 		disable_formextractor: false
 	};
 
+	var _syncOptions = {
+		sync_engines: true,
+		sync_settings: true,
+		sync_style: true
+	};
+
 	var _that = this;
-	
+
 	this.getSearchEngines = function(){
 
 		var engines =  _getValue(_SEARCH_ENGINES_KEY);
@@ -37,7 +44,7 @@ var Storage = new function (){
 			engines = JSON.parse(engines);
 		else
 			engines = [];
-		
+
 		if(engines.length == 0)
 			return _defaultEngines;
 		return engines;
@@ -65,9 +72,18 @@ var Storage = new function (){
 
 	}
 
+	this.getSyncOptions = function(){
+
+		var options  = JSON.parse(_getValue(_SYNC_KEY, '{}'));
+
+		return $.extend({}, _syncOptions, options);
+
+	}
+
 
 	this.setSearchEngines = function(engines){
 		_setValue(_SEARCH_ENGINES_KEY, JSON.stringify(engines));
+
 	}
 
 	this.setStyle = function(style){
@@ -81,8 +97,13 @@ var Storage = new function (){
 		if(localStorage[_BUTTON_KEY] != undefined)
 			_removeValue(_BUTTON_KEY);
 
-		
+
 		_setValue(_OPTIONS_KEY, JSON.stringify(options))
+	}
+
+	this.setSyncOptions = function(options){
+
+		_setValue(_SYNC_KEY, JSON.stringify(options))
 	}
 
 
@@ -93,6 +114,7 @@ var Storage = new function (){
 		_that.clearSearchEngines();
 		_that.clearButton();
 		_that.clearOptions();
+		_that.clearSyncOptions();
 
 	}
 
@@ -109,6 +131,10 @@ var Storage = new function (){
 
 	this.clearOptions = function(){
 		_removeValue(_OPTIONS_KEY);
+	}
+
+	this.clearSyncOptions = function(){
+		_removeValue(_SYNC_KEY);
 	}
 
 	this.getValue = function(key, default_value){
@@ -149,18 +175,33 @@ var Storage = new function (){
 
 	// Storage Upgrades:
 
-	
+
+	this._versionIsNewer = function(cmp_version)
+	{
+		if(!localStorage.hasOwnProperty('VERSION'))
+			return false;
+
+		var store_version = localStorage['VERSION'];
+
+		return store_version < cmp_version;
+
+	}
+
+
 	this.storage_upgrades = function(){
 
-		v0_5_9__v0_6_0();
+
+		var opts = _that.getOptions();
+
+		v0_5_9__v0_6_0(opts);
+		v0_7_12__v0_7_13(opts);
 
 	}
 
 
 	// v0.5.9 -> v0.6.0
-	function v0_5_9__v0_6_0(){
+	function v0_5_9__v0_6_0(opts){
 
-		var opts = _that.getOptions();
 
 		if(opts.activator == 'contextmenu'){
 			opts.activator = 'disabled';
@@ -168,6 +209,30 @@ var Storage = new function (){
 
 			_that.setOptions(opts);
 		}
+	}
+
+
+	function v0_7_12__v0_7_13(opts){
+
+		if(!_that._versionIsNewer('0.7.13'))
+			return;
+
+		_that.setSyncOptions({
+			sync_engines : false,
+			sync_settings : false,
+			sync_style : false
+		});
+
+		var notification = webkitNotifications.createNotification(
+		  'icon48.png',
+		  'Online Synchronization',
+		  'Synchronization of search engines and settings between browsers is now available. It has been disabled by default, but can be enabled in the settings.'
+		);
+
+		notification.show();
+
+
+
 	}
 }
 

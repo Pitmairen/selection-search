@@ -237,6 +237,11 @@ hr{
 	font-size: 9pt;
 	line-height: 1.5;
 }
+
+.warning{
+	background: #FFE492;
+}
+
 .subsection .info{
 	background: #F9F8E2;
 }

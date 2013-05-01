@@ -1,11 +1,11 @@
 {
     "name": "Selection Search",
-    "version": "0.7.12",
+    "version": "0.7.13",
 	"manifest_version" : 2,
 
     "description": "Search for the selected text in search engines",
 
-    "minimum_chrome_version": "6",
+    "minimum_chrome_version": "20",
 
 	"icons": {
 		"16": "icon16.png",
@@ -36,12 +36,15 @@
 
     "permissions": [
         "contextMenus",
-        "tabs"
+        "tabs",
+		"storage",
+		"notifications"
 	],
 
 	"web_accessible_resources": [
 		"folder.png",
 		"icon16.png",
+		"icon48.png",
 		"close.png",
 		"ajax-loader.gif"
 	]
