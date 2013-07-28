@@ -20,7 +20,7 @@ function PopUp()
 	});
 
 	$('html').append(_popupNode);
-	
+
 	var _buttonId = Common.getId('button');
 
 	var _buttonNode = $('<div></div>');
@@ -55,17 +55,17 @@ function PopUp()
 	else
 		_urlVariables.push([/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]);
 
-	
+
 // 	var _domain = location.hostname.split('.');
 // 	if(_domain.length > 1)
 // 		_domain = _domain.slice(1).join('.');
 // 	else
 // 		_domain = location.hostname;
-// 
+//
 // 	_urlVariables.push([/%PAGE_DOMAIN/g, encodeURIComponent(_domain)]);
-// 
+//
 // 	delete _domain;
-	
+
 	this.options = {};
 
 
@@ -76,7 +76,7 @@ function PopUp()
 
 
 
-	
+
 	this.show = function (x, y){
 
 		if(_buttonActive)
@@ -94,7 +94,7 @@ function PopUp()
 
 	}
 
-	
+
 	this.showButton = function(x, y){
 
 		var pos = Common.calculateWindowPosition(_buttonNode, x, y);
@@ -111,7 +111,7 @@ function PopUp()
 
 		_popupNode.find('ul').hide();
 
-		
+
 		_active = false;
 	}
 
@@ -240,10 +240,10 @@ function PopUp()
 
 			if(separate_menus && engine.engines[i].hide_in_popup)
 				continue;
-			
+
 			_addSearchEngine(engine.engines[i], _folderNode, level+1);
 
-			
+
 		}
 
 
@@ -285,7 +285,7 @@ function PopUp()
 
 
 			function get_all_links(en, urls){
-	
+
 				for(var i in en.engines){
 
 					var e = en.engines[i];
@@ -293,7 +293,7 @@ function PopUp()
 					if(separate_menus && e.hide_in_popup)
 						continue;
 
-					
+
 					if(e.is_submenu){
 						urls = get_all_links(e, urls);
 					}else{
@@ -305,7 +305,7 @@ function PopUp()
 
 			}
 
-			
+
 			var urls_to_open = get_all_links(engine, []);
 // 			console.log(urls_to_open);
 
@@ -320,7 +320,7 @@ function PopUp()
 		});
 
 
-		
+
 
 		node.append(
 
@@ -361,7 +361,7 @@ function PopUp()
 			return _addFolder(engine, node, level+1);
 		if(engine.is_separator)
 			return _addSeparator(engine, node, level);
-		
+
 		var icon_url = _getIconUrl(engine);
 		if (icon_url == undefined)
 			icon_url = '#';
@@ -387,7 +387,7 @@ function PopUp()
 			});
 
 
-		
+
 		if(engine.url.substr(0, 11) !== 'javascript:'){
 
 			if(_that.options.newtab){
@@ -436,12 +436,12 @@ function PopUp()
 		if(_iconsLoaded)
 			return;
 		_iconsLoaded = true;
-		
+
 		$('img[_src]', _popupNode).each(function(){
 
 			$(this).attr('src', $(this).attr('_src')).removeAttr('_src');
 		});
-		
+
 
 	}
 
@@ -527,8 +527,11 @@ function PopUp()
 }
 
 PopUp.getIconUrlFromEngine = function(engine) {
-	if(engine.icon_url != undefined)
+	if(engine.icon_url != undefined){
+		if(engine.icon_url == 'CURRENT_DOMAIN')
+			return 'https://plus.google.com/_/favicon?domain=' + window.location.host;
 		return engine.icon_url;
+	}
 	else if(engine.is_submenu)
 		return chrome.extension.getURL('folder.png');
 	return PopUp.getIconUrl(engine.url);
@@ -537,7 +540,7 @@ PopUp.getIconUrl = function(url) {
 	url = url.replace('http://', '', 'https://', '').split('/')[0];
 	if(url == undefined)
 		return undefined;
-	return 'http://www.google.com/s2/favicons?domain=' + url;
+	return 'https://plus.google.com/_/favicon?domain=' + url;
 }
 
 PopUp.getSelection = function(){
@@ -571,7 +574,7 @@ function ClickActivator(_popup){
 	this.setup = function(){
 
 		$(document).mousedown(function(e){
-			
+
 			if(_popup.isActive()){
 				_popup.hide();
 				return;
@@ -595,7 +598,7 @@ function ClickActivator(_popup){
 
 			var rx = window.pageXOffset;
 			var ry = window.pageYOffset;
-			
+
 			var rect = PopUp.getSelectionRect();
 
 			if(rect){
