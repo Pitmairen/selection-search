@@ -637,11 +637,55 @@ function ClickActivator(_popup){
 			if (e.button == 0){
 				_doubleClickTime = e.timeStamp;
 			}
+
 		});
 	}
 
+
+
+
 }
 
+
+
+function DoubleClickActivator(_popup){
+
+	var _doubleTimer = null;
+
+	this.setup = function(){
+
+		$(document).mousedown(function(e){
+			if(_doubleTimer != null)
+				clearTimeout(_doubleTimer);
+		});
+
+
+		$(document).dblclick(function(e){
+
+			_doubleTimer = setTimeout(function(){
+
+				_doubleTimer = null;
+
+				if (!PopUp.hasSelection())
+					return;
+
+				var sel = PopUp.getSelection();
+				_popup.setSelection(sel)
+				_popup.show(e.pageX, e.pageY);
+
+				e.stopPropagation();
+				e.preventDefault();
+
+			}, 100);
+
+
+		});
+	}
+
+
+
+
+}
 
 
 function AutoActivator(_popup){
@@ -702,7 +746,7 @@ function AutoActivator(_popup){
 	}
 
 	function _tryShow(e){
-		if (PopUp.hasSelection()){
+		if (PopUp.hasSelection() && !_popup.isActive()){
 
 			var sel = PopUp.getSelection();
 			_popup.setSelection(sel);

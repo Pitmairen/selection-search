@@ -8,11 +8,11 @@ var G_ENGINE_EDITOR = null;
 				'acid3.acidtests.org':1
 	};
 
-	
+
 	if(document.location.hostname in exclude)
 		return;
 
-	
+
 
 	Common.init();
 
@@ -29,7 +29,7 @@ var G_ENGINE_EDITOR = null;
 			if(!response.options.disable_formextractor)
 				initFormExtractor();
 		}
-	
+
 		Common.setStyleSheet(response.default_style);
 
 		if(response.extra_style){
@@ -61,6 +61,12 @@ var G_ENGINE_EDITOR = null;
 			G_POPUP.setActivator(new KeyAndMouseActivator(G_POPUP));
 		else
 			G_POPUP.setActivator(new ClickActivator(G_POPUP));
+
+
+		if(response.options.open_on_dblclick){
+			var a = new DoubleClickActivator(G_POPUP);
+			a.setup();
+		}
 
 		G_POPUP.bindEvents();
 	});

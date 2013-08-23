@@ -25,7 +25,8 @@ var Storage = new function (){
 		context_menu: 'disabled',
 		separate_menus: false,
 		hide_on_click: false,
-		disable_formextractor: false
+		disable_formextractor: false,
+		open_on_dblclick: false
 	};
 
 	var _syncOptions = {

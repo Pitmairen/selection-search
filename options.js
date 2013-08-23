@@ -352,6 +352,7 @@ $(document).ready(function(){
 
 		$("#opt-disable-extractform").attr('checked', response.options.disable_formextractor);
 
+		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick);
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
@@ -481,6 +482,7 @@ $(document).ready(function(){
 			separate_menus: $('#opt-separate-engines').is(':checked'),
 			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
+			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 		});
 
 
