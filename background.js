@@ -34,7 +34,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 		sendResponse({});
 		return;
 	}
-
+	else if(request.action == 'copy'){
+		copyToClipboard(request.content);
+		sendResponse({});
+		return;
+	}
 	else if(request.action == 'openUrls'){
 
 		_openAllUrls(request.urls);
@@ -60,6 +64,17 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 });
 
 
+function copyToClipboard( text ){
+	var copyDiv = document.createElement('div');
+	copyDiv.contentEditable = true;
+	document.body.appendChild(copyDiv);
+	copyDiv.innerHTML = text;
+	copyDiv.unselectable = "off";
+	copyDiv.focus();
+	document.execCommand('SelectAll');
+	document.execCommand("Copy", false, null);
+	document.body.removeChild(copyDiv);
+}
 
 function _openAllUrls(urls){
 
@@ -149,6 +164,8 @@ function _create_context_menu(){
 									var e = en.engines[i];
 									if(_separate_menus && e.hide_in_ctx)
 										continue;
+									else if(e.url == 'COPY')
+										continue;
 									if(e.is_submenu){
 										urls = get_all_links(e, urls);
 									}else{
@@ -187,6 +204,8 @@ function _create_context_menu(){
 
 								var e = en.engines[i];
 								if(_separate_menus && e.hide_in_ctx)
+									continue;
+								else if(e.url == 'COPY')
 									continue;
 								if(e.is_submenu){
 									urls = get_all_links(e, urls);
@@ -244,9 +263,14 @@ function _create_context_menu(){
 
 				var url = '';
 
-				if(_clicked_en.post){
+				if(_clicked_en.url == 'COPY'){
+					copyToClipboard(info.selectionText);
+					return;
+				}
+				else if(_clicked_en.post){
 					url = _getPostUrl(_clicked_en.url, info.selectionText);
-				}else
+				}
+				else
 					url = _getUrl(_clicked_en.url, info.selectionText);
 
 

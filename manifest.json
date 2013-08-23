@@ -38,7 +38,9 @@
         "contextMenus",
         "tabs",
 		"storage",
-		"notifications"
+		"notifications",
+		"clipboardRead",
+		"clipboardWrite"
 	],
 
 	"web_accessible_resources": [
@@ -46,7 +48,8 @@
 		"icon16.png",
 		"icon48.png",
 		"close.png",
-		"ajax-loader.gif"
+		"ajax-loader.gif",
+		"copy.png"
 	]
 
 

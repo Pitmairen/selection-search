@@ -292,6 +292,8 @@ function PopUp()
 
 					if(separate_menus && e.hide_in_popup)
 						continue;
+					else if(e.url == 'COPY')
+						continue;
 
 
 					if(e.is_submenu){
@@ -315,6 +317,10 @@ function PopUp()
 			if(_that.options.hide_on_click && _that.isActive()){
 				_that.hide();
 			}
+			else if(engine.hide_on_click && _that.isActive())
+				_that.hide();
+
+
 
 			return false;
 		});
@@ -383,12 +389,19 @@ function PopUp()
 
 				if(_that.options.hide_on_click && _that.isActive())
 					_that.hide();
+				else if(engine.hide_on_click && _that.isActive())
+					_that.hide();
 
 			});
 
 
-
-		if(engine.url.substr(0, 11) !== 'javascript:'){
+		if(engine.url == 'COPY'){
+			a.click(function(){
+				chrome.extension.sendRequest({action:'copy', content: PopUp.getSelection()});
+				return false;
+			});
+		}
+		else if(engine.url.substr(0, 11) !== 'javascript:'){
 
 			if(_that.options.newtab){
 
@@ -532,6 +545,8 @@ PopUp.getIconUrlFromEngine = function(engine) {
 			return 'https://plus.google.com/_/favicon?domain=' + window.location.host;
 		return engine.icon_url;
 	}
+	else if(engine.url == 'COPY')
+		return chrome.extension.getURL('copy.png');
 	else if(engine.is_submenu)
 		return chrome.extension.getURL('folder.png');
 	return PopUp.getIconUrl(engine.url);

@@ -153,13 +153,26 @@ function _addEngineOptions(en, tr){
 	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
 	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
 
+	if(!en.is_submenu && !en.is_separator){
+
+		var hide_on_click = '<input class="hide_on_click" id="engine-opt-hide-on-click-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-hide-on-click-'+_G_engine_id_count+'">Hide menu on click<p>';
+
+		options_popup.append('<hr>').append(hide_on_click).append('<p class="separate-menus-msg">The menu will be hidden after clicking this search engine.</p>');
+
+	}
+
 
 	if(en.is_submenu){
 
 		var hide_menu = $('<input class="hidemenu" id="engine-opt-hidemenu-'+_G_engine_id_count+'" type="checkbox" />');
 
-		var hide_menu_wrap = $('<div></div>').append(hide_menu);
+		var hide_menu_wrap = $('<div style="padding-left: 0.5em;"></div>').append(hide_menu);
 		hide_menu_wrap.append('<label for="engine-opt-hidemenu-'+_G_engine_id_count+'">Don\'t show menu</label>').append('<p class="separate-menus-msg">When this is checked the submenu will not open on mouse over. It will just open all searches inside on click.</p>');
+
+
+		var hide_on_click = '<input style="margin-top: 0.8em;" class="hide_on_click" id="engine-opt-hide-on-click-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-hide-on-click-'+_G_engine_id_count+'">Hide menu on click<p>';
+
+		hide_menu_wrap.append(hide_on_click).append('<p class="separate-menus-msg">The menu will be hidden after clicking this submenu</p>');
 
 
 		var open_all = $('<input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" />').change(function(){
@@ -197,6 +210,9 @@ function _addEngineOptions(en, tr){
 	}
 	if(en.post){
 		options_popup.find('.post').attr('checked', true);
+	}
+	if(en.hide_on_click){
+		options_popup.find('.hide_on_click').attr('checked', true);
 	}
 
 	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
@@ -387,6 +403,8 @@ $(document).ready(function(){
 			if(!en.post)
 				delete en.post;
 
+			if(!en.hide_on_click)
+				delete en.hide_on_click;
 
 			if(en.hide_in_popup)
 				delete en.hide_in_popup;
@@ -409,6 +427,7 @@ $(document).ready(function(){
 				if(!en.openall){
 					delete en.openall;
 					delete en.hidemenu;
+					delete en.hide_on_click;
 				}
 				else if(!en.hidemenu){
 					delete en.hidemenu;
