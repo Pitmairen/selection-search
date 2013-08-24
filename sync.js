@@ -16,8 +16,6 @@ var Sync = new function(){
 				ret.push(en);
 
 		}
-		console.log('SYNC1');
-		console.log(ret);
 		return ret;
 	}
 
@@ -39,8 +37,6 @@ var Sync = new function(){
 			ret.splice(en[0], 0, en[1]);
 		}
 
-		console.log('SYNC2');
-		console.log(ret);
 		return ret;
 	}
 

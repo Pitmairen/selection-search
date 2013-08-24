@@ -16,7 +16,7 @@ function EngineEditor(){
 	var _cancelButton = $('<input type="button" value="Cancel" />');
 
 	var _postForm = false;
-	
+
 	var _that = this;
 
 
@@ -63,7 +63,7 @@ function EngineEditor(){
 			if(_iconEdit.val())
 				en['icon_url'] = _iconEdit.val();
 
-			chrome.extension.sendRequest({'action' : 'saveEngine', 'engine' : en});
+			chrome.runtime.sendMessage({'action' : 'saveEngine', 'engine' : en});
 
 			//G_POPUP is from search.js
 			G_POPUP.addSearchEngine(en);

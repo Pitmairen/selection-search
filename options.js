@@ -293,7 +293,7 @@ $(document).ready(function(){
 	var CURRENT_STYLE = '';
 	var hotkey_editor = null;
 
-	chrome.extension.sendRequest({}, function(response){
+	chrome.runtime.sendMessage({}, function(response){
 
 		popup.setOptions(response.options);
 		Common.setStyleSheet(response.default_style);
@@ -353,10 +353,12 @@ $(document).ready(function(){
 		$("#opt-disable-extractform").attr('checked', response.options.disable_formextractor);
 
 		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick);
+		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
+
 
 	});
 
@@ -483,6 +485,7 @@ $(document).ready(function(){
 			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
+			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 		});
 
 
@@ -493,7 +496,7 @@ $(document).ready(function(){
 		});
 
 
-		chrome.extension.sendRequest({action:"optionsChanged"});
+		chrome.runtime.sendMessage({action:"optionsChanged"});
 
 
 
@@ -758,7 +761,7 @@ $(document).ready(function(){
 
 		alert('Settings has been imported.\n\n' + msg.join('\n'));
 
-		chrome.extension.sendRequest({action:"optionsChanged"});
+		chrome.runtime.sendMessage({action:"optionsChanged"});
 
 		location.reload();
 

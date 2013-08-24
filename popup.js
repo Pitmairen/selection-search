@@ -311,7 +311,7 @@ function PopUp()
 			var urls_to_open = get_all_links(engine, []);
 // 			console.log(urls_to_open);
 
-			chrome.extension.sendRequest({action:'openUrls', urls:urls_to_open});
+			chrome.runtime.sendMessage({action:'openUrls', urls:urls_to_open});
 
 
 			if(_that.options.hide_on_click && _that.isActive()){
@@ -397,7 +397,7 @@ function PopUp()
 
 		if(engine.url == 'COPY'){
 			a.click(function(){
-				chrome.extension.sendRequest({action:'copy', content: PopUp.getSelection()});
+				chrome.runtime.sendMessage({action:'copy', content: PopUp.getSelection()});
 				return false;
 			});
 		}
@@ -408,7 +408,7 @@ function PopUp()
 				if(_that.options.background_tab){
 					a.click(function(){
 
-						chrome.extension.sendRequest({action:'openUrls', urls:[$(this).attr('href')]});
+						chrome.runtime.sendMessage({action:'openUrls', urls:[$(this).attr('href')]});
 
 						return false;
 					});

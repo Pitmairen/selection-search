@@ -19,7 +19,7 @@ var G_ENGINE_EDITOR = null;
 	G_POPUP = new PopUp();
 
 
-	chrome.extension.sendRequest({fromContentScript:true}, function(response){
+	chrome.runtime.sendMessage({fromContentScript:true}, function(response){
 
 
 		if(document.location.hostname != 'mail.google.com'){

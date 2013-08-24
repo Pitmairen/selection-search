@@ -11,7 +11,7 @@ var G_rootMenuId = null;
 
 
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 
 	if(request.action == 'saveEngine'){
 
@@ -41,7 +41,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
 	}
 	else if(request.action == 'openUrls'){
 
-		_openAllUrls(request.urls);
+		_openAllUrls(request.urls, sender.tab);
 
 		sendResponse({});
 		return;
@@ -76,15 +76,22 @@ function copyToClipboard( text ){
 	document.body.removeChild(copyDiv);
 }
 
-function _openAllUrls(urls){
-
+function _openAllUrls(urls, parent_tab){
 	var opt = Storage.getOptions();
 
 	for(var i=0; i<urls.length; ++i){
-		chrome.tabs.create({
+
+		var tab_opts = {
 			'url' : urls[i],
-			'selected' : !opt.background_tab,
-		});
+			'active' : !opt.background_tab,
+			'openerTabId': parent_tab.id,
+		}
+
+		if(!opt.open_new_tab_last){
+			tab_opts.index = parent_tab.index + 1 + i;
+		}
+
+		chrome.tabs.create(tab_opts);
 	}
 }
 
@@ -175,7 +182,7 @@ function _create_context_menu(){
 								return urls;
 							}
 
-							_openAllUrls(get_all_links(engine, []));
+							_openAllUrls(get_all_links(engine, []), tab);
 						}
 					});
 
@@ -216,7 +223,7 @@ function _create_context_menu(){
 							return urls;
 						}
 
-						_openAllUrls(get_all_links(engine, []));
+						_openAllUrls(get_all_links(engine, []), tab);
 					}
 				});
 				chrome.contextMenus.create({
@@ -276,10 +283,17 @@ function _create_context_menu(){
 
 				if(_opts.newtab){
 
-					chrome.tabs.create({
+					var tab_opts = {
 						'url' : url,
-						'selected' : !_opts.background_tab,
-					});
+						'active' : !_opts.background_tab,
+						'openerTabId': tab.id,
+					}
+
+					if(!_opts.open_new_tab_last){
+						tab_opts.index = tab.index + 1;
+					}
+
+					chrome.tabs.create(tab_opts);
 
 				}else{
 
