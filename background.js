@@ -3,7 +3,7 @@ Storage.storage_upgrades();
 
 
 // Added in version 0.1.4
-localStorage['VERSION'] = '0.7.15';
+localStorage['VERSION'] = '0.7.16';
 
 // Id of the root menu when the contextmenu activator is used.
 var G_rootMenuId = null;
