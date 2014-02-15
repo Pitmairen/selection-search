@@ -5,12 +5,12 @@ $(document).ready(function (){
 	var query = document.location.search.substr(1).split('=');
 
 	if(query.length != 2){
-		$("#error").text('Search failed"');
+		$("#error").text('Search failed');
 		return;
 	}
 
 	if(query[0] != 'url'){
-		$("#error").text('Search failed"');
+		$("#error").text('Search failed');
 		return;
 	}
 
