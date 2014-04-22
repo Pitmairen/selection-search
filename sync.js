@@ -71,7 +71,7 @@ var Sync = new function(){
 			var notification = webkitNotifications.createNotification(
 			  'icon48.png',
 			  'Synchronization Error',
-			  'Failed to synchronize you settings. Sync has been disabled. ('+chrome.runtime.lastError+')'
+			  'Failed to synchronize you settings. Sync has been disabled. ('+chrome.runtime.lastError['message']+')'
 			);
 
 			notification.show();

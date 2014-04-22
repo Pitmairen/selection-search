@@ -356,7 +356,7 @@ chrome.storage.sync.get(null, function(items){
 		var notification = webkitNotifications.createNotification(
 		  'icon48.png',
 		  'Synchronization Error',
-		  'Failed to load synced settings ('+chrome.runtime.lastError+')'
+		  'Failed to load synced settings ('+chrome.runtime.lastError['message']+')'
 		);
 
 		notification.show();
