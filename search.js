@@ -46,6 +46,9 @@ var G_ENGINE_EDITOR = null;
 		}
 
 
+        $.fx.off = response.options.disable_effects;
+
+
 		G_POPUP.setOptions(response.options);
 		var separate_menus = response.options.separate_menus;
 		for (i in response.searchEngines){

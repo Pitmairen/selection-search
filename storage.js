@@ -28,6 +28,7 @@ var Storage = new function (){
 		disable_formextractor: false,
 		open_on_dblclick: false,
 		open_new_tab_last: false,
+		disable_effects: false,
 	};
 
 	var _syncOptions = {

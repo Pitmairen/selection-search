@@ -328,6 +328,7 @@ $(document).ready(function(){
 
 		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
 		$("input[name='hide-on-click']").attr('checked', response.options.hide_on_click);
+		$("input[name='disable-effects']").attr('checked', response.options.disable_effects);
 
 		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
 		$("#select_activator").change();
@@ -486,6 +487,7 @@ $(document).ready(function(){
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
+			disable_effects: $('#opt-disable-effects').is(':checked'),
 		});
 
 
