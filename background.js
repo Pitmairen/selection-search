@@ -123,20 +123,24 @@ function _create_context_menu(){
 				sel = 'http://' + selection;
 			else
 				sel = selection;
+			return sel;
 		}
-		else
-			sel = encodeURIComponent(selection);
 
-		return url.replace(/%s/g, sel);
+		// sel = encodeURIComponent(selection);
+
+		return Common.replaceSearchPlaceholder(url, selection);
+		// return url.replace(/%s/g, sel);
 	}
 
 	function _getPostUrl(url, selection){
 		var parts = url.split('{POSTARGS}', 2);
 		if(parts.length == 2){
-			url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+			// url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+			url = Common.replaceSearchPlaceholder(parts[0], selection);
 			url += '{POSTARGS}' + parts[1].replace(/%s/g, selection);
 		}else{
-			url = url.replace(/%s/g, encodeURIComponent(selection));
+			url = Common.replaceSearchPlaceholder(url, selection)
+			// url = url.replace(/%s/g, encodeURIComponent(selection));
 		}
 		return chrome.extension.getURL('postsearch.html') + '?url=' + encodeURIComponent(url);
 	}

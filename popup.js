@@ -475,10 +475,13 @@ function PopUp()
 		if(is_post){
 			var parts = search_url.split('{POSTARGS}', 2);
 			if(parts.length == 2){
-				url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+				// url = parts[0].replace(/%s/g, encodeURIComponent(selection));
+				url = Common.replaceSearchPlaceholder(parts[0], selection);
+
 				url += '{POSTARGS}' + parts[1].replace(/%s/g, selection);
 			}else{
-				url = search_url.replace(/%s/g, encodeURIComponent(selection));
+				// url = search_url.replace(/%s/g, encodeURIComponent(selection));
+				url = Common.replaceSearchPlaceholder(search_url, selection);
 			}
 
 			url = chrome.extension.getURL('postsearch.html') + '?url='+encodeURIComponent(url);
@@ -496,12 +499,14 @@ function PopUp()
 					sel = 'http://' + selection;
 				else
 					sel = selection;
+				url = sel;
 			}
-			else
-				sel = encodeURIComponent(selection);
+			else{
+				// sel = encodeURIComponent(selection);
+				url = Common.replaceSearchPlaceholder(search_url, selection);
 
-
-			url = search_url.replace(/%s/g, sel);
+				// url = search_url.replace(/%s/g, sel);
+			}
 		}
 
 
@@ -835,4 +840,5 @@ function KeyAndMouseActivator(_popup){
 	}
 
 }
+
 

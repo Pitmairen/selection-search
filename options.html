@@ -46,7 +46,6 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 
 	<dt>%PAGE_QS_VAR(name)</dt>
 		<dd>A query string variable from the current page (%PAGE_QS_VAR(key1) == value1)</dd>
-
 </dl>
 
 <strong>For Icon url:</strong>
@@ -59,6 +58,9 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 <dl>
 	<dt>COPY</dt>
 		<dd>If the search url is set to "COPY" the selcetion will be copied to the clipboard.</dd>
+
+	<dt>{%+s}</dt>
+		<dd>Using <strong>{%+s}</strong> as a placeholder will replace spaces in the selection with +</dd>
 </dl>
 </div>
 

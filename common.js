@@ -11,7 +11,7 @@ var Common = new function(){
 	var _styleConfig = {
 		"submenu_corner" : "topleft", // Which corner of the submenu to place at which corner of the submenu-link defined by the "submenu_position" config option
 		"submenu_position" : "topright",
-		
+
 	};
 
 	_that = this;
@@ -28,7 +28,7 @@ var Common = new function(){
 // 			$('body').append(_styleNode);
 	}
 
-	
+
 	this.getId =function(id){
 		var new_id = id + '-' + _randomId;
 
@@ -60,14 +60,14 @@ var Common = new function(){
 
 		this.parseStyleOptions(css);
 
-		
+
 		_that.addStyleSheet(css);
 	}
 
 	this.addStyleSheet = function(css){
-		
+
 		_styleNode.append(document.createTextNode(_that.replaceCSS(css)));
-	
+
 	}
 
 
@@ -92,7 +92,7 @@ var Common = new function(){
 
 		if(config.hasOwnProperty('submenu_position') && config['submenu_position'].match(/^(top|bottom)(right|left)$/))
 			_styleConfig['submenu_position'] = config['submenu_position'];
-		
+
 	}
 
 
@@ -119,7 +119,7 @@ var Common = new function(){
 
 
 		menu.css({'visibility': 'hidden', 'display': 'block'});
-		
+
 		if(corner[1] == 'bottom')
 			y -= menu.outerHeight();
 
@@ -133,7 +133,7 @@ var Common = new function(){
 		var wwidth =  $(window).width() - 5;
 		var wheight = $(window).height() - 5;
 
-		
+
 		if(abs_x - window.pageXOffset + menu.outerWidth() > wwidth)
 			x = 0 - menu.outerWidth();
 
@@ -176,3 +176,15 @@ Common.calculateWindowPosition = function(node, x, y){
 	return {'x':x, 'y':y}
 
 }
+
+
+Common.replaceSearchPlaceholder = function(string, selection)
+{
+
+	string = string.replace(/%s/g, encodeURIComponent(selection));
+
+	return string.replace(/\{%\+s\}/g, encodeURIComponent(selection).replace(
+				/%20/g, '+'));
+
+}
+
