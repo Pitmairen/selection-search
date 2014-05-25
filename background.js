@@ -136,7 +136,7 @@ function _create_context_menu(){
 			url = parts[0].replace(/%s/g, encodeURIComponent(selection));
 			url += '{POSTARGS}' + parts[1].replace(/%s/g, selection);
 		}else{
-			url = url.replace(/%s/g, encodeURIComponent(selecton));
+			url = url.replace(/%s/g, encodeURIComponent(selection));
 		}
 		return chrome.extension.getURL('postsearch.html') + '?url=' + encodeURIComponent(url);
 	}
