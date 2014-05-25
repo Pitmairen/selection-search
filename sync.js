@@ -46,8 +46,14 @@ var Sync = new function(){
 
 		var data = {}
 
-		if(opts.sync_engines)
-			data.engines = _getEnginesToSave(storage);
+		if(opts.sync_engines){
+			var engines = _getEnginesToSave(storage);
+
+			var chunks = _splitSearchEnginesIntoChunks(engines);
+
+			jQuery.extend(data, chunks);
+
+		}
 		if(opts.sync_settings)
 			data.settings = storage.getOptions();
 		if(opts.sync_style)
@@ -84,12 +90,17 @@ var Sync = new function(){
 
 	this.loadStorage = function(storage, items){
 
-
 		var opts = storage.getSyncOptions();
 
-		if(items.hasOwnProperty('engines') && opts.sync_engines)
-		{
-			storage.setSearchEngines(_getEnginesToLoad(storage, items.engines));
+		if(opts.sync_engines){
+
+			if(items.hasOwnProperty('engines_chunk_count') && items.engines_chunk_count > 0){
+				var synced_engines = _getChunkedEngines(items);
+				storage.setSearchEngines(_getEnginesToLoad(storage, synced_engines));
+			}
+			else if(items.hasOwnProperty('engines'))
+				storage.setSearchEngines(_getEnginesToLoad(storage, items.engines));
+
 		}
 
 		if(items.hasOwnProperty('settings') && opts.sync_settings)
@@ -109,10 +120,6 @@ var Sync = new function(){
 
 		var opts = storage.getSyncOptions();
 
-		if(changes.hasOwnProperty('engines') && opts.sync_engines)
-		{
-			storage.setSearchEngines(_getEnginesToLoad(storage, changes.engines.newValue));
-		}
 
 		if(changes.hasOwnProperty('settings') && opts.sync_settings)
 		{
@@ -124,8 +131,126 @@ var Sync = new function(){
 			storage.setStyle(changes.style.newValue);
 		}
 
+		if(opts.sync_engines){
+
+			if(changes.hasOwnProperty('engines')){
+				storage.setSearchEngines(_getEnginesToLoad(storage, changes.engines.newValue));
+			}
+			else{
+
+				var chunks = $.grep(Object.keys(changes), function(value,index){
+					return value.startsWith('engines_chunk_');
+				});
+
+				if(chunks.length > 0){
+					_reloadFromSync(storage);
+				}
+
+			}
+
+
+
+		}
+	}
+
+	function _getChunkedEngines(sync_items)
+	{
+
+		var count = sync_items.engines_chunk_count;
+
+		var chunks = [];
+
+		for(var i=0; i < count; i++){
+
+			var key = 'engines_chunk_' + i;
+
+			if(sync_items.hasOwnProperty(key)){
+				chunks.push(sync_items[key]);
+			}
+		}
+
+
+		try{
+			var engines = JSON.parse(chunks.join(''));
+		}
+		catch(e){
+			var notification = webkitNotifications.createNotification(
+			  'icon48.png',
+			  'Synchronization Error',
+			  'Failed to parse chunked search engines ('+e+')'
+			);
+
+			notification.show();
+			return [];
+
+		}
+
+		return engines;
 
 	}
+
+	function _reloadFromSync(storage)
+	{
+
+		chrome.storage.sync.get(null, function(items){
+
+			if(chrome.runtime.lastError !== undefined){
+
+				var notification = webkitNotifications.createNotification(
+				  'icon48.png',
+				  'Synchronization Error',
+				  'Failed to update synced settings ('+chrome.runtime.lastError['message']+')'
+				);
+
+				notification.show();
+				return;
+			}
+
+			Sync.loadStorage(storage, items);
+			_update_context_menu();
+
+		});
+
+	}
+
+
+	function _splitSearchEnginesIntoChunks(original_engines)
+	{
+		var engines_string = JSON.stringify(original_engines);
+		var len = engines_string.length;
+
+		if(len < 4000){
+
+			// try to remove some old values if they are present.
+			chrome.storage.sync.remove(
+			$.map([0,1,2,3,4,5,6,7,8,9], function(i){return 'engines_chunk_'+i})
+			);
+
+			return {'engines' : original_engines, 'engines_chunk_count' : 0}
+		}
+
+
+		// The string will be converted to json when stored, so the string
+		// will be double stringified. The length of the string will be
+		// longer so we check the difference in length.
+		var diff = len / JSON.stringify(engines_string).length;
+
+		var chunk_size = Math.floor(4000 * diff) - 50;
+
+		var re = new RegExp(".{1,"+chunk_size+"}","g");
+
+		var chunks = engines_string.match(re);
+
+		var ret = {'engines_chunk_count' : chunks.length};
+
+		for(var i=0; i<chunks.length; ++i){
+			ret['engines_chunk_'+i] = chunks[i];
+		}
+
+		return ret;
+
+	}
+
 
 
 
