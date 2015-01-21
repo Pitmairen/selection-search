@@ -309,9 +309,9 @@ function PopUp()
 
 
 			var urls_to_open = get_all_links(engine, []);
-// 			console.log(urls_to_open);
+			// console.log(urls_to_open);
 
-			chrome.runtime.sendMessage({action:'openUrls', urls:urls_to_open});
+			chrome.runtime.sendMessage({action:'openUrls', urls:urls_to_open, background_tab:engine.background_tab});
 
 
 			if(_that.options.hide_on_click && _that.isActive()){
@@ -405,10 +405,10 @@ function PopUp()
 
 			if(_that.options.newtab){
 
-				if(_that.options.background_tab){
+				if(_that.options.background_tab || engine.background_tab){
 					a.click(function(){
 
-						chrome.runtime.sendMessage({action:'openUrls', urls:[$(this).attr('href')]});
+						chrome.runtime.sendMessage({action:'openUrls', urls:[$(this).attr('href')], background_tab:engine.background_tab});
 
 						return false;
 					});

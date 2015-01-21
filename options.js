@@ -194,6 +194,32 @@ function _addEngineOptions(en, tr){
 	}
 
 
+	if(!en.is_separator){
+		var background_tab = $('<div class="engine-opt-background_tab"></div>');
+		background_tab.append('<hr />');
+		background_tab.append("<p>Open in background tab</p>");
+
+
+		var bg_opts = $('<div style="padding-left: 1.5em;"></div>');
+		bg_opts.append($('<input type="checkbox" class="background_tab" id="engine-opts-background_tab-'+_G_engine_id_count+'"><label for="engine-opts-background_tab-'+_G_engine_id_count+'">Open in background tab</label>'));
+
+
+		var bg_opts_global = $('<input type="checkbox" class="background_global" id="engine-opts-background_tab_global'+_G_engine_id_count+'"/><label for="engine-opts-background_tab_global'+_G_engine_id_count+'">Use global settings</label>').click(function(){
+			if($(this).is(':checked')){
+				$('input', bg_opts).attr('disabled', true);
+			}else{
+				$('input', bg_opts).attr('disabled', false);
+			}
+		});
+
+
+		background_tab.append(bg_opts_global);
+		background_tab.append(bg_opts);
+
+		options_popup.append(background_tab);
+
+	}
+
 	var enable_sync = $('<input class="nosync" id="engine-opt-sync-'+_G_engine_id_count+'" type="checkbox" />');
 
 	options_popup.append('<hr />').append(enable_sync).append('<label for="engine-opt-sync-'+_G_engine_id_count+'">Synchronize</label>');
@@ -213,6 +239,13 @@ function _addEngineOptions(en, tr){
 	}
 	if(en.hide_on_click){
 		options_popup.find('.hide_on_click').attr('checked', true);
+	}
+	if(en.background_tab == undefined){
+		options_popup.find('.background_global').attr('checked', true);
+		options_popup.find('.background_tab').attr('disabled', true);
+	}else{
+		options_popup.find('.background_global').attr('checked', false);
+		options_popup.find('.background_tab').attr('checked', en.background_tab);
 	}
 
 	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
@@ -360,6 +393,11 @@ $(document).ready(function(){
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
 
+		if(!$("#opt-newtab").is(':checked')){
+			$('.engine-opt-background_tab').hide();
+		}else{
+			$('.engine-opt-background_tab').show();
+		}
 
 	});
 
@@ -369,6 +407,12 @@ $(document).ready(function(){
 	$('#new-engine').click(function(){
 
 		addNewEngine({name:'', url:'', icon_url:''}, 0);
+
+		if(!$("#opt-newtab").is(':checked')){
+			$('.engine-opt-background_tab').hide();
+		}else{
+			$('.engine-opt-background_tab').show();
+		}
 
 		return false;
 	});
@@ -384,6 +428,20 @@ $(document).ready(function(){
 
 		return false;
 	});
+
+
+	$("#opt-newtab").click(function(){
+
+		if(!$(this).is(':checked')){
+			$('.engine-opt-background_tab').hide();
+		}else{
+			$('.engine-opt-background_tab').show();
+		}
+
+	});
+
+
+
 
 
 	$('#save').click(function(){
@@ -425,6 +483,11 @@ $(document).ready(function(){
 			else
 				en.nosync = true;
 
+			if(en.background_global != undefined){
+				if(en.background_global)
+					delete en.background_tab;
+				delete en.background_global;
+			}
 
 			if($(this).hasClass('menu-folder')){
 
