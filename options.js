@@ -166,30 +166,11 @@ $(document).ready(function(){
 
 	chrome.runtime.sendMessage({}, function(response){
 
-		popup.setOptions(response.options);
-		Common.setStyleSheet(response.default_style);
-		if(response.extra_style)
-			Common.setStyleSheet(response.extra_style);
-
-		for (i in response.searchEngines){
-			var en = response.searchEngines[i];
-
-			if(i < 3) // add 3 engines for preview
-				popup.addSearchEngine(en);
-
-
-			addNewEngine(en, 0);
-		}
-
 
 		if(response.extra_style){
-
-			CURRENT_STYLE= response.extra_style;
+			CURRENT_STYLE=response.extra_style;
 			$('#select_theme').prepend('<option selected="selected" value="current_style">&lt;Current Style&gt;</option>');
 		}
-
-		$('#preview').append(popup.getForPreview());
-		$('#preview-button').append(popup.getButtonForPreview());
 
 
 		$("input[name='button']").filter("[value="+response.options.button+"]").attr('checked', true);
@@ -231,6 +212,25 @@ $(document).ready(function(){
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
 
+
+        // Add search engines
+		for (var i in response.searchEngines){
+			var en = response.searchEngines[i];
+
+			if(i < 3) // add 3 engines for preview
+				popup.addSearchEngine(en);
+
+
+			addNewEngine(en, 0);
+		}
+
+		popup.setOptions(response.options);
+		Common.setStyleSheet(response.default_style);
+		if(response.extra_style)
+			Common.setStyleSheet(response.extra_style);
+
+		$('#preview').append(popup.getForPreview());
+		$('#preview-button').append(popup.getButtonForPreview());
 
 	});
 
