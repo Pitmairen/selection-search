@@ -28,7 +28,7 @@ function EngineEditor(){
 	_editor.append(_iconEdit);
 
 
-	var _titleBar = $('<h4 style="padding-left: 20px; background: url(\''+chrome.extension.getURL('icon16.png')+'\') no-repeat left top;"><input style="background: url(\''+chrome.extension.getURL('close.png')+'\') no-repeat center center;" class="close" type="button" value="" /><span class="title">Add search engine</span></h4>');
+	var _titleBar = $('<h4 style="padding-left: 20px; background: url(\''+chrome.extension.getURL('img/icon16.png')+'\') no-repeat left top;"><input style="background: url(\''+chrome.extension.getURL('img/close.png')+'\') no-repeat center center;" class="close" type="button" value="" /><span class="title">Add search engine</span></h4>');
 	_editorContainer.append(_titleBar);
 	_editorContainer.append(_editor);
 	_editorContainer.append(_loading);
@@ -36,7 +36,7 @@ function EngineEditor(){
 	_editorContainer.append(_saveButton).append(_cancelButton);
 
 	_loading.css({
-		'background' : 'url("'+chrome.extension.getURL('ajax-loader.gif')+'") no-repeat center center',
+		'background' : 'url("'+chrome.extension.getURL('img/ajax-loader.gif')+'") no-repeat center center',
 		'height' : '50px', 'width' : '100%',
 	});
 

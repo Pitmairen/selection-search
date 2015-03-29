@@ -30,7 +30,7 @@ function PopUp()
 		'position': 'absolute',
 		'display' :  'none',
 		'zIndex' :  9999999,
-		'background-image' : 'url("' + chrome.extension.getURL('icon16.png') + '")',
+		'background-image' : 'url("' + chrome.extension.getURL('img/icon16.png') + '")',
 	});
 	$('html').append(_buttonNode);
 
@@ -551,9 +551,9 @@ PopUp.getIconUrlFromEngine = function(engine) {
 		return engine.icon_url;
 	}
 	else if(engine.url == 'COPY')
-		return chrome.extension.getURL('copy.png');
+		return chrome.extension.getURL('img/copy.png');
 	else if(engine.is_submenu)
-		return chrome.extension.getURL('folder.png');
+		return chrome.extension.getURL('img/folder.png');
 	return PopUp.getIconUrl(engine.url);
 }
 PopUp.getIconUrl = function(url) {

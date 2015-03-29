@@ -227,7 +227,7 @@ var Storage = new function (){
 		});
 
 		var notification = webkitNotifications.createNotification(
-		  'icon48.png',
+		  'img/icon48.png',
 		  'Online Synchronization',
 		  'Synchronization of search engines and settings between browsers is now available. It has been disabled by default, but can be enabled in the settings.'
 		);

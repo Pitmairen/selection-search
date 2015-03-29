@@ -75,7 +75,7 @@ var Sync = new function(){
 			});
 
 			var notification = webkitNotifications.createNotification(
-			  'icon48.png',
+			  'img/icon48.png',
 			  'Synchronization Error',
 			  'Failed to synchronize you settings. Sync has been disabled. ('+chrome.runtime.lastError['message']+')'
 			);
@@ -175,7 +175,7 @@ var Sync = new function(){
 		}
 		catch(e){
 			var notification = webkitNotifications.createNotification(
-			  'icon48.png',
+			  'img/icon48.png',
 			  'Synchronization Error',
 			  'Failed to parse chunked search engines ('+e+')'
 			);
@@ -197,7 +197,7 @@ var Sync = new function(){
 			if(chrome.runtime.lastError !== undefined){
 
 				var notification = webkitNotifications.createNotification(
-				  'icon48.png',
+				  'img/icon48.png',
 				  'Synchronization Error',
 				  'Failed to update synced settings ('+chrome.runtime.lastError['message']+')'
 				);

@@ -18,7 +18,7 @@ p.buttons{
 	padding-left: 85px;
 /* 	height: 128px; */
 	line-height: 72px;
-	background: url("icon128.png") no-repeat left center;
+	background: url("img/icon128.png") no-repeat left center;
 	background-size:72px;
 }
 .section-heading {
@@ -128,7 +128,7 @@ hr{
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	background: url("engine-options.png") no-repeat center center;
+	background: url("img/engine-options.png") no-repeat center center;
 	opacity: 0.8;
 }
 
@@ -155,7 +155,7 @@ hr{
 .close-popup{
 	width: 12px;
 	height: 12px;
-	background: url("close.png") no-repeat center center;
+	background: url("img/close.png") no-repeat center center;
 	display: block;
 	float: right;
 	border: 1px solid #aaa;
@@ -271,7 +271,7 @@ a{
 .drag-target{
 	cursor: move;
 	float: left;
-    background: url("move.png") no-repeat center center;
+    background: url("img/move.png") no-repeat center center;
 }
 
 .drag-moving, #engines tr:not(:first-child):hover{
