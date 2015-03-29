@@ -19,76 +19,32 @@ var _G_engine_id_count = 0;
 
 function addNewEngine(en, level){
 
-	++_G_engine_id_count;
 
+    var template_data = {en:en, id:++_G_folder_id_count};
 
 	if(en.is_separator){
-		return _addSeparator(en, level);
+		_addSeparator(template_data, level);
+        return;
 	}
-
-	var name = en.name,
-		url = en.url,
-		icon_url = en.icon_url,
-		post = en.post || false,
-		is_folder = en.is_submenu || false;
-
-	level = level || 0;
-
-	icon_url = icon_url == undefined ||
-				icon_url.length == 0 ? '(Use default)' : icon_url;
-
-	var tr = $('<tr></tr>');
-
-	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
-	tr.append($('<td></td>').append($('<input class="name" type="text" />').val(name)));
+    
+    if(en.is_submenu)
+        template_data.folder_id = ++_G_folder_id_count;
 
 
-	var _url = $('<input class="url" type="text" />');
-	if(!is_folder)
-		_url.val(url)
-	else
-		_url.val('Submenu').attr('disabled', true);
+    var el = $(render.searchengine(template_data));
 
-	tr.append($('<td></td>').append(_url));
-	tr.append($('<td></td>').append($('<input class="icon_url" type="text" />').val(icon_url)));
+	Reorder.makeMovable(el);
 
-	tr.find('input.icon_url').focus(function (){
+	el.data('level', level);
 
-		if ($(this).val() == '(Use default)')
-			$(this).val('');
+    _addEngineOptions(en, el);
 
-	}).blur(function (){
+	$('#engines').append(el);
 
-		if (!$(this).val())
-			$(this).val('(Use default)');
-
-	});
-
-
-	_addEngineOptions(en, tr);
-
-	Reorder.makeMovable(tr);
-
-
-	$('#engines').append(tr);
-
-	tr.data('level', level);
-
-
-	if(!is_folder){
-
-		tr.attr('id', 'search-engine-'+(_G_engine_id_count));
-		tr.addClass('search-engine');
-		Reorder.initElements(tr);
-
+	if(!en.is_submenu){
+		Reorder.initElements(el);
 		return;
 	}
-
-	tr.addClass('menu-folder');
-
-	var id = 'folder-'+(++_G_folder_id_count);
-	tr.attr('id', id);
-
 
 	var engines = en.engines || [];
 
@@ -96,216 +52,91 @@ function addNewEngine(en, level){
 		addNewEngine(engines[i], level+1);
 	}
 
+    var end = $(render.folder_end(template_data)).data('level', level+1);
 
-
-	var end = $('<tr id="end-'+id+'" class="menu-folder-end"><td></td><td colspan="5"></td></tr>').data('level', level+1);
-
-
-	Reorder.initElements(tr);
+	Reorder.initElements(el);
 	Reorder.initElements(end);
 
 	$('#engines').append(end);
 
-
 }
 
 
-function _addSeparator(en, level){
+function _addSeparator(template_data, level){
 
-	var tr = $('<tr class="menu-separator"></tr>');
+    var el = $(render.separator(template_data));
 
-	tr.append($('<td class="drag-target"></td>').css('background', 'url("'+chrome.extension.getURL('move.png')+'") no-repeat center center'));
+	_addEngineOptions(template_data.en, el);
 
-
-	tr.append('<td colspan="3"><div class="separator-bg"></div></td>').data('level', level);
-
-	_addEngineOptions(en, tr);
-
-
-	Reorder.initElements(tr);
-	Reorder.makeMovable(tr);
-	$('#engines').append(tr);
+	Reorder.initElements(el);
+	Reorder.makeMovable(el);
+	$('#engines').append(el);
 
 
 }
 
-function _addEngineOptions(en, tr){
+function _addEngineOptions(en, el){
 
 
-	var options_popup = $('<div class="engine-options-popup"></div>');
+    var opts = el.find('.engine-options-popup');
+
+    opts.find('.close-popup').click(function(){
+		opts.fadeOut(100);
+        return false;
+    });
 
 
-	options_popup.append($('<a href="#" class="close-popup"></a>').click(function(){
+	el.find('.engine-opts-link').click(function(){
 
-			options_popup.fadeOut(100);
-			return false;
+		$('.engine-options-popup').not(opts).hide();
 
-		})
-	);
-
-
-	if(!en.is_submenu && !en.is_separator)
-		options_popup.append('<label for="engine-opt-post-'+_G_engine_id_count+'">Use POST method</label><input class="post" id="engine-opt-post-'+_G_engine_id_count+'" type="checkbox" /><hr />');
-
-	options_popup.append('<p><strong>Show in:</strong></p>');
-
-	options_popup.append('<p><input class="hide_in_ctx" id="engine-opt-ctx-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-ctx-'+_G_engine_id_count+'">Context menu</label></p>');
-	options_popup.append('<p><input class="hide_in_popup" id="engine-opt-popup-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-popup-'+_G_engine_id_count+'">Popup</label></p>');
-	options_popup.append('<p class="separate-menus-msg">This only has effect when the "Separate search engines" option is checked below in "Other Options" section.</p>');
-
-	if(!en.is_submenu && !en.is_separator){
-
-		var hide_on_click = '<input class="hide_on_click" id="engine-opt-hide-on-click-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-hide-on-click-'+_G_engine_id_count+'">Hide menu on click<p>';
-
-		options_popup.append('<hr>').append(hide_on_click).append('<p class="separate-menus-msg">The menu will be hidden after clicking this search engine.</p>');
-
-	}
-
-
-	if(en.is_submenu){
-
-		var hide_menu = $('<input class="hidemenu" id="engine-opt-hidemenu-'+_G_engine_id_count+'" type="checkbox" />');
-
-		var hide_menu_wrap = $('<div style="padding-left: 0.5em;"></div>').append(hide_menu);
-		hide_menu_wrap.append('<label for="engine-opt-hidemenu-'+_G_engine_id_count+'">Don\'t show menu</label>').append('<p class="separate-menus-msg">When this is checked the submenu will not open on mouse over. It will just open all searches inside on click.</p>');
-
-
-		var hide_on_click = '<input style="margin-top: 0.8em;" class="hide_on_click" id="engine-opt-hide-on-click-'+_G_engine_id_count+'" type="checkbox" /> <label for="engine-opt-hide-on-click-'+_G_engine_id_count+'">Hide menu on click<p>';
-
-		hide_menu_wrap.append(hide_on_click).append('<p class="separate-menus-msg">The menu will be hidden after clicking this submenu</p>');
-
-
-		var open_all = $('<input class="openall" id="engine-opt-openall-'+_G_engine_id_count+'" type="checkbox" />').change(function(){
-
-			hide_menu_wrap.toggle($(this).is(':checked'));
-		});
-
-
-		options_popup.append('<hr />').append(open_all).append('<label for="engine-opt-openall-'+_G_engine_id_count+'">Open all on click</label>');
-		options_popup.append('<p class="separate-menus-msg" style="margin-bottom: 0.8em;">When this is checked all search engines in this submenu will be opened at once.</p>');
-		options_popup.append(hide_menu_wrap.hide());
-
-
-		if(en.openall){
-			open_all.attr('checked', true).change();
-
-			hide_menu.attr('checked', en.hidemenu);
-		}
-	}
-
-
-	if(!en.is_separator){
-		var background_tab = $('<div class="engine-opt-background_tab"></div>');
-		background_tab.append('<hr />');
-		background_tab.append("<p>Open in background tab</p>");
-
-
-		var bg_opts = $('<div style="padding-left: 1.5em;"></div>');
-		bg_opts.append($('<input type="checkbox" class="background_tab" id="engine-opts-background_tab-'+_G_engine_id_count+'"><label for="engine-opts-background_tab-'+_G_engine_id_count+'">Open in background tab</label>'));
-
-
-		var bg_opts_global = $('<input type="checkbox" class="background_global" id="engine-opts-background_tab_global'+_G_engine_id_count+'"/><label for="engine-opts-background_tab_global'+_G_engine_id_count+'">Use global settings</label>').click(function(){
-			if($(this).is(':checked')){
-				$('input', bg_opts).attr('disabled', true);
-			}else{
-				$('input', bg_opts).attr('disabled', false);
-			}
-		});
-
-
-		background_tab.append(bg_opts_global);
-		background_tab.append(bg_opts);
-
-		options_popup.append(background_tab);
-
-	}
-
-	var enable_sync = $('<input class="nosync" id="engine-opt-sync-'+_G_engine_id_count+'" type="checkbox" />');
-
-	options_popup.append('<hr />').append(enable_sync).append('<label for="engine-opt-sync-'+_G_engine_id_count+'">Synchronize</label>');
-
-
-	if(!en.hide_in_popup){
-		options_popup.find('.hide_in_popup').attr('checked', true);
-	}
-	if(!en.hide_in_ctx){
-		options_popup.find('.hide_in_ctx').attr('checked', true);
-	}
-	if(!en.nosync){
-		options_popup.find('.nosync').attr('checked', true);
-	}
-	if(en.post){
-		options_popup.find('.post').attr('checked', true);
-	}
-	if(en.hide_on_click){
-		options_popup.find('.hide_on_click').attr('checked', true);
-	}
-	if(en.background_tab == undefined){
-		options_popup.find('.background_global').attr('checked', true);
-		options_popup.find('.background_tab').attr('disabled', true);
-	}else{
-		options_popup.find('.background_global').attr('checked', false);
-		options_popup.find('.background_tab').attr('checked', en.background_tab);
-	}
-
-	var opt_link = $('<a href="#" class="engine-opts-link">&nbsp;</a>').hover(
-
-		function(){
-			$(this).parent().parent().addClass('options-hover');
-		},
-		function(){
-			$(this).parent().parent().removeClass('options-hover');
-		}
-	).click(function(){
-
-		$('.engine-options-popup').not(options_popup).hide();
-
-		var x = $(this).offset().left - options_popup.outerWidth()-4;
+		var x = $(this).offset().left - opts.outerWidth()-4;
 		var y = $(this).offset().top;
-
-		options_popup.css({top:y+'px', left:x+'px'});
-		options_popup.fadeToggle(100);
+		opts.css({top:y+'px', left:x+'px'});
+		opts.fadeToggle(100);
 		return false;
 	});
 
-	tr.append($('<td class="engine-options"></td>').append(opt_link).append(options_popup.hide()));
+    
+	el.find('.delete').click(function(){
 
-
-
-
-	tr.append($('<td></td>').append($('<a href="#" class="delete">X</a>').hover(
-
-		function(){
-			$(this).parent().parent().addClass('options-hover');
-		},
-		function(){
-			$(this).parent().parent().removeClass('options-hover');
-		}
-
-	).click(function(){
-
-		var tr = $(this).parent().parent();
-
-		if(tr.hasClass('menu-folder')){
-
-			var elms = tr.nextUntil('#end-'+tr.attr('id'));
-
-			$('#end-'+tr.attr('id')).remove();
-
-
+		if(el.hasClass('menu-folder')){
+			var elms = el.nextUntil('#end-'+el.attr('id'));
+			$('#end-'+el.attr('id')).remove();
 			elms.each(function(){$(this).data('level', $(this).data('level')-1);});
-
 			Reorder.initElements(elms);
-
-
 		}
-
-		tr.remove();
+		el.remove();
 		return false;
-	})
+	});
 
 
-	));
+
+    opts.find('.openall').change(function(){
+        opts.find('.hide_menu_wrap').toggle($(this).is(':checked'));
+    }).attr('checked', Boolean(en.openall)).change();
+
+
+    opts.find('.background_global').click(function(){
+        opts.find('.background_tab').attr('disabled', $(this).is(":checked"));
+    });
+
+	opts.find('.hide_in_popup').attr('checked', !Boolean(en.hide_in_popup));
+    opts.find('.hide_in_ctx').attr('checked', !Boolean(en.hide_in_ctx));
+    opts.find('.nosync').attr('checked', !Boolean(en.nosync));
+	opts.find('.post').attr('checked', Boolean(en.post));
+    opts.find('.hide_on_click').attr('checked', Boolean(en.hide_on_click));
+
+	if(en.background_tab === undefined){
+		opts.find('.background_global').attr('checked', true);
+		opts.find('.background_tab').attr('disabled', true);
+	}else{
+		opts.find('.background_global').attr('checked', false);
+		opts.find('.background_tab').attr('checked', en.background_tab);
+	}
+
+    // folders
+    opts.find('.hidemenu').attr('checked', Boolean(en.hidemenu));
 
 
 }
@@ -460,7 +291,7 @@ $(document).ready(function(){
 					en[$(this).attr('class')] = $(this).val();
 			});
 
-			if(en.icon_url == '(Use default)')
+			if(en.icon_url === '')
 				delete en.icon_url;
 			if(!en.post)
 				delete en.post;
@@ -938,5 +769,9 @@ $(document).ready(function(){
 		$('#popup-advanced-options').slideToggle();
 		return false;
 	});
+
+
+
+
 
 });

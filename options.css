@@ -271,10 +271,11 @@ a{
 .drag-target{
 	cursor: move;
 	float: left;
+    background: url("move.png") no-repeat center center;
 }
 
-.drag-moving, .options-hover{
-  background:#ddd;
+.drag-moving, #engines tr:not(:first-child):hover{
+    background: #ddd;
 }
 
 #hotkey_info{

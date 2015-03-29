@@ -1,0 +1,22 @@
+{{? it.en.is_submenu }}
+<tr class="menu-folder" id="folder-{{=it.folder_id}}">
+{{??}}
+<tr class="search-engine" id="search-engine-{{=it.id}}">
+{{?}}
+    <td class="drag-target"></td>
+    <td>
+        <input type="text" class="name" value="{{= it.en.name }}">
+    </td>
+    <td>
+        {{? it.en.is_submenu }}
+            <input type="text" class="url" value="Submenu" disabled="true">
+        {{??}}
+            <input type="text" class="url" value="{{= it.en.url }}">
+        {{?}}
+    </td>
+    <td>
+        <input class="icon_url" type="text" placeholder="(Use default)" value="{{= it.en.icon_url || '' }}">
+    </td>
+
+    {{#def.engine_options}}
+</tr>
