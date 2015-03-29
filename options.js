@@ -135,6 +135,13 @@ function _addEngineOptions(en, el){
 		opts.find('.background_tab').attr('checked', en.background_tab);
 	}
 
+
+    if(!$("#opt-newtab").is(':checked')){
+        opts.find('.engine-opt-background_tab').hide();
+    }else{
+        opts.find('.engine-opt-background_tab').show();
+    }
+
     // folders
     opts.find('.hidemenu').attr('checked', Boolean(en.hidemenu));
 
@@ -224,11 +231,6 @@ $(document).ready(function(){
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
 
-		if(!$("#opt-newtab").is(':checked')){
-			$('.engine-opt-background_tab').hide();
-		}else{
-			$('.engine-opt-background_tab').show();
-		}
 
 	});
 
@@ -236,27 +238,17 @@ $(document).ready(function(){
 	$('#search-icon').append('<img src="'+chrome.extension.getURL('img/icon16.png')+'" width="16px" height="16px" />');
 
 	$('#new-engine').click(function(){
-
 		addNewEngine({name:'', url:'', icon_url:''}, 0);
-
-		if(!$("#opt-newtab").is(':checked')){
-			$('.engine-opt-background_tab').hide();
-		}else{
-			$('.engine-opt-background_tab').show();
-		}
-
 		return false;
 	});
 
 	$('#new-folder').click(function(){
 		addNewEngine({name:'New Submenu', url:'', icon_url:'', is_submenu:true}, 0);
-
 		return false;
 	});
 
 	$('#new-separator').click(function(){
 		addNewEngine({is_separator:true}, 0);
-
 		return false;
 	});
 
@@ -270,9 +262,6 @@ $(document).ready(function(){
 		}
 
 	});
-
-
-
 
 
 	$('#save').click(function(){
@@ -314,7 +303,7 @@ $(document).ready(function(){
 			else
 				en.nosync = true;
 
-			if(en.background_global != undefined){
+			if(en.background_global !== undefined){
 				if(en.background_global)
 					delete en.background_tab;
 				delete en.background_global;
@@ -353,7 +342,7 @@ $(document).ready(function(){
 			}
 		});
 
-		// When we get here only the root item should vbe left
+		// When we get here only the root item should be left
 		var new_engines = folder_stack[0].engines;
 
 
@@ -402,7 +391,6 @@ $(document).ready(function(){
 
 
 	$('#restore').click(function(){
-
 
 		if(confirm("This will delete all your search engines and reset all the changes you have made")){
 
@@ -749,13 +737,12 @@ $(document).ready(function(){
 
 	$('#show-more-variables').click(function(){
 
+        // Change the link text to "Hide" when the variables is shows.
 		if($(this).data('old-text')){
 			$(this).text($(this).data('old-text')).removeData('old-text');
 		}else{
 			$(this).data('old-text', $(this).text()).text('Hide');
 		}
-
-
 
 
 		$('#more-variables').slideToggle();
