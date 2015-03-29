@@ -20,7 +20,7 @@ var _G_engine_id_count = 0;
 function addNewEngine(en, level){
 
 
-    var template_data = {en:en, id:++_G_folder_id_count};
+    var template_data = {en:en, id:++_G_engine_id_count};
 
 	if(en.is_separator){
 		_addSeparator(template_data, level);
