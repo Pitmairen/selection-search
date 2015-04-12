@@ -29,6 +29,7 @@ var Storage = new function (){
 		open_on_dblclick: false,
 		open_new_tab_last: false,
 		disable_effects: false,
+                activator_combo: [],
 	};
 
 	var _syncOptions = {

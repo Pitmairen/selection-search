@@ -587,7 +587,7 @@ PopUp.getSelectionRect = function(){
 
 
 
-function ClickActivator(_popup){
+function ClickActivator(_popup, in_combo){
 
 	var _doubleClickTime = 0;
 
@@ -595,7 +595,7 @@ function ClickActivator(_popup){
 
 		$(document).mousedown(function(e){
 
-			if(_popup.isActive()){
+			if(!in_combo && _popup.isActive()){
 				_popup.hide();
 				return;
 			}
@@ -693,7 +693,7 @@ function DoubleClickActivator(_popup){
 }
 
 
-function AutoActivator(_popup){
+function AutoActivator(_popup, in_combo){
 
 	var _lastTimer;
 	var _startedInInput = false;
@@ -708,7 +708,7 @@ function AutoActivator(_popup){
 
 			_startedInInput = false;
 
-			if(_popup.isActive())
+			if(!in_combo && _popup.isActive())
 				_popup.hide();
 			if(_popup.buttonIsActive())
 				_popup.hideButton();
@@ -770,7 +770,7 @@ function AutoActivator(_popup){
 
 
 
-function KeyAndMouseActivator(_popup){
+function KeyAndMouseActivator(_popup, in_combo){
 
 	var _keys = {}; // Keybard Combo
 	var _mouseButton = 0;
@@ -809,7 +809,7 @@ function KeyAndMouseActivator(_popup){
 
 		$(document).mousedown(function(e){
 
-			if(_popup.isActive()){
+			if(!in_combo && _popup.isActive()){
 				_popup.hide();
 				return;
 			}
@@ -838,6 +838,30 @@ function KeyAndMouseActivator(_popup){
 		return true;
 
 	}
+
+}
+
+
+function ComboActivator(_popup, activators){
+    
+
+
+    this.setup = function(){
+        
+		$(document).mousedown(function(e){
+
+			if(_popup.isActive()){
+				_popup.hide();
+		    }
+
+        });
+
+        for(var i in activators){
+            activators[i].setup();
+        }
+
+
+    }
 
 }
 

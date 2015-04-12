@@ -59,11 +59,13 @@ var G_ENGINE_EDITOR = null;
 		}
 
 		if(response.options.activator == 'auto')
-			G_POPUP.setActivator(new AutoActivator(G_POPUP));
+			G_POPUP.setActivator(new AutoActivator(G_POPUP, false));
 		else if(response.options.activator == 'k_and_m')
-			G_POPUP.setActivator(new KeyAndMouseActivator(G_POPUP));
+			G_POPUP.setActivator(new KeyAndMouseActivator(G_POPUP, false));
+        else if(response.options.activator == 'combo')
+            G_POPUP.setActivator(_createComboActivator(response.options.activator_combo));
 		else
-			G_POPUP.setActivator(new ClickActivator(G_POPUP));
+			G_POPUP.setActivator(new ClickActivator(G_POPUP, false));
 
 
 		if(response.options.open_on_dblclick){
@@ -76,6 +78,23 @@ var G_ENGINE_EDITOR = null;
 
 
 
+    function _createComboActivator(combo_opts){
+        
+        var activator_map = {'auto': AutoActivator,
+                            'k_and_m' : KeyAndMouseActivator,
+                            'click' : ClickActivator};
+        var activators = [];
+        for(var i in combo_opts){
+
+            if (activator_map.hasOwnProperty(combo_opts[i])){
+                activators.push(new activator_map[combo_opts[i]](G_POPUP, true));
+            }
+
+        }
+
+        return new ComboActivator(G_POPUP, activators);
+
+    }
 
 
 })();

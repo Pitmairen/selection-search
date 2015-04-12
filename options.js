@@ -6,7 +6,8 @@ var ACTIVATORS = {
 	'click' : 'Mouse Click',
 	'auto' :  'Auto',
 // 	'contextmenu' : 'Context Menu',
-	'k_and_m' : 'Keyboard shortcut + Mouse click'
+	'k_and_m' : 'Keyboard shortcut + Mouse click',
+	'combo' :  'Multiple Activators',
 }
 
 var CONTEXTMENU_OPTIONS = {
@@ -213,6 +214,14 @@ $(document).ready(function(){
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
 
 
+        // set activator combo
+        for(var i in response.options.activator_combo){
+            var act = response.options.activator_combo[i];
+            $("#combo_"+act).attr("checked", true);
+
+        }
+
+
         // Add search engines
 		for (var i in response.searchEngines){
 			var en = response.searchEngines[i];
@@ -355,6 +364,13 @@ $(document).ready(function(){
 
 		Storage.setStyle(jQuery.trim($('#style').val()));
 
+
+        var act_combo = $('input[name=activator_combo]:checked').map(function() {
+                return $(this).val();
+        }).get();
+
+
+
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
 			newtab: $("input[name='newtab']").is(':checked'),
@@ -371,6 +387,7 @@ $(document).ready(function(){
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 			disable_effects: $('#opt-disable-effects').is(':checked'),
+            activator_combo: act_combo,
 		});
 
 
@@ -454,6 +471,8 @@ $(document).ready(function(){
 		$('#activator_' + opt.attr('value')).show(100);
 
 	});
+
+
 
 	for (var act in CONTEXTMENU_OPTIONS){
 
