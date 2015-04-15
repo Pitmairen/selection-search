@@ -292,9 +292,6 @@ function PopUp()
 
 					if(separate_menus && e.hide_in_popup)
 						continue;
-					else if(e.url == 'COPY')
-						continue;
-
 
 					if(e.is_submenu){
 						urls = get_all_links(e, urls);
@@ -311,7 +308,7 @@ function PopUp()
 			var urls_to_open = get_all_links(engine, []);
 			// console.log(urls_to_open);
 
-			chrome.runtime.sendMessage({action:'openUrls', urls:urls_to_open, background_tab:engine.background_tab});
+			chrome.runtime.sendMessage({action:'openUrls', urls:urls_to_open, background_tab:engine.background_tab, selection:_lastSelection});
 
 
 			if(_that.options.hide_on_click && _that.isActive()){
@@ -408,7 +405,7 @@ function PopUp()
 				if(_that.options.background_tab || engine.background_tab){
 					a.click(function(){
 
-						chrome.runtime.sendMessage({action:'openUrls', urls:[$(this).attr('href')], background_tab:engine.background_tab});
+						chrome.runtime.sendMessage({action:'openUrls', urls:[$(this).attr('href')], background_tab:engine.background_tab, selection:_lastSelection});
 
 						return false;
 					});

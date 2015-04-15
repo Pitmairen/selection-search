@@ -41,14 +41,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	}
 	else if(request.action == 'openUrls'){
 
-		_openAllUrls(request.urls, sender.tab, request.background_tab);
+		_openAllUrls(request.urls, sender.tab, request.background_tab, request.selection);
 
 		sendResponse({});
 		return;
 	}
 
 
-	resp = {}
+	resp = {};
 
 	resp.options = Storage.getOptions();
 	resp.sync_options = Storage.getSyncOptions();
@@ -76,16 +76,22 @@ function copyToClipboard( text ){
 	document.body.removeChild(copyDiv);
 }
 
-function _openAllUrls(urls, parent_tab, engine_background){
+function _openAllUrls(urls, parent_tab, engine_background, selection){
 	var opt = Storage.getOptions();
 
 	for(var i=0; i<urls.length; ++i){
+
+
+        if (urls[i] == 'COPY') {
+            copyToClipboard(selection);
+            continue;
+        }
 
 		var tab_opts = {
 			'url' : urls[i],
 			'active' : !_shouldOpenInNewTab(opt.background_tab, engine_background),
 			'openerTabId': parent_tab.id,
-		}
+		};
 
 		if(!opt.open_new_tab_last){
 			tab_opts.index = parent_tab.index + 1 + i;
@@ -175,8 +181,7 @@ function _create_context_menu(){
 									var e = en.engines[i];
 									if(_separate_menus && e.hide_in_ctx)
 										continue;
-									else if(e.url == 'COPY')
-										continue;
+
 									if(e.is_submenu){
 										urls = get_all_links(e, urls);
 									}else{
@@ -186,7 +191,7 @@ function _create_context_menu(){
 								return urls;
 							}
 
-							_openAllUrls(get_all_links(engine, []), tab, engine.background_tab);
+							_openAllUrls(get_all_links(engine, []), tab, engine.background_tab, info.selectionText);
 						}
 					});
 
@@ -216,8 +221,7 @@ function _create_context_menu(){
 								var e = en.engines[i];
 								if(_separate_menus && e.hide_in_ctx)
 									continue;
-								else if(e.url == 'COPY')
-									continue;
+
 								if(e.is_submenu){
 									urls = get_all_links(e, urls);
 								}else{
@@ -227,7 +231,7 @@ function _create_context_menu(){
 							return urls;
 						}
 
-						_openAllUrls(get_all_links(engine, []), tab, engine.background_tab);
+						_openAllUrls(get_all_links(engine, []), tab, engine.background_tab, info.selectionText);
 					}
 				});
 				chrome.contextMenus.create({
