@@ -394,7 +394,7 @@ function PopUp()
 
 		if(engine.url == 'COPY'){
 			a.click(function(){
-				chrome.runtime.sendMessage({action:'copy', content: PopUp.getSelection()});
+				chrome.runtime.sendMessage({action:'copy', content: _lastSelection});
 				return false;
 			});
 		}
