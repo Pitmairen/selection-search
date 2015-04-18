@@ -167,6 +167,7 @@ $(document).ready(function(){
 
 	chrome.runtime.sendMessage({}, function(response){
 
+		popup.setOptions(response.options);
 
 		if(response.extra_style){
 			CURRENT_STYLE=response.extra_style;
@@ -185,8 +186,6 @@ $(document).ready(function(){
 
 		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
 		$("#select_activator").change();
-
-		$('#select_theme').change();
 
 
 		$('input[name=remove_icons][value='+response.options.remove_icons+']').attr('checked', true).change();
@@ -221,7 +220,6 @@ $(document).ready(function(){
 
         }
 
-
         // Add search engines
 		for (var i in response.searchEngines){
 			var en = response.searchEngines[i];
@@ -233,13 +231,16 @@ $(document).ready(function(){
 			addNewEngine(en, 0);
 		}
 
-		popup.setOptions(response.options);
 		Common.setStyleSheet(response.default_style);
 		if(response.extra_style)
 			Common.setStyleSheet(response.extra_style);
 
+
 		$('#preview').append(popup.getForPreview());
 		$('#preview-button').append(popup.getButtonForPreview());
+
+
+		$('#select_theme').change();
 
 	});
 
