@@ -228,7 +228,6 @@ $(document).ready(function(){
 
 
 		$('input[name=remove_icons][value='+response.options.remove_icons+']').attr('checked', true).change();
-		$('input[name=use_default_style]').attr('checked', response.options.use_default_style);
 
 
 		hotkey_editor = HotKeys.createHotkeyInput('#k_and_m_keys', response.options.k_and_m_combo.slice(0, -1));
@@ -404,7 +403,6 @@ $(document).ready(function(){
 			background_tab: $("input[name='background_tab']").is(':checked'),
 			activator: $('#select_activator option:selected').first().attr('value'),
 			remove_icons:$('input[name=remove_icons]:checked').val(),
-			use_default_style: $('input[name=use_default_style]').is(':checked'),
 			show_in_inputs: $('input[name=show_in_inputs]').is(':checked'),
 			k_and_m_combo:k_and_m_combo,
 			context_menu: $('#contextmenu_option option:selected').first().attr('value'),
@@ -534,14 +532,6 @@ $(document).ready(function(){
 		return false;
 	});
 
-
-	$('input[name=remove_icons]').change(function(){
-
-		if($(this).val() == 'https')
-			$('#use_default_style').show(100);
-		else
-			$('#use_default_style').hide(100);
-	});
 
 
 	$('#k_and_m_keys').focus(function(){

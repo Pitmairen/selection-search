@@ -230,7 +230,11 @@ var Storage = new function (){
         // Fix is done in setStyle 
         _that.setStyle(style);
         
+        opts.remove_icons = 'no';
+        delete opts.use_default_style;
+
         _that.setOptions(opts);
+
 
     }
 
