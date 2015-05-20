@@ -61,7 +61,7 @@ function IconLoader(){
             return;
 
         var url = _getDefaultIcon();
-        if(!tab.url){
+        if(tab !== undefined && tab.url){
             url = _getFaviconUrl(tab.url.split('/').slice(0, 3).join('/'));
         }
 
