@@ -13,8 +13,8 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 - Big rewrite of a lot of the code. It now uses a shadow DOM to prevent interference to/from the page
   where the popup is inserted. The code should also be cleaner.
 - Fix for extension breaking search in the pdfviewer.
-- The way the icons are loaded have changed so there should no longer be warings about unsafe content on https pages.
-  So the option to remove icons from https pages was removed.
+- The way the icons are loaded have changed so there should no longer be warings about unsafe content on https pages. So the option to remove icons from https pages was removed.
+- Prevent links from opening when selection is on a link.
 
 
 *0.7.26:*
