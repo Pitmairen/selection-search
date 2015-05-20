@@ -21,6 +21,8 @@
         if(response.options.activator === 'disabled')
             return;
 
+        // jquery effects
+        $.fx.off = response.options.disable_effects;
 
 
         style.setDefaultStyle(response.default_style);
