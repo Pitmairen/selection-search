@@ -57,10 +57,13 @@ function IconLoader(){
     // Loads the icon for the current domain if
     // it is needed.
     this.loadCurrentDomain = function(tab){
-        if(!_needsCurrentDomain || !tab.url)
+        if(!_needsCurrentDomain)
             return;
 
-        var url = _getFaviconUrl(tab.url.split('/').slice(0, 3).join('/'));
+        var url = _getDefaultIcon();
+        if(!tab.url){
+            url = _getFaviconUrl(tab.url.split('/').slice(0, 3).join('/'));
+        }
 
         for(var i=0; i < _images.length; i++){
 
