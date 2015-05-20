@@ -1,17 +1,23 @@
 <html>
 <head>
-<script src="jquery-1.7.2.min.js"></script>
-<script src="storage.js"></script>
+<script src="../common/jquery-2.1.4.min.js"></script>
+<script src="../common/urlparse.js"></script>
+<script src="../common/actionutils.js"></script>
 <script src="sync.js"></script>
-<script src="common.js"></script>
+<script src="storage.js"></script>
+<script src="iconloader.js"></script>
+<script src="contextmenu.js"></script>
+<script src="actionutils.js"></script>
 <script src="background.js"></script>
+<script src="init.js"></script>
 </head>
 <body>
 
 
+
 <style id="default-style">
 .common li, .common span, .common a, .common input, .common img, .common h4,
-#popup, #engine-editor{
+.popup, .engine-editor{
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -51,17 +57,18 @@
 .common a:after, .common a[href^="http"]:after {
   content: '';
 }
-#engine-editor{
+.engine-editor{
+
+    z-index: 2147483647;
 	padding: 0.5em;
 	width: 35em;
 	font-size: 9pt;
 	background: #EDEDED;
-	border: 3px solid #878787;
+	border: 3px solid #8787istered t87;
 	-webkit-border-radius: 5px;
 	-webkit-box-shadow: 0px 0px 8px #B0B0B0;
 }
-
-#engine-editor input[type='text']{
+.engine-editor input[type='text']{
 	width: 100%;
 	margin-bottom: 0.5em;
 	padding: 0.1em 0;
@@ -70,7 +77,7 @@
 	background: #fff;
 	-webkit-border-radius: 2px;
 }
-#engine-editor input[type='button']{
+.engine-editor input[type='button']{
 	width: auto;
 	display: inline-block;
 	margin-top: 0.5em;
@@ -81,17 +88,17 @@
 	border: 1px solid #A0A0A0;
 	-webkit-border-radius: 2px;
 }
-#engine-editor input[type='button']:hover{
+.engine-editor input[type='button']:hover{
 	border: 1px solid #7C7C7C;
 }
-#engine-editor input[type='button']:active{
+.engine-editor input[type='button']:active{
 	background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#F5F5F5));
 }
-#engine-editor input[type='button']:disabled{
+.engine-editor input[type='button']:disabled{
 	color: #AAAAAA;
 	background: -webkit-gradient(linear, left top, left bottom, from(#E7E7E7), to(#D3D3D3));
 }
-#engine-editor h4{
+.engine-editor h4{
 	margin: 0;
 	height: 1.5em;
 	font-size: 1.1em;
@@ -99,7 +106,7 @@
 	margin-bottom: 0.5em;
 	border-bottom: 1px solid #CECECE;
 }
-#engine-editor input.close{
+.engine-editor input.close{
 	float: right;
 	margin: 0;
 	height: 1.4em;
@@ -107,13 +114,14 @@
 	padding-bottom: 0.3em;
 	vertical-align: middle;
 }
-#engine-editor span.title{
+.engine-editor span.title{
 	float: left;
 	font-weight: bold;
 	line-height: 1.5em;
 }
 
-#popup{
+
+.popup{
  width: 12em;
  position: absolute;
  background: #EDECEC;
@@ -125,8 +133,9 @@
  -webkit-box-shadow: 0px 1px 10px #ccc;
  display: block;
  font-family: sans-serif;
+z-index: 2147483647;
 }
-#popup li{
+.popup li{
  margin: 1px 0;
  padding: 0;
  text-align: left;
@@ -134,10 +143,10 @@
  display: block;
  font-family: sans-serif;
 }
-#popup input{
+.popup input{
 	width: 10.1em;
 }
-#popup img{
+.popup img{
  width: 16px;
  height: 16px;
  vertical-align: middle;
@@ -146,7 +155,7 @@
  margin-right: 4px;
  display: inline;
 }
-#popup li:first-child {
+.popup li:first-child {
  overflow: hidden;
  text-overflow:ellipsis;
  white-space:nowrap;
@@ -154,7 +163,7 @@
  margin-bottom: 0.5em;
  padding: 0.2em 0.3em;
 }
-#popup a{
+.popup a{
  margin: 1px;
  text-decoration: none;
  color: #202020;
@@ -163,10 +172,10 @@
  -webkit-border-radius: 3px;
  font-family: sans-serif;
 }
-#popup a:hover{
+.popup a:hover, .popup a.active{
  background: #96B8E1;
 }
-#popup .engine-name{
+.popup .engine-name{
  display: inline-block;
  width: 8.5em;
  overflow: hidden;
@@ -174,7 +183,8 @@
  white-space:nowrap;
  vertical-align: middle;
 }
-#button {
+.button {
+ position:absolute;
  background: #fafafa;
  background-repeat: no-repeat;
  background-position: center center;
@@ -183,8 +193,9 @@
  width: 16px;
  height: 16px;
  font-family: sans-serif;
+ z-index: 2147483647;
 }
-#popup .engine-separator{
+.popup .engine-separator{
  height: 1px;
  margin: 3px 0;
  background: #AEAAA7;

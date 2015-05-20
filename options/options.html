@@ -2,13 +2,13 @@
 <head>
 <title>Selection Search - Options</title>
 <link type="text/css" rel="stylesheet" href="options.css" />
-<script src="jquery-1.7.2.min.js"></script>
-<script src="storage.js"></script>
-<script src="common.js"></script>
-<script src="popup.js"></script>
+<script src="../common/jquery-2.1.4.min.js"></script>
+<script src="../background/storage.js"></script>
+<script src="../popup/style.js"></script>
+<script src="../popup/popup.js"></script>
+<script src="../templates/options.js"></script>
 <script src="reorder.js"></script>
 <script src="hotkeys.js"></script>
-<script src="templates/options.js"></script>
 <script src="options.js"></script>
 
 </head>
@@ -381,23 +381,23 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <textarea class="theme_def" name="Default" id="theme_1"></textarea>
 
 <textarea class="theme_def" name="Icons only" id="theme_2">
-#popup .engine-name, #popup li:first-child{
+.popup .engine-name, .popup li:first-child{
  display: none;
 }
-#popup a, #popup li{
+.popup a, .popup li{
  display: inline-block; padding: 0.2em;
 }
-#popup img{
+.popup img{
  margin: 0; padding: 0;
 }
-#popup {
+.popup {
  width: auto;
  padding: 0.1em;
 }
-#popup #popup{
+.popup .popup{
  white-space:nowrap;
 }
-#popup .engine-separator{
+.popup .engine-separator{
  width: 1px; height: 20px; margin: 0 3px; padding: 0; vertical-align: middle;
 }
 /*CONFIG_START{"submenu_position":"topright","submenu_corner":"bottomleft"}CONFIG_END*/
@@ -405,102 +405,102 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 
 <textarea class="theme_def" name="No selection" id="theme_3">
-#popup li:first-child{
+.popup li:first-child{
  display: none;
 }
 </textarea>
 
 
 <textarea class="theme_def" name="Rounded gradient" id="theme_4">
-#popup {
+.popup {
  background: -webkit-gradient(linear, left top, left bottom, from(#E0DFDC), to(#B9B8B6));
  -webkit-border-radius: 5px;
 }
-#popup a:hover{
+.popup a:hover, .popup a.active{
  background: #E0DFDD;
 }
 </textarea>
 
 <textarea class="theme_def" name="Transparent" id="theme_5">
-#popup {
+.popup {
  opacity: 0.9;
 }
 </textarea>
 
 <textarea class="theme_def" name="Dark" id="theme_6">
-#popup{
+.popup{
  background: #303030;
  border: 1px solid #D1D1D1;
  -webkit-border-radius: 6px;
  -webkit-box-shadow: 0px 1px 5px #979797
 }
-#popup a, #popup li, #popup .engine-name, #popup input{
+.popup a, .popup li, .popup .engine-name, .popup input{
  color: #DDDDDD;
 }
-#popup a:hover{
+.popup a:hover, .popup a.active{
  background: #595959;
 }
 </textarea>
 
 <textarea class="theme_def" name="Animations" id="theme_7">
-#popup{
+.popup{
  width: 13em;
  -webkit-border-radius: 8px;
 }
-#popup img{
+.popup img{
  -webkit-border-radius: 8px;
  -webkit-transition: all 0.2s ease-in;
 }
-#popup a:hover img{
+.popup a:hover img{
  -webkit-border-radius: 2px;
  -webkit-box-shadow: 1px 1px 3px #303030;
   -webkit-transform: rotate(360deg) scale(1.5);
  margin-right: 10px;
 }
-#popup a{
+.popup a{
  -webkit-transition: all 0.2s ease-in;
 }
-#popup a:hover{
+.popup a:hover{
  font-weight: bold;
 }
 </textarea>
 
 <textarea class="theme_def" name="Animations 2" id="theme_8">
-#popup .engine-name, #popup li:first-child{
+.popup .engine-name, .popup li:first-child{
  display: none;
 }
-#popup a, #popup li{
+.popup a, .popup li{
  display: inline-block; padding: 0.2em;
 }
-#popup img{
+.popup img{
  margin: 0; padding: 0;
 }
-#popup {
+.popup {
  width: auto;
  padding: 0.1em 0.2em;
  -webkit-border-radius: 5px;
 }
-#popup img{
+.popup img{
  -webkit-border-radius: 8px;
  -webkit-transition: all 0.2s ease-in;
 }
-#popup a:hover img{
+.popup a:hover img{
  -webkit-border-radius: 2px;
  -webkit-box-shadow: 1px 1px 3px #303030;
   -webkit-transform: rotate(360deg) scale(1.5);
  margin-right: 3px;
 }
-#popup a{
+.popup a{
  -webkit-transition: all 0.2s ease-in;
 }
-#popup a:hover{
+.popup a:hover{
  font-weight: bold;
  background: none;
 }
-#popup #popup{
+.popup .popup{
  white-space:nowrap;
 }
-#popup .engine-separator{
+.popup .engine-separator{
  width: 1px; height: 20px; margin: 0 3px; padding: 0; vertical-align: middle;
 }
 /*CONFIG_START{"submenu_position":"topright","submenu_corner":"bottomleft"}CONFIG_END*/
@@ -509,7 +509,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <!-- The is used to check if someone with an older version of the extension have changed the stylesheet.
  This cant be removed after a while when everybody have updgraded -->
 <textarea id="old-default-style" style="display: none;">
-#popup{
+.popup{
  width: 12em;
  position: absolute;
  background: #EDECEC;
@@ -520,13 +520,13 @@ Previously opened tabs must be reloaded to show the new engines.</p>
  list-style-type: none;
  -webkit-box-shadow: 0px 1px 10px #ccc;
 }
-#popup li{
+.popup li{
  margin: 1px 0;
  padding: 0;
  text-align: left;
  color: #202020;
 }
-#popup img{
+.popup img{
  width: 16px;
  height: 16px;
  vertical-align: middle;
@@ -534,7 +534,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
  margin: 0;
  margin-right: 4px;
 }
-#popup li:first-child {
+.popup li:first-child {
  overflow: hidden;
  text-overflow:ellipsis;
  white-space:nowrap;
@@ -542,7 +542,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
  margin-bottom: 0.5em;
  padding: 0.2em 0.8em;
 }
-#popup a{
+.popup a{
  margin: 1px;
  text-decoration: none;
  color: #202020;
@@ -550,7 +550,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
  padding: 0.2em 0.8em;
  -webkit-border-radius: 3px;
 }
-#popup a:hover{
+.popup a:hover{
  background: #96B8E1;
 }
 

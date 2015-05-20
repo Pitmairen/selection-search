@@ -144,22 +144,22 @@ var Reorder = new function(){
 					var bg;
 
 					if(el.hasClass('menu-folder')){
-						backgrounds.push('url("img/tree-left.png") no-repeat '+((i)*16)+'px 10px');
+						backgrounds.push('url("../img/tree-left.png") no-repeat '+((i)*16)+'px 10px');
 
 					}
 
 	
 					if(el.hasClass('menu-folder-end'))
-						bg = 'url("img/tree-end.png") no-repeat '+((i-1)*16)+'px center';
+						bg = 'url("../img/tree-end.png") no-repeat '+((i-1)*16)+'px center';
 					else
-						bg = 'url("img/tree.png") no-repeat '+((i-1)*16)+'px center';
+						bg = 'url("../img/tree.png") no-repeat '+((i-1)*16)+'px center';
 					
 				
 					backgrounds.push(bg);
 					
 				}
 				else{
-					backgrounds.push('url("img/tree-left.png") no-repeat '+((i-1)*16 )+'px center');
+					backgrounds.push('url("../img/tree-left.png") no-repeat '+((i-1)*16 )+'px center');
 				}
 
 			}

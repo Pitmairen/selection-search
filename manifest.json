@@ -1,56 +1,61 @@
 {
     "name": "Selection Search",
-    "version": "0.7.26",
-	"manifest_version" : 2,
+    "version": "0.7.26", 
+    "manifest_version" : 2,
 
     "description": "Search for the selected text in search engines",
 
-    "minimum_chrome_version": "20",
+    "minimum_chrome_version": "35",
 
-	"icons": {
-		"16": "img/icon16.png",
-		"48": "img/icon48.png",
-		"128": "img/icon128.png"
-	},
+    "icons": {
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png"
+    },
 
-	"options_page": "options.html",
+    "options_page": "options/options.html",
 
     "background": {
-		"page" : "background.html",
-		"persistent" : true
-	},
+        "page" : "background/background.html",
+        "persistent" : true
+    },
 
-	"content_scripts": [
-		{
-			"matches": ["http://*/*", "https://*/*", "file://*/*"],
-			"js": ["jquery-1.7.2.min.js", "urlparse.js", "common.js", "popup.js", "engine-editor.js", "extractform.js", "search.js"],
-			"run_at" : "document_end",
-			"all_frames" : true
-		},
-		{
-			"matches": ["http://mycroftproject.com/*"],
-			"js": ["jquery-1.7.2.min.js", "opensearch.js", "sites/mycroft.js"],
-			"run_at" : "document_end"
-		}
-	],
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*", "file://*/*"],
+            "js": ["popup/popup.js", "popup/activators.js", "common/actionutils.js",
+                "popup/actions.js", "popup/style.js", "popup/button.js",
+                "common/urlparse.js", "common/jquery-2.1.4.min.js",
+                "old/engine-editor.js", "old/extractform.js",
+                "popup/positioning.js", "popup/init_script.js"],
+                "run_at" : "document_end",
+                "all_frames" : true
+        },
+        {
+            "matches": ["http://mycroftproject.com/*"],
+            "js": ["old/opensearch.js", "sites/mycroft.js"],
+            "run_at" : "document_end"
+        }
+    ],
 
     "permissions": [
         "contextMenus",
-		"storage",
-		"notifications",
-		"clipboardWrite"
-	],
+        "storage",
+        "notifications",
+        "clipboardWrite",
+        "tabs"
+    ],
 
-	"web_accessible_resources": [
-		"img/folder.png",
-		"img/icon16.png",
-		"img/icon48.png",
-		"img/close.png",
-		"img/ajax-loader.gif",
-		"img/copy.png",
-		"postsearch.html",
-		"postsearch.js"
-	]
+    "web_accessible_resources": [
+        "img/folder.png",
+        "img/icon16.png",
+        "img/icon48.png",
+        "img/close.png",
+        "img/ajax-loader.gif",
+        "img/copy.png",
+        "old/postsearch.html",
+        "old/postsearch.js"
+    ]
 
 
 }

@@ -16,7 +16,6 @@ $(document).ready(function (){
 
 
 	var url = decodeURIComponent(query[1]);
-// 	console.log(url);
 
 	var parts = url.split('{POSTENCODING}', 2);
 	var encoding = null;

@@ -1,9 +1,8 @@
 
-function EngineEditor(){
+function EngineEditor(_shadowDOM){
 
-	var _editorContainer = $('<div style="display: none; position: absolute; z-index: 9999;"></div>')
-		.attr('id', Common.getId('engine-editor'))
-		.attr('class', Common.getCommonClass());
+	var _editorContainer = $('<div style="display: none; position: absolute;"></div>')
+		.attr('class', 'engine-editor common');
 
 	var _editor = $('<div style="display: none;"></div>');
 	var _loading = $('<div></div>');
@@ -40,7 +39,7 @@ function EngineEditor(){
 		'height' : '50px', 'width' : '100%',
 	});
 
-	$('html').append(_editorContainer);
+	$(_shadowDOM).append(_editorContainer);
 
 	_titleBar.find('.close').click(function(){
 		_that.hide();
@@ -66,16 +65,17 @@ function EngineEditor(){
 			chrome.runtime.sendMessage({'action' : 'saveEngine', 'engine' : en});
 
 			//G_POPUP is from search.js
-			G_POPUP.addSearchEngine(en);
+			// G_POPUP.addSearchEngine(en);
 		}
 	});
 
 
 	this.show = function(x, y){
 
-		var pos = Common.calculateWindowPosition(_editorContainer, x, y);
+		// var pos = Common.calculateWindowPosition(_editorContainer, x, y);
 
-		_editorContainer.css({'top' : pos.y+'px', 'left' : pos.x+'px'});
+		_editorContainer.css({'top' : y+'px', 'left' : x+'px'});
+        Positioning.checkPosition(_editorContainer[0]);
 
 		_saveButton.attr('disabled', true);
 		_loading.show();
@@ -85,7 +85,8 @@ function EngineEditor(){
 	}
 
 	this.hide = function(){
-		_editorContainer.hide(100);
+		// $(_editorContainer).hide(100);
+        _editorContainer[0].style.display = "none";
 	}
 
 	this.load = function(en){

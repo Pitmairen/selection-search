@@ -1,5 +1,5 @@
 
-function initFormExtractor(){
+function initFormExtractor(engineEditor){
 
 	
 
@@ -32,10 +32,10 @@ function initFormExtractor(){
 
 		var method = form.attr('method') || 'get';
 
-		G_ENGINE_EDITOR.show(e.pageX, e.pageY);
+		engineEditor.show(e.pageX, e.pageY);
 
 		if(form.length == 0 || !(method.toLowerCase() == 'get' || method.toLowerCase() == 'post') || !this.name){
-			G_ENGINE_EDITOR.showError('Error parsing form');
+			engineEditor.showError('Error parsing form');
 			return;
 		}
 
@@ -72,7 +72,7 @@ function initFormExtractor(){
 		if (icon)
 			en.icon_url = urlparse.urljoin(location.protocol + '//' + location.host + location.pathname, icon);
 
-		G_ENGINE_EDITOR.load(en);
+		engineEditor.load(en);
 	});
 
 

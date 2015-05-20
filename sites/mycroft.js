@@ -1,19 +1,42 @@
 
 (function(){
 
-function loadOpenSearch(url){
 
-	OpenSearch.getEngineFromURL(url, function(status, engine, error){
+function loadOpenSearch(engineEditor, url){
 
-		if(status == 'OK'){
-			G_ENGINE_EDITOR.load(engine);
-		}
-		else
-			G_ENGINE_EDITOR.showError(error);
+    OpenSearch.getEngineFromURL(url, function(status, engine, error){
 
-	});
+        if(status == 'OK'){
+            engineEditor.load(engine);
+        }
+        else
+            engineEditor.showError(error);
+
+    });
 
 }
+
+
+var shadowElement = document.createElement("div");
+var shadowDOM = shadowElement.createShadowRoot();
+
+document.documentElement.appendChild(shadowElement);
+
+var style = new Style(shadowDOM);
+
+var engineEditor = new EngineEditor(shadowDOM);
+initFormExtractor(engineEditor)
+
+chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
+
+    style.setDefaultStyle(response.default_style);
+    if(response.extra_style)
+        style.setCustomStyle(response.extra_style);
+
+});
+
+
+
 
 $('a[onClick^=addOpenSearch]').each(function(){
 
@@ -46,10 +69,10 @@ $('a[onClick^=addOpenSearch]').each(function(){
 			})
 		).click(function(e){
 
-			G_ENGINE_EDITOR.show(e.pageX, e.pageY-50);
+			engineEditor.show(e.pageX, e.pageY-50);
 
 
-			loadOpenSearch("http://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
+			loadOpenSearch(engineEditor, "http://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
 			return false;
 		})
 	);

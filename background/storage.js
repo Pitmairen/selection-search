@@ -17,8 +17,7 @@ var Storage = new function (){
 		button: 1,
 		newtab: false,
 		activator: 'click',
-		remove_icons: 'https',
-		use_default_style: true,
+		remove_icons: 'no',
 		show_in_inputs: true,
 		background_tab: true,
 		k_and_m_combo: [17, 0], // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
@@ -91,6 +90,8 @@ var Storage = new function (){
 	}
 
 	this.setStyle = function(style){
+
+        style = _fixCSSAfterVersion_0_8_0(style);
 
 		_setValue(_STYLE_KEY, style);
 
@@ -180,19 +181,23 @@ var Storage = new function (){
 	// Storage Upgrades:
 
 
-	this._versionIsNewer = function(cmp_version)
+    var _prevVersion = undefined;
+
+	function _versionIsNewer(new_version)
 	{
-		if(!localStorage.hasOwnProperty('VERSION'))
-			return false;
+        if(_prevVersion === undefined)
+            return false;
 
-		var store_version = localStorage['VERSION'];
-
-		return store_version < cmp_version;
+		return _prevVersion < new_version;
 
 	}
 
 
-	this.storage_upgrades = function(){
+
+
+	this.storage_upgrades = function(prev_version){
+
+        _prevVersion = prev_version;
 
 
 		var opts = _that.getOptions();
@@ -200,7 +205,34 @@ var Storage = new function (){
 		v0_5_9__v0_6_0(opts);
 		v0_7_12__v0_7_13(opts);
 
+        var style = _that.getStyle();
+		v0_7_26__v0_8_0(opts, style);
+
 	}
+
+
+    function _fixCSSAfterVersion_0_8_0(css){
+
+        css = css.replace(/#popup/g, ".popup");
+        css = css.replace(/#button/g, ".button");
+        css = css.replace(/#engine-editor/g, ".engine-editor");
+
+        return css;
+
+    }
+
+
+    function v0_7_26__v0_8_0(opts, style){
+
+		if(!_versionIsNewer('0.8.0'))
+			return;
+
+        // Fix is done in setStyle 
+        _that.setStyle(style);
+        
+        _that.setOptions(opts);
+
+    }
 
 
 	// v0.5.9 -> v0.6.0
@@ -218,7 +250,7 @@ var Storage = new function (){
 
 	function v0_7_12__v0_7_13(opts){
 
-		if(!_that._versionIsNewer('0.7.13'))
+		if(!_versionIsNewer('0.7.13'))
 			return;
 
 		_that.setSyncOptions({

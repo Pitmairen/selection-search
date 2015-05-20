@@ -1,5 +1,4 @@
 
-Storage.storage_upgrades();
 
 var ACTIVATORS = {
 	'disabled' : 'Disabled',
@@ -149,11 +148,48 @@ function _addEngineOptions(en, el){
 
 }
 
+
+function loadPopupPreview(){
+
+
+    var dom = document.documentElement;
+    var style = new Style(dom);
+
+    var preview_container = document.getElementById("preview");
+
+	chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
+
+        style.setDefaultStyle(response.default_style);
+
+        if(response.extra_style)
+            style.setCustomStyle(response.extra_style);
+
+
+        var popup = new Popup(response.options);
+
+        popup.showForPreview();
+
+        preview_container.appendChild(popup.getNode());
+
+        popup.setSearchEngines(response.engines.slice(0, 5));
+
+
+        chrome.runtime.sendMessage({action:"getPopupIcons"}, function(response){
+
+            popup.setIcons(response.icons);
+
+        });
+
+	});
+    return style;
+
+}
+
+
 $(document).ready(function(){
 
-	Common.init();
 
-	var popup = new PopUp();
+	// var popup = new PopUp();
 
 
 	// The style system has changed.
@@ -165,9 +201,12 @@ $(document).ready(function(){
 	var CURRENT_STYLE = '';
 	var hotkey_editor = null;
 
-	chrome.runtime.sendMessage({}, function(response){
 
-		popup.setOptions(response.options);
+    var styleing = loadPopupPreview();
+
+	chrome.runtime.sendMessage({action:"getOptions"}, function(response){
+
+		// popup.setOptions(response.options);
 
 		if(response.extra_style){
 			CURRENT_STYLE=response.extra_style;
@@ -224,28 +263,15 @@ $(document).ready(function(){
 		for (var i in response.searchEngines){
 			var en = response.searchEngines[i];
 
-			if(i < 3) // add 3 engines for preview
-				popup.addSearchEngine(en);
-
-
 			addNewEngine(en, 0);
 		}
-
-		Common.setStyleSheet(response.default_style);
-		if(response.extra_style)
-			Common.setStyleSheet(response.extra_style);
-
-
-		$('#preview').append(popup.getForPreview());
-		$('#preview-button').append(popup.getButtonForPreview());
-
 
 		$('#select_theme').change();
 
 	});
 
 
-	$('#search-icon').append('<img src="'+chrome.extension.getURL('img/icon16.png')+'" width="16px" height="16px" />');
+	$('#search-icon').append('<img src="'+chrome.extension.getURL('../img/icon16.png')+'" width="16px" height="16px" />');
 
 	$('#new-engine').click(function(){
 		addNewEngine({name:'', url:'', icon_url:''}, 0);
@@ -399,7 +425,7 @@ $(document).ready(function(){
 		});
 
 
-		chrome.runtime.sendMessage({action:"optionsChanged"});
+		chrome.runtime.sendMessage({action:"storageUpdated"});
 
 
 
@@ -420,7 +446,7 @@ $(document).ready(function(){
 
 	$('#update-preview').click(function(e){
 
-		Common.setStyleSheet($('#style').val());
+        $("#style").val($('#style').val());
 
 		return false;
 	});
@@ -438,8 +464,8 @@ $(document).ready(function(){
 		var id = opt.attr('value');
 
 		if(id == 'current_style'){
-			Common.setStyleSheet(CURRENT_STYLE)
 			$("#style").val(CURRENT_STYLE);
+            styleing.setCustomStyle(CURRENT_STYLE);
 			return;
 		}
 
@@ -447,7 +473,7 @@ $(document).ready(function(){
 
 		$("#style").val(css);
 
-		Common.setStyleSheet(css);
+        styleing.setCustomStyle(css);
 
 	});
 
@@ -665,7 +691,7 @@ $(document).ready(function(){
 
 		alert('Settings has been imported.\n\n' + msg.join('\n'));
 
-		chrome.runtime.sendMessage({action:"optionsChanged"});
+		chrome.runtime.sendMessage({action:"storageUpdated"});
 
 		location.reload();
 
