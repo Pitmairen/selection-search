@@ -3,6 +3,7 @@
 function Activator(){
 
     var _inCombo = false;
+    var _this = this;
 
     this.setInCombo = function(in_combo){
         _inCombo = in_combo;
@@ -34,7 +35,7 @@ function Activator(){
     }
 
 
-   this.isPointOnSelection = function(x, y){
+    this.isPointOnSelection = function(x, y){
 
         var rx = window.pageXOffset;
         var ry = window.pageYOffset;
@@ -42,20 +43,48 @@ function Activator(){
         var rect = this.getSelectionRect();
 
         if(rect){
-           rx += rect.left;
-           ry += rect.top;
+            rx += rect.left;
+            ry += rect.top;
         }
 
         if ((y >= ry && y <= ry + rect.height && x >= rx && x <= rx + rect.width)){
-           return true;
+            return true;
         }
         return false;
 
-   }
+    }
 
-   this.isInCombo = function(){
-       return _inCombo;
-   }
+    this.isInCombo = function(){
+        return _inCombo;
+    }
+
+
+    // Returns true if the popup should be opened.
+    // "e" is the event that created the request to open the popup.
+    this.popupShouldOpen = function(e){
+        return _this.hasSelection();
+    }
+
+
+    this.preventClickOnLinks = function(){
+
+        // Prevent default action when selection is on on links
+        for (var links = document.querySelectorAll("a"), i = 0; i < links.length; i++){
+
+            links[i].addEventListener('click', function(e){
+
+                if(!_this.popupShouldOpen(e))
+                    return;
+
+                if(_this.isPointOnSelection(e.pageX, e.pageY)){
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        }
+    }
+
+
 
 
 }
@@ -71,7 +100,18 @@ function ClickActivator(_popup, _options){
 	var _doubleClickTime = 0;
     var _this = this;
 
+
+    // Returns true if the popup should be opened.
+    this.popupShouldOpen = function(e){
+        return _this.hasSelection() && e.button == _options.button;
+    }
+
+
     this.setup = function(){
+
+
+        _this.preventClickOnLinks();
+
 
         document.addEventListener("mousedown", function(e){
 
@@ -269,6 +309,12 @@ function KeyAndMouseActivator(_popup, _options){
 	var _mouseButton = 0;
     var _this = this;
 
+
+    this.popupShouldOpen = function(e){
+        return _this.hasSelection() && _is_keyboard_combo_activated() && e.button == _options.button;
+    }
+
+
 	this.setup = function(){
 
 		var combo = _options.k_and_m_combo;
@@ -278,6 +324,10 @@ function KeyAndMouseActivator(_popup, _options){
 		}
 
 		_mouseButton = combo[combo.length-1];
+
+
+        _this.preventClickOnLinks();
+
 
 		// Disable context menu if right click is used
 		if(_mouseButton == 2){
