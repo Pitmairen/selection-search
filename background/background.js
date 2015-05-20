@@ -24,7 +24,7 @@ function openAllUrls(request, sendResponse, parent_tab){
         i = parseInt(i);
 
         if (urls[i] == 'COPY') {
-            _utils.copyToClipboard(request.selection);
+            copyToClipboard({text:request.selection}, function(){});
             continue;
         }
 
