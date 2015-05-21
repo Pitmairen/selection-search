@@ -1,6 +1,6 @@
 {
     "name": "Selection Search",
-    "version": "0.7.26", 
+    "version": "0.8.1", 
     "manifest_version" : 2,
 
     "description": "Search for the selected text in search engines",

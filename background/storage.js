@@ -91,7 +91,7 @@ var Storage = new function (){
 
 	this.setStyle = function(style){
 
-        style = _fixCSSAfterVersion_0_8_0(style);
+        style = _fixCSSAfterVersion_0_8_1(style);
 
 		_setValue(_STYLE_KEY, style);
 
@@ -206,12 +206,12 @@ var Storage = new function (){
 		v0_7_12__v0_7_13(opts);
 
         var style = _that.getStyle();
-		v0_7_26__v0_8_0(opts, style);
+		v0_7_26__v0_8_1(opts, style);
 
 	}
 
 
-    function _fixCSSAfterVersion_0_8_0(css){
+    function _fixCSSAfterVersion_0_8_1(css){
 
         css = css.replace(/#popup/g, ".popup");
         css = css.replace(/#button/g, ".button");
@@ -222,9 +222,9 @@ var Storage = new function (){
     }
 
 
-    function v0_7_26__v0_8_0(opts, style){
+    function v0_7_26__v0_8_1(opts, style){
 
-		if(!_versionIsNewer('0.8.0'))
+		if(!_versionIsNewer('0.8.1'))
 			return;
 
         // Fix is done in setStyle 
