@@ -71,22 +71,24 @@ function Activator(){
         // Prevent default action when selection is on on links
         for (var links = document.querySelectorAll("a"), i = 0; i < links.length; i++){
 
-            links[i].addEventListener('click', function(e){
-
-                if(!_this.popupShouldOpen(e))
-                    return;
-
-                if(_this.isPointOnSelection(e.pageX, e.pageY)){
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            });
+            links[i].addEventListener('click', _disableEvent);
+            links[i].addEventListener('mouseup', _disableEvent);
+            
         }
     }
 
 
+    function _disableEvent(e){
 
+        if(!_this.popupShouldOpen(e))
+            return;
 
+        if(_this.isPointOnSelection(e.pageX, e.pageY)){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+    }
 }
 
 
