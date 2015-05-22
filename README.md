@@ -9,6 +9,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.4* 
+- Fix loading of sub menu icons.
+- Fix styling of sub menus. The css has also changed a little bit
+  so custom styling may need to be updated.
+
 *0.8.3* 
 - Fix icon scaling.
 
