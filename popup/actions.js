@@ -47,14 +47,14 @@ function DefaultAction(popup, utils, options)
             return;
 
 
-	    if(options.newtab){
+        if(options.newtab){
 
-		    if(options.background_tab || engine.background_tab){
+            if(options.background_tab || engine.background_tab){
                 utils.openAllUrls(engine, [anchorElement.href], popup.getSelection());
                 evt.preventDefault();
                 evt.stopPropagation();
             }
-			else
+            else
                 anchorElement.target = "_blank";
         }
 
@@ -91,7 +91,7 @@ function CopyAction(popup)
         evt.preventDefault();
         evt.stopPropagation();
 
-	}
+    }
 }
 
 
@@ -181,28 +181,28 @@ function PopupActionUtils(){
 
     BaseActionUtils.call(this);
 
-	var _urlVariables = [
-		[/%PAGE_HOST/g, encodeURIComponent(location.host)],
-		[/%PAGE_URL/g, encodeURIComponent(location.href)],
-		[/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
-	];
+    var _urlVariables = [
+        [/%PAGE_HOST/g, encodeURIComponent(location.host)],
+        [/%PAGE_URL/g, encodeURIComponent(location.href)],
+        [/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
+    ];
 
     var _this = this;
 
-	if(location.search.substr(0, 12) == '?javascript:')
-		_urlVariables.push([/%PAGE_QUERY_STRING/g, '']);
-	else
-		_urlVariables.push([/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]);
+    if(location.search.substr(0, 12) == '?javascript:')
+        _urlVariables.push([/%PAGE_QUERY_STRING/g, '']);
+    else
+        _urlVariables.push([/%PAGE_QUERY_STRING/g, encodeURIComponent(location.search.substr(1))]);
 
 
     this.replaceVariables = function(url){
-		for(var i in _urlVariables){
-			url = url.replace(_urlVariables[i][0], _urlVariables[i][1]);
-		}
+        for(var i in _urlVariables){
+            url = url.replace(_urlVariables[i][0], _urlVariables[i][1]);
+        }
 
-		if(url.match(/%PAGE_QS_VAR\(.+?\)/)){
-			url = _this.replaceQueryStringVars(url, location.search.substr(1));
-		}
+        if(url.match(/%PAGE_QS_VAR\(.+?\)/)){
+            url = _this.replaceQueryStringVars(url, location.search.substr(1));
+        }
         return url;
     }
 

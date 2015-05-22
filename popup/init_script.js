@@ -10,7 +10,7 @@
     var style = new Style(shadowDOM);
 
 
-	chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
+    chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
         if(!response.options.disable_formextractor){
             var engineEditor = new EngineEditor(shadowDOM);
@@ -49,10 +49,10 @@
         var activator = _getActivator(response.options.activator, popup, response.options, shadowDOM);
         activator.setup();
 
-		if(response.options.open_on_dblclick){
-			var a = new DoubleClickActivator(popup);
-			a.setup();
-		}
+        if(response.options.open_on_dblclick){
+            var a = new DoubleClickActivator(popup);
+            a.setup();
+        }
 
         if(response.options.remove_icons !== 'no')
             return;
@@ -71,7 +71,7 @@
 
         });
 
-	});
+    });
 
 
 

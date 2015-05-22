@@ -218,7 +218,7 @@ function Popup(options, style){
     }
 
 
-	function _createSeparator(engine){
+    function _createSeparator(engine){
 
         var li = document.createElement("li");
 
@@ -226,7 +226,7 @@ function Popup(options, style){
 
         return li;
 
-	}
+    }
 
 
     /*

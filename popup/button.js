@@ -71,7 +71,7 @@ function Button(_popup){
 
     function _addButtonEvents(node){
 
-	    node.addEventListener('mouseenter', function(e){
+        node.addEventListener('mouseenter', function(e){
             var pos = Positioning.getOffsetRect(node);
             _this.hide();
             _popup.show(pos.left, pos.top);

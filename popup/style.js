@@ -6,11 +6,11 @@ function Style(shadowDOM){
     // of the submenu-link defined by the "submenu_position"
     // config option. See icons only style for example.
     
-	var _defaultStyleConfig = {
-		"submenu_corner" : "topleft", 
-		"submenu_position" : "topright",
-	};
-	var _styleConfig = {};
+    var _defaultStyleConfig = {
+        "submenu_corner" : "topleft", 
+        "submenu_position" : "topright",
+    };
+    var _styleConfig = {};
 
     var _defaultStyleNode = document.createElement('style');
     var _customStyleNode = document.createElement('style');
@@ -49,35 +49,35 @@ function Style(shadowDOM){
 
 
 
-	/* This searches for a inline config section in the css data */
-	function _parseStyleOptions(css){
+    /* This searches for a inline config section in the css data */
+    function _parseStyleOptions(css){
 
-		var match = css.match(/\/*CONFIG_START{([\s\S]*)}CONFIG_END\*\//);
-		if(!match)
-			return;
+        var match = css.match(/\/*CONFIG_START{([\s\S]*)}CONFIG_END\*\//);
+        if(!match)
+            return;
 
-		var config = '{' + match[1] + '}';
+        var config = '{' + match[1] + '}';
 
-		try{
-			var config = JSON.parse(config);
-		}catch(err){
-			return;
-		}
+        try{
+            var config = JSON.parse(config);
+        }catch(err){
+            return;
+        }
 
-		if(config.hasOwnProperty('submenu_corner') &&
+        if(config.hasOwnProperty('submenu_corner') &&
             config['submenu_corner'].match(/^(top|bottom)(right|left)$/)){
 
-			_styleConfig['submenu_corner'] = config['submenu_corner'];
+            _styleConfig['submenu_corner'] = config['submenu_corner'];
         }
 
-		if(config.hasOwnProperty('submenu_position') &&
+        if(config.hasOwnProperty('submenu_position') &&
             config['submenu_position'].match(/^(top|bottom)(right|left)$/)){
 
-			_styleConfig['submenu_position'] = config['submenu_position'];
+            _styleConfig['submenu_position'] = config['submenu_position'];
 
         }
 
-	}
+    }
 
 }
 
