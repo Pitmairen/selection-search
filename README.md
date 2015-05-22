@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.3* 
+- Fix icon scaling.
+
 *0.8.2* 
 - Fix bug in the icon loading introduced in the previous version.
 
