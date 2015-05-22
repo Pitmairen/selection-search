@@ -158,7 +158,7 @@ function loadIcons(iconCollection, engines, options){
         }
 
         if(en.is_submenu)
-            iconCollection(iconCollection, en.engines, options);
+            loadIcons(iconCollection, en.engines, options);
     }
 }
 
