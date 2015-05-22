@@ -23,10 +23,10 @@
             _contextMenu.disable();
 
 
-        // Create a new icon loader object. This prevents problem if
-        // this function is called multiple times before the icons are finished loaded.
-        _iconLoader = new IconLoader();
-        loadIcons(_iconLoader, Storage.getSearchEngines(), _options);
+        // Create a new icon collection object. And reload 
+        // all the icons.
+        _iconCollection = new IconCollection();
+        loadIcons(_iconCollection, Storage.getSearchEngines(), _options);
 
     }
 
@@ -36,7 +36,7 @@
 
     var _options = Storage.getOptions();
     var _contextMenu = new ContextMenu(_options);
-    var _iconLoader = new IconLoader();
+    var _iconCollection = new IconCollection();
 
 
     // _storageUpdated();
@@ -49,13 +49,15 @@
             case "getContentScriptData":
                 return getContentScriptData(sendResponse);
             case "getPopupIcons":
-                return getPopupIcons(_iconLoader, sendResponse, sender.tab);
+                return getPopupIcons(_iconCollection, sendResponse);
             case "getOptions":
                 return getOptions(sendResponse);
             case "copyToClipboard":
                 return copyToClipboard(request, sendResponse);
             case "openAllUrls":
                 return openAllUrls(request, sendResponse, sender.tab);
+            case "getCurrentDomainIcon":
+                return getCurrentDomainIcon(_iconCollection, sendResponse, sender.tab);
             case "saveEngine":
                 saveEngine(request, sendResponse);
                 _storageUpdated();

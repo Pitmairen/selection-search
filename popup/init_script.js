@@ -60,6 +60,15 @@
         chrome.runtime.sendMessage({action:"getPopupIcons"}, function(response){
             popup.setIcons(response.icons);
 
+            if(response.needsCurrentDomain){
+
+                chrome.runtime.sendMessage({action:"getCurrentDomainIcon"}, function(response){
+
+                    popup.setIconForIndexes(response.icon, response.indexes);
+
+                });
+            }
+
         });
 
 	});

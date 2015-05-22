@@ -1,160 +1,132 @@
 
 
-function IconLoader(){
+function IconLoader(src, onload){
+
+    var _img = new Image();
+
+    _img.addEventListener("error", _onError);
+
+    if(onload !== undefined){
+        _img.addEventListener("load", _onLoad);
+    }
+
+    _img.src = src;
+
+    var _this = this;
+
+    var _urlCache = null;
+
+
+    this.isComplete = function(){
+        return _img.complete;
+    }
+
+    this.getDataURL = function(){
+        if(_urlCache !== null)
+            return _urlCache;
+
+        IconLoader._context.clearRect(0, 0, 16, 16);
+        IconLoader._context.drawImage(_img, 0, 0);
+        _urlCache = IconLoader._canvas.toDataURL("image/png");
+        return _urlCache;
+    }
+
+
+    function _onError(e){
+        _img.src = IconLoader.getDefaultIcon();
+    }
+
+    function _onLoad(e){
+        onload(_this);
+    }
+}
+
+
+IconLoader.loadCurrentDomainIcon = function(tab, onload){
+
+    var url = IconLoader.getDefaultIcon();
+
+    if(tab !== undefined && tab.url){
+        url = IconLoader.getFaviconUrl(tab.url.split('/').slice(0, 3).join('/'));
+    }
+
+    new IconLoader(url, onload);
+
+}
+
+IconLoader.getFaviconUrl = function(host){
+    return "https://plus.google.com/_/favicon?domain="+host;
+}
+
+IconLoader.getDefaultIcon = function(){
+    return chrome.extension.getURL('img/default_favicon.png');
+}
+
+IconLoader._canvas = document.createElement("canvas");
+IconLoader._canvas.width = "16";
+IconLoader._canvas.height = "16";
+IconLoader._context = IconLoader._canvas.getContext("2d");
+
+
+function IconCollection(){
 
     // All the images added to the loader.
     var _images = [];
-
-    var _canvas = _createCanvas();
-    var _context = _canvas.getContext("2d");
-
-
-    // Used to track if all the images are done loading.
-    var _loadingCount = 0;
-
-    var _listeners = [];
-
-
     var _needsCurrentDomain = false;
 
     var _this = this;
 
 
-    this.reset = function(){
-        _images = [];
-        _loadingCount = 0;
-        _listeners = [];
-        _needsCurrentDomain = false;
-    }
-
     // The host shold be in the format: "http(s)://www.example.com"
     this.addHost = function(host){
-        this.addURL(_getFaviconUrl(host));
+        this.addURL(IconLoader.getFaviconUrl(host));
     }
 
 
     // The url should be a absolute url to an image.
     this.addURL = function(url){
 
-
-        var img = new Image();
-        img.onload = _onImgLoaded;
-        img.onerror = _onImgError(img);
+        var img;
 
         if(url == "CURRENT_DOMAIN"){
+            img = new IconLoader(IconLoader.getDefaultIcon());
             img._currentDomain = true;
             _needsCurrentDomain = true;
         }
         else{
-            img.src = url;
-            _loadingCount++;
+            img = new IconLoader(url);
         }
-
         _images.push(img);
     }
 
 
-    // Loads the icon for the current domain if
-    // it is needed.
-    this.loadCurrentDomain = function(tab){
-        if(!_needsCurrentDomain)
-            return;
+    this.needsCurrentDomain = function(){
+        return _needsCurrentDomain;
+    }
 
-        var url = _getDefaultIcon();
-        if(tab !== undefined && tab.url){
-            url = _getFaviconUrl(tab.url.split('/').slice(0, 3).join('/'));
+    this.getCurrentDomainIndexes = function(){
+        var ret = [];
+        for(var i in _images){
+            if(_images[i]._currentDomain === true)
+                ret.push(parseInt(i));
         }
-
-        for(var i=0; i < _images.length; i++){
-
-            if(_images[i]._currentDomain === true && _images[i].src !== url){
-                _loadingCount++;
-                _images[i].src = url;
-            }
-
-        }
-
+        return ret;
     }
 
-    this.isFinishedLoading = function(){
-        return _loadingCount === 0;
-    }
-
-
-    this.getIconURL = function(index){
-        return _getIconDataUrl(_images[index]);
-    }
 
     this.getAllIconURLs = function(tab){
 
         var urls = [];
         for(var i=0; i < _images.length; i++){
-            urls.push(_getIconDataUrl(_images[i]));
+            var img = _images[i];
+            if(img.isComplete())
+                urls.push(img.getDataURL());
+            else
+                urls.push(IconLoader.getDefaultIcon());
         }
         return urls;
     }
 
-    this.addLoadedListener = function(callback){
-        if(_this.isFinishedLoading())
-            callback();
-        else
-            _listeners.push(callback);
-
-    }
-
-    function _callListeners(){
-
-        for(var i in _listeners){
-            _listeners[i]();
-        }
-        _listeners = [];
-
-    }
-
-
-    function _getFaviconUrl(host){
-
-        return "https://plus.google.com/_/favicon?domain="+host;
-    }
-
-    function _getIconDataUrl(img){
-        _context.clearRect(0, 0, 16, 16);
-        _context.drawImage(img, 0, 0);
-        return _canvas.toDataURL("image/png");
-    }
-
-
-    function _createCanvas(){
-        
-        var c = document.createElement("canvas");
-        c.width = "16";
-        c.height = "16";
-        return c;
-
-    }
-
-    function _onImgLoaded(e){
-        
-        _loadingCount--;
-
-        if(_this.isFinishedLoading())
-            _callListeners();
-
-    }
-
-
-    function _onImgError(img){
-        return function(e){
-            img.src = _getDefaultIcon();
-        }
-    }
-
-
-    function _getDefaultIcon(){
-
-        return chrome.extension.getURL('img/default_favicon.png');
-
-    }
 
 
 

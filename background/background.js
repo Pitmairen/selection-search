@@ -82,30 +82,32 @@ function getContentScriptData(sendResponse){
 
 }
 
-function getPopupIcons(iconLoader, sendResponse, tab){
+function getPopupIcons(iconCollection, sendResponse){
 
 	resp = {};
 
-    iconLoader.loadCurrentDomain(tab);
 
-    if(iconLoader.isFinishedLoading()){
-        resp.icons = iconLoader.getAllIconURLs(tab);
+    resp.icons = iconCollection.getAllIconURLs();
+    resp.needsCurrentDomain = iconCollection.needsCurrentDomain();
+
+    sendResponse(resp);
+
+}
+
+function getCurrentDomainIcon(iconCollection, sendResponse, tab){
+
+	resp = {};
+
+    resp.indexes = iconCollection.getCurrentDomainIndexes();
+
+    IconLoader.loadCurrentDomainIcon(tab, function(icon){
+
+        resp.icon = icon.getDataURL();
         sendResponse(resp);
-        return;
 
-    }else{
+    });
 
-        iconLoader.addLoadedListener(function(){
-
-            resp.icons = iconLoader.getAllIconURLs(tab);
-
-            sendResponse(resp);
-        });
-
-        return true;
-
-    }
-
+    return true;
 }
 
 function getOptions(sendResponse){
@@ -129,7 +131,7 @@ function getOptions(sendResponse){
 
 
 
-function loadIcons(iconLoader, engines, options){
+function loadIcons(iconCollection, engines, options){
 
     if(options.remove_icons !== 'no')
         return;
@@ -143,20 +145,20 @@ function loadIcons(iconLoader, engines, options){
         }
 
         if(en.icon_url !== undefined)
-            iconLoader.addURL(en.icon_url);
+            iconCollection.addURL(en.icon_url);
         else if(en.is_separator)
             continue;
 	    else if(en.is_submenu)
-            iconLoader.addURL(chrome.extension.getURL('img/folder.png'));
+            iconCollection.addURL(chrome.extension.getURL('img/folder.png'));
         else if(en.url == 'COPY')
-            iconLoader.addURL(chrome.extension.getURL('img/copy.png'));
+            iconCollection.addURL(chrome.extension.getURL('img/copy.png'));
         else{
             var host = en.url.split('/').slice(0, 3).join('/');
-            iconLoader.addHost(host);
+            iconCollection.addHost(host);
         }
 
         if(en.is_submenu)
-            loadIcons(iconLoader, en.engines, options);
+            iconCollection(iconCollection, en.engines, options);
     }
 }
 

@@ -99,6 +99,19 @@ function Popup(options, style){
         }
     }
 
+    /*
+     * Sets the icons for the specified indexes
+     */
+    this.setIconForIndexes = function(icon, indexes){
+        var imgNodes = _popupNode.getElementsByTagName("img");
+        var len = imgNodes.length;
+        for(var i=0; i < len; i++){
+            if(indexes.indexOf(i) !== -1){
+                imgNodes[i].src = icon;
+            }
+        }
+    }
+
 
 
     function _setSelection(value){
