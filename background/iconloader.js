@@ -26,7 +26,7 @@ function IconLoader(src, onload){
             return _urlCache;
 
         IconLoader._context.clearRect(0, 0, 16, 16);
-        IconLoader._context.drawImage(_img, 0, 0);
+        IconLoader._context.drawImage(_img, 0, 0, 16, 16);
         _urlCache = IconLoader._canvas.toDataURL("image/png");
         return _urlCache;
     }
