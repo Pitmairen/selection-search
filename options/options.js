@@ -165,7 +165,7 @@ function loadPopupPreview(){
             style.setCustomStyle(response.extra_style);
 
 
-        var popup = new Popup(response.options);
+        var popup = new Popup(response.options, style);
 
         popup.showForPreview();
 
@@ -202,7 +202,7 @@ $(document).ready(function(){
 	var hotkey_editor = null;
 
 
-    var styleing = loadPopupPreview();
+    var styling = loadPopupPreview();
 
 	chrome.runtime.sendMessage({action:"getOptions"}, function(response){
 
@@ -444,7 +444,7 @@ $(document).ready(function(){
 
 	$('#update-preview').click(function(e){
 
-        $("#style").val($('#style').val());
+        styling.setCustomStyle($('#style').val());
 
 		return false;
 	});
@@ -463,7 +463,7 @@ $(document).ready(function(){
 
 		if(id == 'current_style'){
 			$("#style").val(CURRENT_STYLE);
-            styleing.setCustomStyle(CURRENT_STYLE);
+            styling.setCustomStyle(CURRENT_STYLE);
 			return;
 		}
 
@@ -471,7 +471,7 @@ $(document).ready(function(){
 
 		$("#style").val(css);
 
-        styleing.setCustomStyle(css);
+        styling.setCustomStyle(css);
 
 	});
 

@@ -5,6 +5,7 @@
 <script src="../common/jquery-2.1.4.min.js"></script>
 <script src="../background/storage.js"></script>
 <script src="../popup/style.js"></script>
+<script src="../popup/positioning.js"></script>
 <script src="../popup/popup.js"></script>
 <script src="../templates/options.js"></script>
 <script src="reorder.js"></script>
@@ -172,14 +173,22 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 		<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.</p>
 
 		<pre id="html">
-	&lt;ul id="popup"&gt;
-		&lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
-		&lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-		&lt;li class="engine-separator"&gt;&lt;/li&gt;
-		...
-	&lt;/ul&gt;
+    &lt;ul class="popup mainmenu"&gt;
+        &lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li class="engine-separator"&gt;&lt;/li&gt;
+        ...
+        &lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Sub menu name&lt;/span&gt;&lt;/a&gt;
+            &lt;ul class="popup submenu"&gt;
+                &lt;li&gt;&lt;input type="text" value="Selected Text" /&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;&lt;img class="engine-img" src="#" /&gt;&lt;span class="engine-name"&gt;Search engine name&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li class="engine-separator"&gt;&lt;/li&gt;
+                ...
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
 
-	&lt;div id="button"&gt;&lt;/div&gt;
+    &lt;div class="button"&gt;&lt;/div&gt;
 		</pre>
 
 		<textarea id="style"></textarea>
@@ -372,7 +381,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 <textarea class="theme_def" name="Default" id="theme_1"></textarea>
 
 <textarea class="theme_def" name="Icons only" id="theme_2">
-.popup .engine-name, .popup li:first-child{
+.popup .engine-name, .popup.mainmenu > li:first-child{
  display: none;
 }
 .popup a, .popup li{
@@ -457,7 +466,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 </textarea>
 
 <textarea class="theme_def" name="Animations 2" id="theme_8">
-.popup .engine-name, .popup li:first-child{
+.popup .engine-name, .popup.mainmenu > li:first-child{
  display: none;
 }
 .popup a, .popup li{

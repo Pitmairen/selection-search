@@ -5,6 +5,8 @@ function Popup(options, style){
     
 
     var _popupNode = _createPopupNode();
+    _popupNode.classList.add("mainmenu");
+
     var _input = _createInputField(_popupNode);
     var _currentSelection = "";
     var _active = false;
@@ -206,6 +208,8 @@ function Popup(options, style){
 
         var node = _createPopupNode();
 
+        
+        node.classList.add("submenu");
 
         li.appendChild(node);
 

@@ -205,8 +205,11 @@ var Storage = new function (){
         v0_5_9__v0_6_0(opts);
         v0_7_12__v0_7_13(opts);
 
-        var style = _that.getStyle();
+        var style = _that.getStyle('');
         v0_7_26__v0_8_1(opts, style);
+
+        style = _that.getStyle('');
+        v0_8_3__v0_8_4(style);
 
     }
 
@@ -221,6 +224,16 @@ var Storage = new function (){
 
     }
 
+    function v0_8_3__v0_8_4(style){
+
+        if(!_versionIsNewer('0.8.4'))
+            return;
+
+        style = style.replace(/\.popup li:first-child\b/g, ".popup.mainmenu > li:first-child");
+
+        _that.setStyle(style);
+
+    }
 
     function v0_7_26__v0_8_1(opts, style){
 
