@@ -30,7 +30,6 @@ function Activator(){
         if (sel.length == 0)
             return false;
 
-        return true;
         return sel.indexOf("\n") == -1;
     }
 
