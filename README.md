@@ -9,8 +9,14 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
-*0.8.5* 
+*0.8.6* 
 - Try to reload icons if they don't load the first time
+
+
+*0.8.5* 
+- Revert the old way where the popup would not open when there was a newline in the selection.
+- Prevent the menu from wrapping when the menu hits the edge of the page. (Does not update custom styles)
+- Set default text direction to left to right.
 
 
 *0.8.4* 
