@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.5* 
+- Try to reload icons if they don't load the first time
+
+
 *0.8.4* 
 - Fix loading of sub menu icons.
 - Fix styling of sub menus. The css has also changed a little bit
