@@ -15,15 +15,24 @@ function IconLoader(src, onload){
     var _this = this;
 
     var _urlCache = null;
+    var _isError = false;
 
+    _img.addEventListener("load", function(){
+        _isError = false;
+    });
 
     this.isComplete = function(){
-        return _img.complete;
+        return _img.complete || _isError;
     }
 
     this.getDataURL = function(){
         if(_urlCache !== null)
             return _urlCache;
+
+        if(_isError){
+            _reloadImage();
+            return IconLoader.getDefaultIcon();
+        }
 
         IconLoader._context.clearRect(0, 0, 16, 16);
         IconLoader._context.drawImage(_img, 0, 0, 16, 16);
@@ -33,11 +42,15 @@ function IconLoader(src, onload){
 
 
     function _onError(e){
-        _img.src = IconLoader.getDefaultIcon();
+        _isError = true;        
     }
 
     function _onLoad(e){
         onload(_this);
+    }
+
+    function _reloadImage(){
+        _img.src = src + "#" + new Date().getTime();
     }
 }
 
