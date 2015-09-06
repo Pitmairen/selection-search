@@ -246,6 +246,8 @@ $(document).ready(function(){
 		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick);
 		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
 
+		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
+
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
@@ -412,6 +414,7 @@ $(document).ready(function(){
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 			disable_effects: $('#opt-disable-effects').is(':checked'),
+			auto_popup_relative_to_mouse: $('#auto_popup_relative_to_mouse').is(':checked'),
             activator_combo: act_combo,
 		});
 

@@ -284,8 +284,26 @@ function AutoActivator(_popup, _button, _options){
 
             var rect = _this.getSelectionRect();
 
-            var x = window.pageXOffset + rect.right;
-            var y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 30;
+            var x,y;
+            var node = _button.getNode();
+
+            var display = node.style.display;
+            var visibility = node.style.visibility;
+            node.style.display = "block";
+            node.style.visibility = "hidden";
+
+            if (_options.auto_popup_relative_to_mouse){
+                x = e.pageX + _button.getNode().clientWidth;
+                y = e.pageY - _button.getNode().clientHeight - 10;
+            }else{
+                x = window.pageXOffset + rect.right;
+                y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
+            }
+
+            // Restore the values.
+            node.style.display = display;
+            node.style.visibility = visibility;
+
 
             _button.show(x, y);
 
