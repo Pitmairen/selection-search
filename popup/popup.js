@@ -403,8 +403,14 @@ function Popup(options, style){
      */
     function _showPopupNode(x, y, node){
 
-        node.style.left = x + "px";
-        node.style.top = y + "px";
+        // Modify the position of the popup menu so that, when using the "No
+        // selection" styling option, the name of the first engine appears
+        // under the mouse. This makes the first engine easy to select while
+        // not covering up any icons with the mouse.
+        // node.style.left = x + "px";
+        // node.style.top = y + "px";
+        node.style.left = x - 45 + "px";
+        node.style.top = y - 8 + "px";
 
         // Keep it inside the screen
         Positioning.checkPosition(node);
