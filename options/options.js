@@ -157,6 +157,8 @@ function loadPopupPreview(){
 
     var preview_container = document.getElementById("preview");
 
+    var preview_button = document.getElementById("preview-button");
+
 	chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
         style.setDefaultStyle(response.default_style);
@@ -168,10 +170,13 @@ function loadPopupPreview(){
         var popup = new Popup(response.options, style);
 
         popup.showForPreview();
-
         preview_container.appendChild(popup.getNode());
-
         popup.setSearchEngines(response.engines.slice(0, 5));
+
+
+        var button = new Button(popup);
+        button.showForPreview();
+        preview_button.appendChild(button.getNode());
 
 
         chrome.runtime.sendMessage({action:"getPopupIcons"}, function(response){

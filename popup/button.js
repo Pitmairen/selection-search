@@ -10,6 +10,7 @@ function Button(_popup){
 
     var _this = this;
 
+    var _isPreview = false;
     /*
      * Returns if the button is currently being displayed.
      */
@@ -52,6 +53,8 @@ function Button(_popup){
     this.showForPreview = function(){
         _buttonNode.style.position = "static";
         _buttonNode.style.display = "block";
+
+        _isPreview = true;
     }
 
 
@@ -72,12 +75,16 @@ function Button(_popup){
     function _addButtonEvents(node){
 
         node.addEventListener('mouseenter', function(e){
+            if (_isPreview)
+                return;
+
             var pos = Positioning.getOffsetRect(node);
             _this.hide();
             _popup.show(pos.left, pos.top);
         });
 
     }
+
 
 }
 
