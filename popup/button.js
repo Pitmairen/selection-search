@@ -53,6 +53,8 @@ function Button(_popup){
     this.showForPreview = function(){
         _buttonNode.style.position = "static";
         _buttonNode.style.display = "block";
+        _buttonNode.style.marginTop = "0";
+        _buttonNode.style.marginLeft = "0";
 
         _isPreview = true;
     }
