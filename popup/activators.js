@@ -284,6 +284,7 @@ function AutoActivator(_popup, _button, _options){
 
             var rect = _this.getSelectionRect();
 
+<<<<<<< HEAD
             // Modify the position of the auto popup button to be slightly
             // under the mouse, which makes the button easier to locate and
             // move to. Also, define a new y-value to place the button at
@@ -302,6 +303,30 @@ function AutoActivator(_popup, _button, _options){
                 _button.show(x, y);
             else
                 _button.show(x, yEdge);
+=======
+            var x,y;
+            var node = _button.getNode();
+
+            var display = node.style.display;
+            var visibility = node.style.visibility;
+            node.style.display = "block";
+            node.style.visibility = "hidden";
+
+            if (_options.auto_popup_relative_to_mouse){
+                x = e.pageX + _button.getNode().clientWidth;
+                y = e.pageY - _button.getNode().clientHeight - 10;
+            }else{
+                x = window.pageXOffset + rect.right;
+                y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
+            }
+
+            // Restore the values.
+            node.style.display = display;
+            node.style.visibility = visibility;
+
+
+            _button.show(x, y);
+>>>>>>> Pitmairen/master
 
             _lastTimer = undefined;
 

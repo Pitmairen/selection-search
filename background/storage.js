@@ -28,6 +28,7 @@ var Storage = new function (){
         open_on_dblclick: false,
         open_new_tab_last: false,
         disable_effects: false,
+        auto_popup_relative_to_mouse: false,
         activator_combo: [],
     };
 

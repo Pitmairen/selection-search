@@ -78,6 +78,8 @@ function Popup(options, style){
 
         _popupNode.style.position = "static";
         _popupNode.style.display = "block";
+        _popupNode.style.marginTop = "0";
+        _popupNode.style.marginLeft = "0";
     }
 
     /*
