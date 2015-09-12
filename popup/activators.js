@@ -284,24 +284,28 @@ function AutoActivator(_popup, _button, _options){
 
             var rect = _this.getSelectionRect();
 
-            // Modify the position of the auto popup button to be slightly
-            // under the mouse, which makes the button easier to locate and
-            // move to. Also, define a new y-value to place the button at
-            // whenever the mouse is near the bottom of the browser viewport.
-            // var x = window.pageXOffset + rect.right;
-            // var y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 30;
-            var x = e.pageX - 8;
-            var y = e.pageY + 10;
-            var yEdge = e.pageY - 28;
+            var x,y;
+            var node = _button.getNode();
 
-            // xFromTop: distance from mouse to top of viewport
-            var xFromTop = e.pageY - $(window).scrollTop();
-            var viewportHeight = $(window).height();
+            var display = node.style.display;
+            var visibility = node.style.visibility;
+            node.style.display = "block";
+            node.style.visibility = "hidden";
 
-            if ((viewportHeight - xFromTop) > 26)
-                _button.show(x, y);
-            else
-                _button.show(x, yEdge);
+            if (_options.auto_popup_relative_to_mouse){
+                x = e.pageX + _button.getNode().clientWidth;
+                y = e.pageY - _button.getNode().clientHeight - 10;
+            }else{
+                x = window.pageXOffset + rect.right;
+                y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
+            }
+
+            // Restore the values.
+            node.style.display = display;
+            node.style.visibility = visibility;
+
+
+            _button.show(x, y);
 
             _lastTimer = undefined;
 
