@@ -7,6 +7,7 @@
 <script src="../popup/style.js"></script>
 <script src="../popup/positioning.js"></script>
 <script src="../popup/popup.js"></script>
+<script src="../popup/button.js"></script>
 <script src="../templates/options.js"></script>
 <script src="reorder.js"></script>
 <script src="hotkeys.js"></script>
@@ -118,6 +119,11 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 <div class="activator_options" id="activator_auto">
 	<p>A small button will appear when some text is selected and <br />you can open the menu by moving the mouse over the button.<p>
+    <p>
+    <input type="checkbox" id="auto_popup_relative_to_mouse" /> <label for="auto_popup_relative_to_mouse">Position the button relative to the mouse cursor.</label>
+    </p>
+    <p>When placed relative to the mouse cursor the button will appear to the top right of the cursor.
+     If you want to tweak the position this can be done with some custom css under "Advanced settings".</p>
 </div>
 
 

@@ -9,9 +9,13 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.7* 
+- Add option to position the auto popup button relative to the mouse
+- Fix preview of the auto popup button on options page
+
+
 *0.8.6* 
 - Try to reload icons if they don't load the first time
-
 
 *0.8.5* 
 - Revert the old way where the popup would not open when there was a newline in the selection.

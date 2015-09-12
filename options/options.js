@@ -157,6 +157,8 @@ function loadPopupPreview(){
 
     var preview_container = document.getElementById("preview");
 
+    var preview_button = document.getElementById("preview-button");
+
 	chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
         style.setDefaultStyle(response.default_style);
@@ -168,10 +170,13 @@ function loadPopupPreview(){
         var popup = new Popup(response.options, style);
 
         popup.showForPreview();
-
         preview_container.appendChild(popup.getNode());
-
         popup.setSearchEngines(response.engines.slice(0, 5));
+
+
+        var button = new Button(popup);
+        button.showForPreview();
+        preview_button.appendChild(button.getNode());
 
 
         chrome.runtime.sendMessage({action:"getPopupIcons"}, function(response){
@@ -245,6 +250,8 @@ $(document).ready(function(){
 
 		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick);
 		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
+
+		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
@@ -412,6 +419,7 @@ $(document).ready(function(){
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 			disable_effects: $('#opt-disable-effects').is(':checked'),
+			auto_popup_relative_to_mouse: $('#auto_popup_relative_to_mouse').is(':checked'),
             activator_combo: act_combo,
 		});
 
