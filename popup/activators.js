@@ -122,7 +122,7 @@ function ClickActivator(_popup, _options){
             }
 
             var in_input = false;
-            if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1}){
+            if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1} || e.target.isContentEditable){
                 if(!e.ctrlKey || !_options.show_in_inputs)
                     return;
                 in_input = true;
@@ -240,7 +240,7 @@ function AutoActivator(_popup, _button, _options){
                 _popup.hide();
             }
 
-            if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1}){
+            if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1} || e.target.isContentEditable){
                 _startedInInput = true;
                 if(!e.ctrlKey || !_options.show_in_inputs)
                     return;
