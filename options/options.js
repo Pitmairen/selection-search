@@ -227,6 +227,7 @@ $(document).ready(function(){
 		$("input[name='show_in_inputs']").attr('checked', response.options.show_in_inputs);
 		$("input[name='hide-on-click']").attr('checked', response.options.hide_on_click);
 		$("input[name='disable-effects']").attr('checked', response.options.disable_effects);
+		$("input[name='show-tooltips']").attr('checked', response.options.show_tooltips);
 
 		$("#select_activator option[value='"+response.options.activator+"']").attr('selected', true);
 		$("#select_activator").change();
@@ -419,6 +420,7 @@ $(document).ready(function(){
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 			disable_effects: $('#opt-disable-effects').is(':checked'),
+			show_tooltips: $('#opt-show-tooltips').is(':checked'),
 			auto_popup_relative_to_mouse: $('#auto_popup_relative_to_mouse').is(':checked'),
             activator_combo: act_combo,
 		});

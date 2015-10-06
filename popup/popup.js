@@ -200,6 +200,9 @@ function Popup(options, style){
         var name = document.createElement("span");
 
         a.className = "engine-url";
+        if(options.show_tooltips){
+            a.title = engine.name;
+        }
         name.className = "engine-name";
 
         name.innerText = engine.name;
@@ -246,6 +249,9 @@ function Popup(options, style){
         var a = document.createElement("a");
         var name = document.createElement("span");
         a.className = "engine-url";
+        if(options.show_tooltips){
+            a.title = engine.name;
+        }
         name.className = "engine-name";
 
         name.innerText = engine.name;
