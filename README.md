@@ -9,10 +9,14 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*next-release* 
+- Treat content editable elements the same as textareas and input elements (thanks to @bijancamp)
+- Add option to show tooltips when hovering the search engines in the popup
+
+
 *0.8.7* 
 - Add option to position the auto popup button relative to the mouse
 - Fix preview of the auto popup button on options page
-
 
 *0.8.6* 
 - Try to reload icons if they don't load the first time
