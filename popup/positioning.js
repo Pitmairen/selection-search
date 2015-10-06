@@ -36,17 +36,10 @@ var Positioning = new function(){
      */
     this.checkPosition = function(node){
 
-        // This is needed to get the real coordinates,
-        // because they are not correct when display=none.
-        var display = node.style.display;
-        var visibility = node.style.visibility;
-        node.style.display = "block";
-        node.style.visibility = "hidden";
-        var pos = this.getOffsetRect(node);
-        // Restore the values.
-        node.style.display = display;
-        node.style.visibility = visibility;
 
+        var dimensions = this.enableDimensions(node);
+        var pos = this.getOffsetRect(node);
+        dimensions.restore();
 
         var bounds = {
             right :  window.pageXOffset + document.documentElement.clientWidth,
@@ -83,12 +76,14 @@ var Positioning = new function(){
 
     this.calculateSubmenuPosition = function(anchor, popupNode, style){
 
-        popupNode.style.visibility = "hidden";
-        popupNode.style.display = 'block';
+
         var pos = style.getConfigValue('submenu_position');
         var corner = style.getConfigValue('submenu_corner');
         pos = pos.match(/^(top|bottom)(right|left)$/);
         corner = corner.match(/^(top|bottom)(right|left)$/);
+
+
+        var dimensions = this.enableDimensions(popupNode);
 
         var ret = {x: anchor.offsetLeft, y:anchor.offsetTop};
 
@@ -101,11 +96,35 @@ var Positioning = new function(){
             ret.y -= popupNode.offsetHeight;
         if(corner[2] == 'right')
             ret.x -= popupNode.offsetWidth;
-        
-        popupNode.style.visibility = "visible";
-        popupNode.style.display = 'none';
 
+        dimensions.restore();
 
         return ret;
+    }
+
+
+    /**
+     * When the a html element is hidden with display=none the
+     * dimensions eg. el.offsetHeight ect. is not availiable
+     * or incorrect. This function uses a trick to make the dimensions
+     * availiable. The restore method on the returned object must
+     * be called when the caller is done.
+     */
+    this.enableDimensions = function(el){
+
+        // store old values so we can reset later
+        var old_visibility = el.style.visibility;
+        var old_display = el.style.display;
+        el.style.visibility = "hidden";
+        el.style.display = 'block';
+
+        return new function(){
+
+            this.restore = function(){
+                el.style.visibility = old_visibility;
+                el.style.display = old_display;
+            }
+
+        }
     }
 }

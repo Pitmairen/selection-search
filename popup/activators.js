@@ -285,12 +285,8 @@ function AutoActivator(_popup, _button, _options){
             var rect = _this.getSelectionRect();
 
             var x,y;
-            var node = _button.getNode();
 
-            var display = node.style.display;
-            var visibility = node.style.visibility;
-            node.style.display = "block";
-            node.style.visibility = "hidden";
+            var dimensions = Positioning.enableDimensions(_button.getNode());
 
             if (_options.auto_popup_relative_to_mouse){
                 x = e.pageX + _button.getNode().clientWidth;
@@ -300,10 +296,7 @@ function AutoActivator(_popup, _button, _options){
                 y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
             }
 
-            // Restore the values.
-            node.style.display = display;
-            node.style.visibility = visibility;
-
+            dimensions.restore();
 
             _button.show(x, y);
 
