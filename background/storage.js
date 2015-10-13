@@ -212,7 +212,7 @@ var Storage = new function (){
 
         style = _that.getStyle('');
         v0_8_3__v0_8_4(style);
-
+        v0_8_8_style_bugfix(style);
     }
 
 
@@ -224,6 +224,20 @@ var Storage = new function (){
 
         return css;
 
+    }
+
+    function v0_8_8_style_bugfix(style){
+
+        if(!_versionIsNewer('0.8.8'))
+            return;
+
+        // Fix for bug in "No selection" style 
+        // The style template was not updated in version 0.8.3 -> 0.8.4 so someone
+        // who has selected this style after the update has not gotten the fix
+        // in the storege upgrade for the 0.8.3 -> 0.8.4.
+        style = style.replace(/\.popup li:first-child\b/g, ".mainmenu > li:first-child");
+
+        _that.setStyle(style);
     }
 
     function v0_8_3__v0_8_4(style){
