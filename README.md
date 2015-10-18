@@ -9,11 +9,14 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.9*
+- Add experimental circular menu
+
+
 *0.8.8*
 - Treat content editable elements the same as textareas and input elements (thanks to @bijancamp)
 - Add option to show tooltips when hovering the search engines in the popup
 - Fix for sub menus not showing first item when using the "No selection" style
-
 
 *0.8.7* 
 - Add option to position the auto popup button relative to the mouse
