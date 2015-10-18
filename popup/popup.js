@@ -12,7 +12,15 @@ function Popup(options, style){
     var _active = false;
     var _listeners = [];
 
+    var _modifier = null;
+
     var _this = this;
+
+
+    
+    this.setModifier = function(mod){
+        _modifier = mod;
+    }
     
     this.addActionListener = function(listener){
         _listeners.push(listener);
@@ -55,10 +63,16 @@ function Popup(options, style){
      */
     this.show = function(x, y){
 
+        if(_modifier !== null){
+            var pos = _modifier.modifyShowPosition(x, y);
+            x = pos.x;
+            y = pos.y;
+        }
+
         _showPopupNode(x, y, _popupNode);
         _active = true;
-
     }
+
 
     /*
      * Hides the menu node
@@ -80,6 +94,10 @@ function Popup(options, style){
         _popupNode.style.display = "block";
         _popupNode.style.marginTop = "0";
         _popupNode.style.marginLeft = "0";
+
+        if(_modifier !== null){
+            _modifier.modifyForPreview(_popupNode);
+        }
     }
 
     /*
@@ -87,6 +105,10 @@ function Popup(options, style){
      */
     this.setSearchEngines = function(engines){
         _addEngines(engines, _popupNode);
+
+        if(_modifier !== null){
+            _modifier.searchEnginesUpdated(engines);
+        }
 
     }
 
@@ -335,7 +357,6 @@ function Popup(options, style){
             if(show_timer)
                 return;
 
-
             // Don't hide if menu is already showing.
             clearTimeout(hide_timer);
             hide_timer = null;
@@ -354,6 +375,7 @@ function Popup(options, style){
             // Don't show the menu if the mouse leavs before it is shown.
             clearTimeout(show_timer);
             show_timer = null;
+
 
             // Do nothing if we already is going to hide.
             if(hide_timer)
@@ -381,7 +403,7 @@ function Popup(options, style){
 
         // Hide the menu when the mouse leavs the menu.
         node.addEventListener("mouseleave", function(){
-            
+
             a.classList.remove("active");
 
             // Do nothing if we already are going to hide.
@@ -397,13 +419,13 @@ function Popup(options, style){
 
     }
 
+
     /*
      * Hides the popup node
      */
     function _hidePopupNode(node){
 
         node.style.display = "none";
-
     }
 
     /*
@@ -427,6 +449,10 @@ function Popup(options, style){
     function _showPopupNodeRelativeToAnchor(a, node){
 
         var pos = Positioning.calculateSubmenuPosition(a, node, style);
+
+        if(_modifier !== null){
+            pos = _modifier.modifySubmenuPosition(node, a, pos.x, pos.y);
+        }
 
         _showPopupNode(pos.x, pos.y, node);
 

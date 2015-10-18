@@ -13,9 +13,11 @@ function Style(shadowDOM){
     var _styleConfig = {};
 
     var _defaultStyleNode = document.createElement('style');
+    var _circularStyleNode = document.createElement('style');
     var _customStyleNode = document.createElement('style');
 
     shadowDOM.appendChild(_defaultStyleNode);
+    shadowDOM.appendChild(_circularStyleNode);
     shadowDOM.appendChild(_customStyleNode);
 
 
@@ -30,6 +32,10 @@ function Style(shadowDOM){
         _parseStyleOptions(style);
     }
 
+    this.setCircularStyle = function(style){
+        _resetCircularStyle();
+        _circularStyleNode.appendChild(document.createTextNode(style));
+    }
 
     this.getConfigValue = function(key){
 
@@ -44,9 +50,14 @@ function Style(shadowDOM){
         while (_customStyleNode.hasChildNodes()) {
             _customStyleNode.removeChild(_customStyleNode.lastChild);
         }
-
     }
 
+    function _resetCircularStyle(){
+        while (_circularStyleNode.hasChildNodes()) {
+            _circularStyleNode.removeChild(_circularStyleNode.lastChild);
+        }
+
+    }
 
 
     /* This searches for a inline config section in the css data */

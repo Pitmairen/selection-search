@@ -149,6 +149,7 @@ function _addEngineOptions(en, el){
 }
 
 
+
 function loadPopupPreview(){
 
 
@@ -168,6 +169,11 @@ function loadPopupPreview(){
 
 
         var popup = new Popup(response.options, style);
+
+        if(response.options.circular_menu){
+            popup.setModifier(new CircularPopup(popup, style));
+        }
+
 
         popup.showForPreview();
         preview_container.appendChild(popup.getNode());
@@ -208,6 +214,8 @@ $(document).ready(function(){
 
 
     var styling = loadPopupPreview();
+
+
 
 	chrome.runtime.sendMessage({action:"getOptions"}, function(response){
 
@@ -258,6 +266,7 @@ $(document).ready(function(){
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
 		$("#opt-sync-style").attr('checked', response.sync_options.sync_style);
 
+        $("#circular_menu").attr('checked', response.options.circular_menu);
 
         // set activator combo
         for(var i in response.options.activator_combo){
@@ -265,6 +274,7 @@ $(document).ready(function(){
             $("#combo_"+act).attr("checked", true);
 
         }
+
 
         // Add search engines
 		for (var i in response.searchEngines){
@@ -305,6 +315,34 @@ $(document).ready(function(){
 		}
 
 	});
+
+    $("#circular_menu").change(function(){
+
+        var ok = confirm("This will overwrite any custom styling. "+
+                "If you want to keep your styling you have to cancel and take a backup"+
+                " of the style before you proceed."+
+                "The options page will be saved and reloaded if you click ok.");
+
+        if(!ok){
+            $(this).attr('checked', !$(this).is(":checked"));
+            return;
+        }
+
+        if($(this).is(":checked")){
+
+            var css = $('#circular-style').val();
+            $("#style").val(css);
+            styling.setCustomStyle(css);
+
+        }else{
+            $("#style").val('');
+            styling.setCustomStyle('');
+        }
+
+        $("#save").click();
+    });
+
+
 
 
 	$('#save').click(function(){
@@ -423,6 +461,7 @@ $(document).ready(function(){
 			show_tooltips: $('#opt-show-tooltips').is(':checked'),
 			auto_popup_relative_to_mouse: $('#auto_popup_relative_to_mouse').is(':checked'),
             activator_combo: act_combo,
+			circular_menu: $('#circular_menu').is(':checked'),
 		});
 
 
@@ -461,29 +500,31 @@ $(document).ready(function(){
 
 	var theme_select = $('#select_theme');
 
-	$('.theme_def').each(function(){
-		theme_select.append('<option value="' + $(this).attr('id')+'">'+$(this).attr('name')+'</option>');
-	});
+    if(!Storage.getOptions().circular_menu){
+        $('.theme_def').each(function(){
+            theme_select.append('<option value="' + $(this).attr('id')+'">'+$(this).attr('name')+'</option>');
+        });
+    }
 
-	theme_select.change(function(){
+    theme_select.change(function(){
 
-		var opt = $('#select_theme option:selected').first();
+        var opt = $('#select_theme option:selected').first();
 
-		var id = opt.attr('value');
+        var id = opt.attr('value');
 
-		if(id == 'current_style'){
-			$("#style").val(CURRENT_STYLE);
+        if(id == 'current_style'){
+            $("#style").val(CURRENT_STYLE);
             styling.setCustomStyle(CURRENT_STYLE);
-			return;
-		}
+            return;
+        }
 
-		var css = $('textarea#' + id).val();
+        var css = $('textarea#' + id).val();
 
-		$("#style").val(css);
+        $("#style").val(css);
 
         styling.setCustomStyle(css);
 
-	});
+    });
 
 	for (var act in ACTIVATORS){
 

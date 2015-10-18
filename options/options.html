@@ -11,6 +11,8 @@
 <script src="../templates/options.js"></script>
 <script src="reorder.js"></script>
 <script src="hotkeys.js"></script>
+<script src="../popup/popup_modifier.js"></script>
+<script src="../popup/circular_popup.js"></script>
 <script src="options.js"></script>
 
 </head>
@@ -160,7 +162,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 	<h4 class="subsection-heading">Styling</h4>
 
-	<p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /></p>
+    <p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /> &nbsp;&nbsp;<input type="checkbox" id="circular_menu"> <label for="circular_menu">Use circular menu (Experimental)</label></p>
 
 	<h4 class="subsection-heading">Preview</h4>
 
@@ -516,6 +518,30 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 }
 /*CONFIG_START{"submenu_position":"topright","submenu_corner":"bottomleft"}CONFIG_END*/
 </textarea>
+
+
+<textarea id="circular-style" style="display: none;">
+.mainmenu {
+ border-color: #333;
+}
+.submenu{
+  border-color: #444;
+}
+.popup img{
+ -webkit-filter: grayscale(75%);
+ transition: -webkit-filter 0.5s ease-in-out;
+}
+.popup a:hover img, .popup a.active img{
+ -webkit-filter: grayscale(10%);
+}
+.popup a:hover{
+ background: none;
+}
+.popup .engine-separator{
+ background: #aaa;
+}
+</textarea>
+
 
 <!-- The is used to check if someone with an older version of the extension have changed the stylesheet.
  This cant be removed after a while when everybody have updgraded -->

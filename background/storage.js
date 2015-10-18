@@ -31,6 +31,7 @@ var Storage = new function (){
         auto_popup_relative_to_mouse: false,
         activator_combo: [],
         show_tooltips: false,
+        circular_menu: false,
     };
 
     var _syncOptions = {
