@@ -286,19 +286,26 @@ function AutoActivator(_popup, _button, _options){
 
             var x,y;
 
-            var dimensions = Positioning.enableDimensions(_button.getNode());
+            if (_options.auto_popup_show_menu_directly){
+                x = e.pageX;
+                y = e.pageY;
 
-            if (_options.auto_popup_relative_to_mouse){
-                x = e.pageX + _button.getNode().clientWidth;
-                y = e.pageY - _button.getNode().clientHeight - 10;
+                _popup.show(x, y);
             }else{
-                x = window.pageXOffset + rect.right;
-                y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
+                var dimensions = Positioning.enableDimensions(_button.getNode());
+
+                if (_options.auto_popup_relative_to_mouse){
+                    x = e.pageX + _button.getNode().clientWidth;
+                    y = e.pageY - _button.getNode().clientHeight - 10;
+                }else{
+                    x = window.pageXOffset + rect.right;
+                    y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;
+                }
+
+                dimensions.restore();
+
+                _button.show(x, y);
             }
-
-            dimensions.restore();
-
-            _button.show(x, y);
 
             _lastTimer = undefined;
 

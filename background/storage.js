@@ -29,6 +29,7 @@ var Storage = new function (){
         open_new_tab_last: false,
         disable_effects: false,
         auto_popup_relative_to_mouse: false,
+        auto_popup_show_menu_directly: false,
         activator_combo: [],
         show_tooltips: false,
         circular_menu: false,
