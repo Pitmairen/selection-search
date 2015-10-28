@@ -321,3 +321,19 @@ a{
 }
 
 
+.dimmable_content{
+	position:relative;
+}
+
+.dim_layer{
+	background-color: white;
+	opacity: 0.5;
+	z-index: 20;
+	height: 100%;
+	width: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
