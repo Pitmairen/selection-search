@@ -197,20 +197,6 @@ function loadPopupPreview(){
 }
 
 
-
-	// Show the dim layer (via id) for a part of the page, which dims that
-	// part in the process.
-	function dimOn(id) {
-		document.getElementById(id).style.display = "";
-	}
-
-	// Hide the dim layer (via id) of a part of the page, which undims that
-	// part in the process.
-	function dimOff(id) {
-		document.getElementById(id).style.display = "none";
-	}
-
-
 $(document).ready(function(){
 
 
@@ -275,7 +261,7 @@ $(document).ready(function(){
 		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
 
 		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
-		$("#auto_popup_show_menu_directly").attr('checked', response.options.auto_popup_show_menu_directly);
+		$("#auto_popup_show_menu_directly").attr('checked', response.options.auto_popup_show_menu_directly).change();
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
@@ -289,10 +275,6 @@ $(document).ready(function(){
             $("#combo_"+act).attr("checked", true);
 
         }
-
-        // Deactivate the option to place the button under the mouse if the
-        // option to show the menu directly is enabled.
-        $('#auto_popup_show_menu_directly').change();
 
 
         // Add search engines
@@ -569,25 +551,15 @@ $(document).ready(function(){
 	});
 
 
-	// Block and disable the relative-mouse-positioning option if the
-	// option to directly show the menu is enabled; unblock and restore the
-	// previous relative-mouse-positioning setting (for the current
-	// customizing session, if any) if the option to directly show the
-	// menu is disabled.
+	// Hide the option to position the button under the mouse if the option
+	// to directly show the menu is enabled; otherwise, show the former
+	// option.
 	$('#auto_popup_show_menu_directly').change(function(){
 
-		if($(this).is(':checked')){
-			var currentOtherValue = $('#auto_popup_relative_to_mouse').prop('checked');
-
-			$('#auto_popup_relative_to_mouse').data('oldOtherValue', currentOtherValue);
-			$('#auto_popup_relative_to_mouse').prop('checked', false);
-			dimOn("dim_layer_auto_popup_relative_to_mouse");
-		}else{
-			var oldOtherValue = $('#auto_popup_relative_to_mouse').data('oldOtherValue');
-
-			$('#auto_popup_relative_to_mouse').prop('checked', oldOtherValue);
-			dimOff("dim_layer_auto_popup_relative_to_mouse");
-		}
+		if($(this).is(':checked'))
+			$("#auto_popup_relative_to_mouse_content").hide(100);
+		else
+			$("#auto_popup_relative_to_mouse_content").show(100);
 
 	});
 
