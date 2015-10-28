@@ -261,7 +261,7 @@ $(document).ready(function(){
 		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
 
 		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
-		$("#auto_popup_show_menu_directly").attr('checked', response.options.auto_popup_show_menu_directly);
+		$("#auto_popup_show_menu_directly").attr('checked', response.options.auto_popup_show_menu_directly).change();
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
@@ -547,6 +547,19 @@ $(document).ready(function(){
 
 		$('.activator_options').hide(100);
 		$('#activator_' + opt.attr('value')).show(100);
+
+	});
+
+
+	// Hide the option to position the button under the mouse if the option
+	// to directly show the menu is enabled; otherwise, show the former
+	// option.
+	$('#auto_popup_show_menu_directly').change(function(){
+
+		if($(this).is(':checked'))
+			$("#auto_popup_relative_to_mouse_content").hide(100);
+		else
+			$("#auto_popup_relative_to_mouse_content").show(100);
 
 	});
 
