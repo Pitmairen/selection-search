@@ -1,7 +1,7 @@
 
 CircularPopup.protocol = Object.create(PopupModifier);
 
-function CircularPopup(popup, style){
+function CircularPopup(popup, style, options){
 
     PopupModifier.call(this);
 
@@ -60,6 +60,9 @@ function CircularPopup(popup, style){
 
     function _generateCircularMenu(engines, menuNode, firstNode) {
 
+        engines = _getEnginesToShow(engines);
+        if(engines.length == 0)
+            return;
 
         var anchor =  menuNode.querySelector(":scope > li a");
 
@@ -112,6 +115,19 @@ function CircularPopup(popup, style){
         dim.restore();
     }
 
+
+    function _getEnginesToShow(engines){
+        if(!options.separate_menus)
+            return engines;
+
+        var ret = [];
+        for(var i in engines){
+            if(!engines[i].hide_in_popup){
+                ret.push(engines[i]);
+            }
+        }
+        return ret;
+    }
 
 }
 

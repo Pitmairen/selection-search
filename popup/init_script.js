@@ -34,7 +34,7 @@
         var popup = new Popup(response.options, style);
 
         if(response.options.circular_menu){
-            popup.setModifier(new CircularPopup(popup, style));
+            popup.setModifier(new CircularPopup(popup, style, response.options));
         }
 
         popup.setSearchEngines(response.engines);
