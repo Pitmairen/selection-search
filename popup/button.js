@@ -1,7 +1,7 @@
 
 
 
-function Button(_popup){
+function Button(_popup, style){
     
 
     var _buttonNode = _createButtonNode();
@@ -33,7 +33,7 @@ function Button(_popup){
 
         _buttonNode.style.top = y + "px";
         _buttonNode.style.left = x + "px";
-        Positioning.checkPosition(_buttonNode);
+        Positioning.checkPosition(_buttonNode, style);
         _buttonNode.style.display = "block";
         _active = true;
 

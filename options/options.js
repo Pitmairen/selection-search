@@ -180,7 +180,7 @@ function loadPopupPreview(){
         popup.setSearchEngines(response.engines.slice(0, 5));
 
 
-        var button = new Button(popup);
+        var button = new Button(popup, style);
         button.showForPreview();
         preview_button.appendChild(button.getNode());
 

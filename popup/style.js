@@ -2,13 +2,30 @@
 function Style(shadowDOM){
 
 
-    // Which corner of the submenu to place at which corner
-    // of the submenu-link defined by the "submenu_position"
+    // The key "submenu_corner" defines which corner of the submenu to place at
+    // which corner of the submenu-link defined by the "submenu_position"
     // config option. See icons only style for example.
+    //
+    // The keys "menu_edge_*" and "button_edge_*", where "*" is "right",
+    // "bottom", "left", or "top", designate how the button or menu should be
+    // repositioned if they fall outside of the window. If one of these keys
+    // has a value of "auto", then the corresponding element is automatically
+    // repositioned to fit inside the browser window. If one of these keys has
+    // a numeric pixel value such as "10px", then the element is moved that
+    // numerical amount in the corresponding direction, without any automatic
+    // positioning done beforehand.
     
     var _defaultStyleConfig = {
         "submenu_corner" : "topleft", 
         "submenu_position" : "topright",
+        "menu_edge_right" : "auto",
+        "menu_edge_bottom" : "auto",
+        "menu_edge_left" : "auto",
+        "menu_edge_top" : "auto",
+        "button_edge_right" : "auto",
+        "button_edge_bottom" : "auto",
+        "button_edge_left" : "auto",
+        "button_edge_top" : "auto",
     };
     var _styleConfig = {};
 
@@ -86,6 +103,54 @@ function Style(shadowDOM){
 
             _styleConfig['submenu_position'] = config['submenu_position'];
 
+        }
+
+        if(config.hasOwnProperty('menu_edge_right') &&
+            config['menu_edge_right'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['menu_edge_right'] = config['menu_edge_right'];
+        }
+
+        if(config.hasOwnProperty('menu_edge_bottom') &&
+            config['menu_edge_bottom'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['menu_edge_bottom'] = config['menu_edge_bottom'];
+        }
+
+        if(config.hasOwnProperty('menu_edge_left') &&
+            config['menu_edge_left'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['menu_edge_left'] = config['menu_edge_left'];
+        }
+
+        if(config.hasOwnProperty('menu_edge_top') &&
+            config['menu_edge_top'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['menu_edge_top'] = config['menu_edge_top'];
+        }
+
+        if(config.hasOwnProperty('button_edge_right') &&
+            config['button_edge_right'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['button_edge_right'] = config['button_edge_right'];
+        }
+
+        if(config.hasOwnProperty('button_edge_bottom') &&
+            config['button_edge_bottom'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['button_edge_bottom'] = config['button_edge_bottom'];
+        }
+
+        if(config.hasOwnProperty('button_edge_left') &&
+            config['button_edge_left'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['button_edge_left'] = config['button_edge_left'];
+        }
+
+        if(config.hasOwnProperty('button_edge_top') &&
+            config['button_edge_top'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+
+            _styleConfig['button_edge_top'] = config['button_edge_top'];
         }
 
     }
