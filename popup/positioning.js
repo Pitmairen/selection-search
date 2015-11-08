@@ -32,9 +32,10 @@ var Positioning = new function(){
 
     /*
      * Checks that the element is inside the browser window.
-     * If not it will move the element so that it fitts inside the browser window.
+     * If not it will move the element so that it fitts inside the browser window,
+     * or according to custom positioning settings.
      */
-    this.checkPosition = function(node){
+    this.checkPosition = function(node, style){
 
 
         var dimensions = this.enableDimensions(node);
@@ -48,21 +49,24 @@ var Positioning = new function(){
             top : window.pageYOffset,
         }
 
+        // Style config settings for how to reposition the menu and button
+        var diffConfig = _getDiffConfig(style, node);
+
         // How much to repositon the menu
         var diffY = null;
         var diffX = null;
 
 
         if (pos.bottom > bounds.bottom) // Goes outside on the bottom
-            diffY = bounds.bottom - pos.bottom;
+            diffY = _calculateDiff(pos.bottom, bounds.bottom, diffConfig.bottom)
         else if (pos.top < bounds.top) // Goes outside on the top
-            diffY = bounds.top - pos.top;
+            diffY = _calculateDiff(pos.top, bounds.top, diffConfig.top)
         
 
         if(pos.right > bounds.right) // Goes outside on the right
-            diffX = bounds.right - pos.right;
+            diffX = _calculateDiff(pos.right, bounds.right, diffConfig.right)
         else if(pos.left < bounds.left) // Goes outside on the left.
-            diffX = bounds.left - pos.left;
+            diffX = _calculateDiff(pos.left, bounds.left, diffConfig.left)
 
 
         // Reposition the menu
@@ -126,5 +130,42 @@ var Positioning = new function(){
             }
 
         }
+    }
+
+
+
+    // Style config settings for repositioning an element. Nodes such as the
+    // submenu and engine editor are always repositioned automatically.
+    function _getDiffConfig(style, node){
+        if(node.classList.contains("mainmenu")){
+            return {
+                right : style.getConfigValue('menu_edge_right'),
+                bottom : style.getConfigValue('menu_edge_bottom'),
+                left : style.getConfigValue('menu_edge_left'),
+                top : style.getConfigValue('menu_edge_top'),
+            }
+        }else if(node.classList.contains("button")){
+            return {
+                right : style.getConfigValue('button_edge_right'),
+                bottom : style.getConfigValue('button_edge_bottom'),
+                left : style.getConfigValue('button_edge_left'),
+                top : style.getConfigValue('button_edge_top'),
+            }
+        }else{
+            return {
+                right : "auto",
+                bottom : "auto",
+                left : "auto",
+                top : "auto",
+            }
+        }
+    }
+
+
+    function _calculateDiff(posValue, boundsValue, configValue){
+        if (configValue === "auto")
+            return boundsValue - posValue;
+        else
+            return parseInt(configValue);
     }
 }

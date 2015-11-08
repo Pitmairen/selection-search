@@ -180,7 +180,7 @@ function loadPopupPreview(){
         popup.setSearchEngines(response.engines.slice(0, 5));
 
 
-        var button = new Button(popup);
+        var button = new Button(popup, style);
         button.showForPreview();
         preview_button.appendChild(button.getNode());
 
@@ -587,7 +587,15 @@ $(document).ready(function(){
 
 
 	$('#show_customize').click(function(){
+		var hidden = $("#customize").is(":hidden");
+
 		$('#customize').toggle();
+
+		if (hidden){
+			$('html, body').animate({
+				scrollTop: $("#head-styling").offset().top
+			}, 500);
+		}
 
 		return false;
 	});

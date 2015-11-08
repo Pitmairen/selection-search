@@ -2,13 +2,30 @@
 function Style(shadowDOM){
 
 
-    // Which corner of the submenu to place at which corner
-    // of the submenu-link defined by the "submenu_position"
+    // The key "submenu_corner" defines which corner of the submenu to place at
+    // which corner of the submenu-link defined by the "submenu_position"
     // config option. See icons only style for example.
+    //
+    // The keys "menu_edge_*" and "button_edge_*", where "*" is "right",
+    // "bottom", "left", or "top", designate how the button or menu should be
+    // repositioned if they fall outside of the window. If one of these keys
+    // has a value of "auto", then the corresponding element is automatically
+    // repositioned to fit inside the browser window. If one of these keys has
+    // an integer value such as "10px", then the element is moved that amount
+    // (only by pixels) in the corresponding direction, without any automatic
+    // positioning done beforehand.
     
     var _defaultStyleConfig = {
         "submenu_corner" : "topleft", 
         "submenu_position" : "topright",
+        "menu_edge_right" : "auto",
+        "menu_edge_bottom" : "auto",
+        "menu_edge_left" : "auto",
+        "menu_edge_top" : "auto",
+        "button_edge_right" : "auto",
+        "button_edge_bottom" : "auto",
+        "button_edge_left" : "auto",
+        "button_edge_top" : "auto",
     };
     var _styleConfig = {};
 
@@ -86,6 +103,19 @@ function Style(shadowDOM){
 
             _styleConfig['submenu_position'] = config['submenu_position'];
 
+        }
+
+        var edge_properties = ['menu_edge_right', 'menu_edge_bottom',
+                               'menu_edge_left', 'menu_edge_top',
+                               'button_edge_right', 'button_edge_bottom',
+                               'button_edge_left', 'button_edge_top'];
+
+        for(var i in edge_properties){
+            var prop = edge_properties[i];
+            if(config.hasOwnProperty(prop) &&
+               config[prop].match(/^[-+]?(0|[1-9][0-9]*) *(px)?$/)){
+                _styleConfig[prop] = config[prop];
+            }
         }
 
     }

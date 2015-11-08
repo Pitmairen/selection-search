@@ -436,8 +436,9 @@ function Popup(options, style){
         node.style.left = x + "px";
         node.style.top = y + "px";
 
-        // Keep it inside the screen
-        Positioning.checkPosition(node);
+        // Keep it inside the screen, or reposition it according to custom
+        // style config settings
+        Positioning.checkPosition(node, style);
 
         node.style.display = "block";
 
@@ -454,7 +455,7 @@ function Popup(options, style){
             pos = _modifier.modifySubmenuPosition(node, a, pos.x, pos.y);
         }
 
-        _showPopupNode(pos.x, pos.y, node);
+        _showPopupNode(pos.x, pos.y, node, null);
 
     }
 

@@ -75,7 +75,7 @@ function EngineEditor(_shadowDOM){
 		// var pos = Common.calculateWindowPosition(_editorContainer, x, y);
 
 		_editorContainer.css({'top' : y+'px', 'left' : x+'px'});
-        Positioning.checkPosition(_editorContainer[0]);
+        Positioning.checkPosition(_editorContainer[0], null);
 
 		_saveButton.attr('disabled', true);
 		_loading.show();

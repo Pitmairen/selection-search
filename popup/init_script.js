@@ -98,7 +98,7 @@
     }
 
     function _createAutoActivator(popup, options, dom){
-        var button = new Button(popup);
+        var button = new Button(popup, style);
         var act = new AutoActivator(popup, button, options);
         dom.appendChild(button.getNode());
         return act;
