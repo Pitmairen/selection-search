@@ -69,7 +69,7 @@ function Popup(options, style){
             y = pos.y;
         }
 
-        _showPopupNode(x, y, _popupNode, style);
+        _showPopupNode(x, y, _popupNode);
         _active = true;
     }
 
@@ -431,7 +431,7 @@ function Popup(options, style){
     /*
      * Shows the popup node
      */
-    function _showPopupNode(x, y, node, style){
+    function _showPopupNode(x, y, node){
 
         node.style.left = x + "px";
         node.style.top = y + "px";

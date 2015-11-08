@@ -587,7 +587,15 @@ $(document).ready(function(){
 
 
 	$('#show_customize').click(function(){
+		var hidden = $("#customize").is(":hidden");
+
 		$('#customize').toggle();
+
+		if (hidden){
+			$('html, body').animate({
+				scrollTop: $("#head-styling").offset().top
+			}, 500);
+		}
 
 		return false;
 	});

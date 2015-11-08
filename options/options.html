@@ -169,7 +169,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 	<div id="popup-advanced-options">
 
-	<h4 class="subsection-heading">Styling</h4>
+	<h4 class="subsection-heading" id="head-styling">Styling</h4>
 
     <p id="select_theme_container"><select id="select_theme"></select> <input type="button" id="show_customize" value="Customize" /> &nbsp;&nbsp;<input type="checkbox" id="circular_menu"> <label for="circular_menu">Use circular menu (Experimental)</label></p>
 
@@ -186,7 +186,26 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	<div id="customize">
 		<div class="clearb"></div>
 
-		<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.</p>
+		<p class="info" id="style-info">Here you can customize the look of the menu with <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.
+		<br><br><b>Selection Search</b> also has its own CSS-like properties that you can customize
+		in the "CONFIG_START" section after your CSS.
+                
+		<span style="padding-top: 12px; padding-left: 50px; display:block"><strong>submenu_corner, submenu_position:</strong><br />
+		These define where the submenu is placed at whenever it is opened from the main popup menu.
+		The property <b>submenu_position</b> defines the corner of the submenu button (of the main menu) that the submenu is placed at, and <b>submenu_corner</b> defines the exact corner of the submenu to place at <b>submenu_position.</b>
+		Valid values of these properties are "topright", "topleft", "bottomright", and "bottomleft".<br /><br />
+
+
+		<strong>menu_edge_right, menu_edge_bottom, menu_edge_left, menu_edge_top:</strong><br />
+                  
+		These define how the menu should be repositioned if it falls outside of the browser window.
+		If one of these properties has a value of "auto", then the menu is automatically repositioned to fit inside the window and to be flush with the window edge that it crossed.
+		If one of these properties has an integer value such as "10px", then the menu is moved that amount in pixels in the corresponding direction, without any automatic positioning done beforehand.
+		This makes it possible to prevent the menu from covering the selection whenever the selection is next to one of the window's edges.<br /><br />
+		<strong>button_edge_right, button_edge_bottom, button_edge_left, button_edge_top:</strong><br />
+		These define how the auto button (when using the Auto activator) is repositioned if it falls outside of the browser window.
+		The possible values are the same as in the above <b>menu_edge_*</b> properties, and their effect is similar.</span><br />
+		See the CSS for the "Icons only" styling preset for an example "CONFIG_START" configuration.</p>
 
 		<pre id="html">
     &lt;ul class="popup mainmenu"&gt;

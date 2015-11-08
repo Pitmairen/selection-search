@@ -11,8 +11,8 @@ function Style(shadowDOM){
     // repositioned if they fall outside of the window. If one of these keys
     // has a value of "auto", then the corresponding element is automatically
     // repositioned to fit inside the browser window. If one of these keys has
-    // a numeric pixel value such as "10px", then the element is moved that
-    // numerical amount in the corresponding direction, without any automatic
+    // an integer value such as "10px", then the element is moved that amount
+    // (only by pixels) in the corresponding direction, without any automatic
     // positioning done beforehand.
     
     var _defaultStyleConfig = {
@@ -105,52 +105,17 @@ function Style(shadowDOM){
 
         }
 
-        if(config.hasOwnProperty('menu_edge_right') &&
-            config['menu_edge_right'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
+        var edge_properties = ['menu_edge_right', 'menu_edge_bottom',
+                               'menu_edge_left', 'menu_edge_top',
+                               'button_edge_right', 'button_edge_bottom',
+                               'button_edge_left', 'button_edge_top'];
 
-            _styleConfig['menu_edge_right'] = config['menu_edge_right'];
-        }
-
-        if(config.hasOwnProperty('menu_edge_bottom') &&
-            config['menu_edge_bottom'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['menu_edge_bottom'] = config['menu_edge_bottom'];
-        }
-
-        if(config.hasOwnProperty('menu_edge_left') &&
-            config['menu_edge_left'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['menu_edge_left'] = config['menu_edge_left'];
-        }
-
-        if(config.hasOwnProperty('menu_edge_top') &&
-            config['menu_edge_top'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['menu_edge_top'] = config['menu_edge_top'];
-        }
-
-        if(config.hasOwnProperty('button_edge_right') &&
-            config['button_edge_right'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['button_edge_right'] = config['button_edge_right'];
-        }
-
-        if(config.hasOwnProperty('button_edge_bottom') &&
-            config['button_edge_bottom'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['button_edge_bottom'] = config['button_edge_bottom'];
-        }
-
-        if(config.hasOwnProperty('button_edge_left') &&
-            config['button_edge_left'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['button_edge_left'] = config['button_edge_left'];
-        }
-
-        if(config.hasOwnProperty('button_edge_top') &&
-            config['button_edge_top'].match(/^ *[+-]?((\d+(\.\d*)?)|(\.\d+)) *(px)? *$/)){
-
-            _styleConfig['button_edge_top'] = config['button_edge_top'];
+        for(var i in edge_properties){
+            var prop = edge_properties[i];
+            if(config.hasOwnProperty(prop) &&
+               config[prop].match(/^[-+]?(0|[1-9][0-9]*) *(px)?$/)){
+                _styleConfig[prop] = config[prop];
+            }
         }
 
     }
