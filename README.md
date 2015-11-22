@@ -9,9 +9,15 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+
+*0.8.10*
+- Added option to show the popup directly without the button when using the auto activator. (thanks to @bijancamp)
+- Added option to configure how the popup is repositioned when it hits the edge of the window. This can be configured using CSS config options. (thanks to @bijancamp)
+- Some changes to the circular menu
+
+
 *0.8.9*
 - Add experimental circular menu
-
 
 *0.8.8*
 - Treat content editable elements the same as textareas and input elements (thanks to @bijancamp)
