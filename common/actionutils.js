@@ -10,8 +10,13 @@ function BaseActionUtils(){
 
     	url = url.replace(/%s/g, encodeURIComponent(selection));
 
-        return url.replace(/\{%\+s\}/g, encodeURIComponent(selection).replace(
+        url = url.replace(/\{%\+s\}/g, encodeURIComponent(selection).replace(
 				/%20/g, '+'));
+
+        url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection).replace(
+				/%20/g, ' '));
+
+        return url;
     }
 
 
