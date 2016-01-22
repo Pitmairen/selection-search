@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
-*0.8.10*
+*0.8.11*
 - Added new placeholder that don't encode spaces {%-s}
 
 
