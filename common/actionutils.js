@@ -13,8 +13,12 @@ function BaseActionUtils(){
         url = url.replace(/\{%\+s\}/g, encodeURIComponent(selection).replace(
 				/%20/g, '+'));
 
-        url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection).replace(
-				/%20/g, ' '));
+        // This placeholder should no be used any more. Its only here because it was 
+        // used to wrongly fix a bug. This bug has now been fixed properly,
+        // so this line is here only to not break the searches for anyone who 
+        // used this placeholder.
+        url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection));
+
 
         return url;
     }
