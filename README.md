@@ -9,9 +9,13 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.12*
+- Fix POST searches which are no linger double urlencoded
+- Remove the the {%-s} added in the previouse release which is no longer needed
+
+
 *0.8.11*
 - Added new placeholder that don't encode spaces {%-s}
-
 
 *0.8.10*
 - Added option to show the popup directly without the button when using the auto activator. (thanks to @bijancamp)
