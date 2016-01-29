@@ -46,7 +46,7 @@ $(document).ready(function (){
 		var key_value = query[i].split('=', 2);
 		if(key_value.length != 2)
 			continue;
-		form.append($('<input type="hidden" name="'+key_value[0]+'" value="'+key_value[1]+'" />'));
+		form.append($('<input type="hidden" name="'+decodeURIComponent(key_value[0])+'" value="'+decodeURIComponent(key_value[1])+'" />'));
 	}
 
 
