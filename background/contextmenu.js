@@ -87,14 +87,15 @@ function ContextMenu(options){
             'parentId' : parentItem,
         };
 
+        var id = chrome.contextMenus.create(menu);
+
         if(engine.openall && engine.hidemenu){
             menu.onclick = function(info, tab){
-                _openAllUrls(engine, info, tab);
+                _onOpenAll(engine, info, tab);
             }
             return;
         }
 
-        var id = chrome.contextMenus.create(menu);
 
         if(engine.openall)
             _addOpenAllItem(engine, id);
