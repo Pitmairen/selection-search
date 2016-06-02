@@ -267,7 +267,6 @@ a{
 
 .drag-target{
 	cursor: move;
-	float: left;
     background: url("../img/move.png") no-repeat center center;
 }
 
