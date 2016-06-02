@@ -11,33 +11,46 @@
 
 
 
-    function _storageUpdated(){
+    function _storageUpdated(is_click_count_update){
 
         _options = Storage.getOptions();
 
         _contextMenu.setOptions(_options);
 
+        var engines = Storage.getSearchEngines();
+
+        if(_options.sort_by_click){
+            engines = _clickCounter.sortEngines(engines);
+        }
+
         if(_options.context_menu === "enabled")
-            _contextMenu.setSearchEngines(Storage.getSearchEngines());
+            _contextMenu.setSearchEngines(engines);
         else
             _contextMenu.disable();
-
 
         // Create a new icon collection object. And reload 
         // all the icons.
         _iconCollection = new IconCollection();
-        loadIcons(_iconCollection, Storage.getSearchEngines(), _options);
+        loadIcons(_iconCollection, engines, _options);
+
+
+        if(is_click_count_update == undefined || !is_click_count_update){
+            _clickCounter.cleanupStorage(engines);
+        }
 
     }
 
-
-
-
+    function _updateClickCount(engine){
+        if(_options.sort_by_click){
+            _clickCounter.clicked(engine);
+            _storageUpdated();
+        }
+    }
 
     var _options = Storage.getOptions();
-    var _contextMenu = new ContextMenu(_options);
+    var _contextMenu = new ContextMenu(_options, _updateClickCount);
     var _iconCollection = new IconCollection();
-
+    var _clickCounter = new ClickCounter();
 
     // _storageUpdated();
 
@@ -47,7 +60,11 @@
         switch(request.action){
 
             case "getContentScriptData":
-                return getContentScriptData(sendResponse);
+                return getContentScriptData(sendResponse, _clickCounter);
+            case "updateClickCount":
+                _updateClickCount(request.engine);
+                sendResponse({});
+                return;
             case "getPopupIcons":
                 return getPopupIcons(_iconCollection, sendResponse);
             case "getOptions":

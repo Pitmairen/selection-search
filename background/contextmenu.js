@@ -1,6 +1,6 @@
 
 
-function ContextMenu(options){
+function ContextMenu(options, _clickCounterCallback){
 
 
     var _rootItem = null;
@@ -107,12 +107,13 @@ function ContextMenu(options){
     function _onEngineClick(engine, info, tab){
         var utils = new ContextMenuActionUtils(info, tab);
         utils.openEngine(engine, info.selectionText)
+        _clickCounterCallback(engine);
     }
 
     function _onOpenAll(engine, info, tab){
         var utils = new ContextMenuActionUtils(info, tab);
         utils.openAllInSubmenu(engine, info.selectionText)
-
+        _clickCounterCallback(engine);
     }
 
 
@@ -151,9 +152,6 @@ function ContextMenu(options){
         })
 
     }
-
-
-
 
 }
 

@@ -67,7 +67,7 @@ function copyToClipboard(request, sendResponse) {
     sendResponse({});
 }
 
-function getContentScriptData(sendResponse){
+function getContentScriptData(sendResponse, clickCounter){
 
     resp = {};
 
@@ -75,12 +75,19 @@ function getContentScriptData(sendResponse){
     resp.default_style = document.getElementById("default-style").innerText;
     resp.extra_style = Storage.getStyle('');
 
-    resp.engines = Storage.getSearchEngines();
+
     resp.options = Storage.getOptions();
+
+    if(clickCounter != undefined && resp.options.sort_by_click)
+        resp.engines = clickCounter.sortEngines(Storage.getSearchEngines());
+    else
+        resp.engines = Storage.getSearchEngines();
+
 
     sendResponse(resp);
 
 }
+
 
 function getPopupIcons(iconCollection, sendResponse){
 
@@ -126,9 +133,6 @@ function getOptions(sendResponse){
     sendResponse(resp);
 
 }
-
-
-
 
 
 function loadIcons(iconCollection, engines, options){

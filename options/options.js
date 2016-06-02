@@ -269,6 +269,10 @@ $(document).ready(function(){
 
         $("#circular_menu").attr('checked', response.options.circular_menu);
 
+
+		$("#opt-sort-by-click").attr('checked', response.options.sort_by_click);
+
+
         // set activator combo
         for(var i in response.options.activator_combo){
             var act = response.options.activator_combo[i];
@@ -464,6 +468,7 @@ $(document).ready(function(){
 			auto_popup_show_menu_directly: $('#auto_popup_show_menu_directly').is(':checked'),
             activator_combo: act_combo,
 			circular_menu: $('#circular_menu').is(':checked'),
+			sort_by_click: $('#opt-sort-by-click').is(':checked'),
 		});
 
 

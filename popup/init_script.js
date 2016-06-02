@@ -45,6 +45,9 @@
         actions.addAction("COPY", new CopyAction(popup));
         actions.addAction("%s", new DomainAction(popup));
 
+        if(response.options.sort_by_click){
+            popup.addActionListener(new SearchCounter(response.options));
+        }
         popup.addActionListener(new MenuHider(popup, response.options));
         popup.addActionListener(actions);
 

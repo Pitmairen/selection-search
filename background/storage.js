@@ -33,6 +33,7 @@ var Storage = new function (){
         activator_combo: [],
         show_tooltips: false,
         circular_menu: false,
+        sort_by_click: false, // Sort the search engines by usage count
     };
 
     var _syncOptions = {

@@ -137,6 +137,20 @@ function MenuHider(popup, options)
 }
 
 
+SearchCounter.prototype = Object.create(PopupAction);
+function SearchCounter(options){
+
+    PopupAction.call(this);
+
+    this.onClick = function(evt, engine, anchorElement){
+        if(!engine.is_submenu || engine.openall){
+            chrome.runtime.sendMessage({
+                action:'updateClickCount', engine: engine
+            });
+        }
+    }
+}
+
 
 function ActionCollection(){
 
