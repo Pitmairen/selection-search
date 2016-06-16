@@ -9,10 +9,16 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.13*
+- Fix visual bug in search engine list on options page
+- Fix bug in context menu when used the "openall" option
+- Fix separator alignment in icon only styles
+- Added option to sort search engines by usage count
+
+
 *0.8.12*
 - Fix POST searches which are no linger double urlencoded
 - Remove the the {%-s} added in the previouse release which is no longer needed
-
 
 *0.8.11*
 - Added new placeholder that don't encode spaces {%-s}
