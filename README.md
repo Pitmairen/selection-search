@@ -9,12 +9,14 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.14*
+- Added option to set a limit on the length of the selection that will activate the popup
+
 *0.8.13*
 - Fix visual bug in search engine list on options page
 - Fix bug in context menu when used the "openall" option
 - Fix separator alignment in icon only styles
 - Added option to sort search engines by usage count
-
 
 *0.8.12*
 - Fix POST searches which are no linger double urlencoded
