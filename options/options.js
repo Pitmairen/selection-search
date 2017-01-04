@@ -272,6 +272,8 @@ $(document).ready(function(){
 
 		$("#opt-sort-by-click").attr('checked', response.options.sort_by_click);
 
+		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
+
 
         // set activator combo
         for(var i in response.options.activator_combo){
@@ -320,6 +322,12 @@ $(document).ready(function(){
 		}
 
 	});
+
+	$("#opt-selection-length-limit").on('input', function(){
+		if($(this).val() <= 0){
+			$(this).val("");
+		}
+	})
 
     $("#circular_menu").change(function(){
 
@@ -447,6 +455,11 @@ $(document).ready(function(){
         }).get();
 
 
+		var selection_limit = $("#opt-selection-length-limit").val();
+		if(selection_limit === ""){
+			selection_limit = -1;
+		}
+
 
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
@@ -469,6 +482,7 @@ $(document).ready(function(){
             activator_combo: act_combo,
 			circular_menu: $('#circular_menu').is(':checked'),
 			sort_by_click: $('#opt-sort-by-click').is(':checked'),
+			selection_length_limit: selection_limit,
 		});
 
 

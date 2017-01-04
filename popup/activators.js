@@ -1,6 +1,6 @@
 
 
-function Activator(){
+function Activator(_options){
 
     var _inCombo = false;
     var _this = this;
@@ -29,6 +29,12 @@ function Activator(){
 
         if (sel.length == 0)
             return false;
+        
+        if (_options.selection_length_limit >= 0){
+            if(sel.length > _options.selection_length_limit){
+                return false;
+            }
+        }
 
         return sel.indexOf("\n") == -1;
     }
@@ -96,7 +102,7 @@ ClickActivator.prototype = Object.create(Activator);
 
 function ClickActivator(_popup, _options){
 
-    Activator.call(this);
+    Activator.call(this, _options);
 
     var _doubleClickTime = 0;
     var _this = this;
@@ -167,7 +173,7 @@ DoubleClickActivator.prototype = Object.create(Activator);
 
 function DoubleClickActivator(_popup){
 
-    Activator.call(this);
+    Activator.call(this, _options);
 
     var _doubleTimer = null;
 
@@ -217,7 +223,7 @@ AutoActivator.prototype = Object.create(Activator);
 
 function AutoActivator(_popup, _button, _options){
 
-    Activator.call(this);
+    Activator.call(this, _options);
 
     var _lastTimer;
     var _startedInInput = false;
@@ -322,7 +328,7 @@ KeyAndMouseActivator.prototype = Object.create(Activator);
 function KeyAndMouseActivator(_popup, _options){
 
 
-    Activator.call(this);
+    Activator.call(this, _options);
 
     var _keys = {}; // Keybard Combo
     var _mouseButton = 0;
