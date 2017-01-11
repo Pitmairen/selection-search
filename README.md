@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.15
+- Fixed bug introduced in the last release that caused the icons to disappear
+
 *0.8.14*
 - Added option to set a limit on the length of the selection that will activate the popup
 
