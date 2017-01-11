@@ -57,7 +57,7 @@
         activator.setup();
 
         if(response.options.open_on_dblclick){
-            var a = new DoubleClickActivator(popup);
+            var a = new DoubleClickActivator(popup, response.options);
             a.setup();
         }
 

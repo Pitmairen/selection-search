@@ -171,7 +171,7 @@ function ClickActivator(_popup, _options){
 
 DoubleClickActivator.prototype = Object.create(Activator);
 
-function DoubleClickActivator(_popup){
+function DoubleClickActivator(_popup, _options){
 
     Activator.call(this, _options);
 
