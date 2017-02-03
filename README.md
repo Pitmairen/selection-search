@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.16
+- Fixed POST searches in new versions of chrome. A change in Chrome version 56 and newer broke the POST search.
+
 *0.8.15
 - Fixed bug introduced in the last release that caused the icons to disappear
 
