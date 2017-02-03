@@ -36,6 +36,8 @@ $(document).ready(function (){
 		.attr('method', 'post')
 		.attr('action', parts[0])
 
+    $(document.body).append(form);
+
 	if(encoding){
 		form.attr('accept-charset', encoding);
 	}
