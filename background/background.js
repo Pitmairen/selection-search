@@ -84,6 +84,8 @@ function getContentScriptData(sendResponse, clickCounter){
         resp.engines = Storage.getSearchEngines();
 
 
+    resp.blacklist = Blacklist.getBlacklist();
+
     sendResponse(resp);
 
 }
@@ -129,6 +131,7 @@ function getOptions(sendResponse){
     resp.default_style = $('#default-style').text();
     resp.extra_style = Storage.getStyle('');
 
+    resp.blacklist = Storage.getBlacklistDefinitions();
 
     sendResponse(resp);
 

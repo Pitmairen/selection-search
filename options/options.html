@@ -309,6 +309,33 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 	</div>
 
+	<h4 class="subsection-heading" id="head-blacklist">Blacklist</h4>
+	<div class="subsection">
+		<p class="info">
+        The blacklist can be used to disable the popup on specific sites. [<a href="#" id="show-blacklist-info">Show Definition Syntax</a>] 
+		</p>
+        <div class="info blacklist-info">
+        To block specific sites you define rules using the following syntax:
+        <pre>
+// This will remove the popup from www.example.com and all pages on this domain
+www.example.com        
+
+// This will remove the popup from mail.example.com and all pages on this domain
+mail.example.com
+
+// This will remove the popup from all subdomains on example.com. Eg www.example.com, mail.example.com, ...
+example.com            
+
+// This will remove the popup from pages starting with /test on www.example.com
+www.example.com/test
+        
+// Each rule must be defined on its own line. Do not include "http://" in the rules.
+</pre>
+        </div>
+        
+        <textarea id="blacklist-definitions" rows="8" placeholder="For example: www.example.com"></textarea>
+
+	</div>
 
 	</div>
 

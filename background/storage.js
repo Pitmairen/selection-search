@@ -5,6 +5,7 @@ var Storage = new function (){
     _STYLE_KEY = 'styleSheet';
     _BUTTON_KEY = 'button'; // Used in previous versions
     _OPTIONS_KEY = 'options';
+    _BLACKLIST_KEY = 'blacklist';
     _SYNC_KEY = 'sync';
 
     var _defaultEngines = searchEngines = [
@@ -36,6 +37,8 @@ var Storage = new function (){
         sort_by_click: false, // Sort the search engines by usage count
         selection_length_limit: -1,
     };
+
+    var _blacklist = [];
 
     var _syncOptions = {
         sync_engines: true,
@@ -80,6 +83,10 @@ var Storage = new function (){
         return $.extend({}, _defaultOptions, options);
 
     }
+    
+    this.getBlacklistDefinitions = function(){
+        return JSON.parse(_getValue(_BLACKLIST_KEY, '[]'));
+    }
 
     this.getSyncOptions = function(){
 
@@ -110,6 +117,10 @@ var Storage = new function (){
 
 
         _setValue(_OPTIONS_KEY, JSON.stringify(options))
+    }
+
+    this.setBlacklistDefinitions = function(blacklist){
+        _setValue(_BLACKLIST_KEY, JSON.stringify(blacklist))
     }
 
     this.setSyncOptions = function(options){

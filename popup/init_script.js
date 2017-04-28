@@ -12,6 +12,14 @@
 
     chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
+
+        if(response.blacklist !== undefined){
+            if(_checkBlacklist(response.blacklist)){
+                return; // Disable the popup
+            }
+        }
+
+
         if(!response.options.disable_formextractor){
             var engineEditor = new EngineEditor(shadowDOM);
 
@@ -81,7 +89,34 @@
     });
 
 
+    function _checkBlacklist(blacklist){
 
+        var hostname = location.hostname;
+
+        if(hostname in blacklist.hostnames){
+            return _checkBlacklistPaths(blacklist.hostnames[hostname]);
+        }
+
+        if(hostname.indexOf('.')){
+            // Remove the sub domain and check again
+            hostname = hostname.split('.').slice(1).join('.');
+            if (hostname in blacklist.hostnames){
+                return _checkBlacklistPaths(blacklist.hostnames[hostname]);
+            }
+        }
+
+        return false;
+    }
+
+    function _checkBlacklistPaths(blackListedPaths){
+        var path = location.pathname + location.search + location.hash;
+        for(var i=0; i < blackListedPaths.length; i++){
+            if(path.startsWith(blackListedPaths[i])){
+                return true;
+            }
+        }
+        return false;
+    }
 
     function _getActivator(activator, popup, options, dom){
         

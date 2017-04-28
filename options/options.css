@@ -319,3 +319,11 @@ a{
 	display: none;
 }
 
+.blacklist-info{
+    display: none;
+    margin-bottom: 1em;
+}
+#blacklist-definitions{
+    width: 100%;
+}
+

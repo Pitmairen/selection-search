@@ -54,8 +54,10 @@ var Sync = new function(){
             jQuery.extend(data, chunks);
 
         }
-        if(opts.sync_settings)
+        if(opts.sync_settings){
             data.settings = storage.getOptions();
+            data.blacklist = storage.getBlacklistDefinitions();
+        }
         if(opts.sync_style)
             data.style = storage.getStyle();
 
@@ -107,6 +109,11 @@ var Sync = new function(){
             storage.setOptions(items.settings);
         }
 
+        if(items.hasOwnProperty('blacklist') && opts.sync_settings)
+        {
+            storage.setBlacklistDefinitions(items.blacklist);
+        }
+
         if(items.hasOwnProperty('style') && opts.sync_style)
         {
             storage.setStyle(items.style);
@@ -123,6 +130,11 @@ var Sync = new function(){
         if(changes.hasOwnProperty('settings') && opts.sync_settings)
         {
             storage.setOptions(changes.settings.newValue);
+        }
+
+        if(changes.hasOwnProperty('blacklist') && opts.sync_settings)
+        {
+            storage.setBlacklistDefinitions(changes.blacklist.newValue);
         }
 
         if(changes.hasOwnProperty('style') && opts.sync_style)

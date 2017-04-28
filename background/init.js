@@ -38,6 +38,8 @@
             _clickCounter.cleanupStorage(engines);
         }
 
+        Blacklist.setDefinitions(Storage.getBlacklistDefinitions());
+
     }
 
     function _updateClickCount(engine){
@@ -52,7 +54,7 @@
     var _iconCollection = new IconCollection();
     var _clickCounter = new ClickCounter();
 
-    // _storageUpdated();
+    _storageUpdated();
 
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){

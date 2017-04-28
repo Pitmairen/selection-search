@@ -274,6 +274,8 @@ $(document).ready(function(){
 
 		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
 
+		$("#blacklist-definitions").val(response.blacklist.join('\n'));
+
 
         // set activator combo
         for(var i in response.options.activator_combo){
@@ -493,8 +495,15 @@ $(document).ready(function(){
 		});
 
 
-		chrome.runtime.sendMessage({action:"storageUpdated"});
+        var blacklist = $('#blacklist-definitions').val().split('\n').map(function(value){
+            return value.trim();
+        }).filter(function(value){
+            return value.length > 0;
+        });
 
+        Storage.setBlacklistDefinitions(blacklist);
+
+		chrome.runtime.sendMessage({action:"storageUpdated"});
 
 
 		location.reload();
@@ -625,6 +634,11 @@ $(document).ready(function(){
 		return false;
 	});
 
+
+	$('#show-blacklist-info').click(function(){
+		$('.blacklist-info').slideToggle(200);
+		return false;
+	});
 
 
 	$('#k_and_m_keys').focus(function(){
