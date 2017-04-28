@@ -9,10 +9,13 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
-*0.8.16
+*0.8.17
+- Added a blacklist to be able to disable the popup on specific sites
+
+*0.8.16*
 - Fixed POST searches in new versions of chrome. A change in Chrome version 56 and newer broke the POST search.
 
-*0.8.15
+*0.8.15*
 - Fixed bug introduced in the last release that caused the icons to disappear
 
 *0.8.14*
