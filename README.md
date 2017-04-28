@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
-*0.8.17
+*0.8.17*
 - Added a blacklist to be able to disable the popup on specific sites
 
 *0.8.16*
