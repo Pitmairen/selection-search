@@ -1,4 +1,4 @@
-#Selection Search
+# Selection Search
 
 This is the code for the [Selection Search](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe) chrome extension.
 
@@ -7,9 +7,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 
 
-#Changelog
+## Changelog
 
-*0.8.18
+*0.8.18*
 - Fixed bug where an erroneous colon (:) was added to the end of the HOST_NAME variable when using the context menu search
 
 *0.8.17*
