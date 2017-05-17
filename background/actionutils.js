@@ -44,7 +44,11 @@ function ContextMenuActionUtils(info, tab){
 
         var urlParts = urlparse.urlsplit(pageUrl);
 
-        var host = urlParts.hostname + ":" + urlParts.port;
+        var host = urlParts.hostname;
+        if(urlParts.port){
+            host += ":" + urlParts.port;
+        }
+
         var origin = urlParts.scheme + "://" + host;
 
         _urlVariables.push([/%PAGE_HOST/g, encodeURIComponent(host)]);
