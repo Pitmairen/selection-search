@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 #Changelog
 
+*0.8.18
+- Fixed bug where an erroneous colon (:) was added to the end of the HOST_NAME variable when using the context menu search
+
 *0.8.17*
 - Added a blacklist to be able to disable the popup on specific sites
 
