@@ -18,23 +18,40 @@ function saveEngine(request, sendResponse){
 function openAllUrls(request, sendResponse, parent_tab){
 
     var opt = Storage.getOptions();
-    var urls = request.urls;
+
+    var urls;
+
+    if (request.urlsWithOptions !== undefined){
+        urls = request.urlsWithOptions;
+    }else{
+        urls = request.urls.map(function(url){
+            return {url: url, incognito: false};
+        });
+    }
 
     for(var i in urls){
         i = parseInt(i);
 
-        if (urls[i] == 'COPY') {
+        if (urls[i].url == 'COPY') {
             copyToClipboard({text:request.selection}, function(){});
             continue;
         }
 
+        if(urls[i].incognito){
+            chrome.windows.create({
+                'url' : urls[i].url,
+                'incognito' : true
+            });
+            continue;
+        }
+
         var tab_opts = {
-            'url' : urls[i],
+            'url' : urls[i].url,
             'active' : !_shouldOpenInNewTab(opt.background_tab, request.in_background_tab),
         };
+
         if(parent_tab.id >= 0)
             tab_opts['openerTabId'] = parent_tab.id;
-
 
         if(!opt.open_new_tab_last){
             tab_opts.index = parent_tab.index + 1 + i;

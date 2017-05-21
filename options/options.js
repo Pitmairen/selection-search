@@ -126,6 +126,7 @@ function _addEngineOptions(en, el){
     opts.find('.nosync').attr('checked', !Boolean(en.nosync));
 	opts.find('.post').attr('checked', Boolean(en.post));
     opts.find('.hide_on_click').attr('checked', Boolean(en.hide_on_click));
+    opts.find('.open_in_incognito').attr('checked', Boolean(en.open_in_incognito));
 
 	if(en.background_tab === undefined){
 		opts.find('.background_global').attr('checked', true);
@@ -398,6 +399,9 @@ $(document).ready(function(){
 				delete en.nosync;
 			else
 				en.nosync = true;
+
+			if(!en.open_in_incognito)
+				delete en.open_in_incognito;
 
 			if(en.background_global !== undefined){
 				if(en.background_global)

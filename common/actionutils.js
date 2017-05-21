@@ -46,20 +46,29 @@ function BaseActionUtils(){
         });
 
     }
+    
+    this.openAllUrlsWithOptions = function(engine, urlsWithOptions, selection){
+
+        chrome.runtime.sendMessage({
+            action:'openAllUrls', urlsWithOptions: urlsWithOptions, "selection" : selection,
+            "in_background_tab" : engine.background_tab,
+        });
+
+    }
 
     this.openEngine = function(engine, selection){
 
-        var urls = [_this.createSearchUrl(engine, selection)];
+        var urls = [_this.createSearchUrlWithOptions(engine, selection)];
 
-        _this.openAllUrls(engine, urls, selection);
+        _this.openAllUrlsWithOptions(engine, urls, selection);
 
     }
 
     this.openAllInSubmenu = function(engine, selection){
 
-        var urls = _getAllUrls(engine.engines, selection, []);
+        var urls = _getAllUrlsWithOptions(engine.engines, selection, []);
 
-        _this.openAllUrls(engine, urls, selection);
+        _this.openAllUrlsWithOptions(engine, urls, selection);
 
     }
 
@@ -78,6 +87,12 @@ function BaseActionUtils(){
     this.createPostUrl = function(url, selection){
 
         return chrome.extension.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
+    }
+
+
+    this.createSearchUrlWithOptions = function(engine, selection){
+        var url = _this.createSearchUrl(engine, selection);
+        return {url: url, incognito: engine.open_in_incognito};
     }
 
 
@@ -123,5 +138,19 @@ function BaseActionUtils(){
 
     }
 
+    /*
+     * Recursively get all the urls from the engines.
+     */
+    function _getAllUrlsWithOptions(engines, selection, urls){
+        for(var i in engines){
+            var engine = engines[i];
+            if(engine.is_submenu)
+                urls = _getAllUrlsWithOptions(engine.engines, selection, urls);
+            else
+                urls.push(_this.createSearchUrlWithOptions(engine, selection));
+        }
+        return urls;
+
+    }
 }
 

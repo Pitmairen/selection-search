@@ -73,6 +73,17 @@
 
         {{?}}
 
+
+        {{ if(!it.en.is_submenu && !it.en.is_separator) { }}
+            <hr>
+            <input class="open_in_incognito" id="engine-opt-open-in-incognito-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-open-in-incognito-{{= it.id }}">Incognito mode</label>
+            <p class="separate-menus-msg">
+                The search will open in a new incognito window
+            </p>
+        {{ } }}
+
+
         <hr>
         <input class="nosync" id="engine-opt-sync-{{=it.id}}" type="checkbox" />
         <label for="engine-opt-sync-{{=it.id}}">Synchronize</label>

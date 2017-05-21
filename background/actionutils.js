@@ -23,7 +23,16 @@ function ContextMenuActionUtils(info, tab){
             function(){}, // Dummy
             tab
         );
+    }
 
+    this.openAllUrlsWithOptions = function(engine, urlsWithOptions, selection){
+
+        openAllUrls({
+            action:'openAllUrls', urlsWithOptions: urlsWithOptions, "selection" : selection,
+            "in_background_tab" : engine.background_tab},
+            function(){}, // Dummy
+            tab
+        );
     }
 
     this.replaceVariables = function(url){

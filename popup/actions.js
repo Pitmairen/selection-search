@@ -46,11 +46,18 @@ function DefaultAction(popup, utils, options)
         else if(engine.url.substr(0, 11) === "javascript:")
             return;
 
+    
+        if(engine.open_in_incognito){
+            utils.openEngine(engine, popup.getSelection());
+            evt.preventDefault();
+            evt.stopPropagation();
+            return;
+        }
 
         if(options.newtab){
 
             if(options.background_tab || engine.background_tab){
-                utils.openAllUrls(engine, [anchorElement.href], popup.getSelection());
+                utils.openEngine(engine, popup.getSelection());
                 evt.preventDefault();
                 evt.stopPropagation();
             }
@@ -66,6 +73,7 @@ function DefaultAction(popup, utils, options)
     }
 
 
+    
 
 }
 
