@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.19*
+- Added option to open searches in incognito mode
+
 *0.8.18*
 - Fixed bug where an erroneous colon (:) was added to the end of the HOST_NAME variable when using the context menu search
 
