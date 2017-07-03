@@ -397,6 +397,9 @@ function KeyAndMouseActivator(_popup, _options){
 
         });
 
+        // Ensure combo is not marked as activated on page return
+        window.addEventListener('blur', _resetkeys);
+
     }
 
     function _resetkeys(){
