@@ -75,10 +75,14 @@ IconLoader.getDefaultIcon = function(){
     return chrome.extension.getURL('img/default_favicon.png');
 }
 
+// Factor to scale the canvas by to support various display densities
+var pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
+
 IconLoader._canvas = document.createElement("canvas");
-IconLoader._canvas.width = "16";
-IconLoader._canvas.height = "16";
+IconLoader._canvas.width = 16 * pixelRatio;
+IconLoader._canvas.height = 16 * pixelRatio;
 IconLoader._context = IconLoader._canvas.getContext("2d");
+IconLoader._context.scale(pixelRatio, pixelRatio);
 
 
 function IconCollection(){
