@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
-*0.8.20
+*0.8.20*
 - Fixed bug in Keyboard+Mouse activator where the popup would trigger without holding the keyboard key when returning to the page 
 after the page lost focus because of certain keyboard shortcuts. (thanks to @bijancamp)
 - Improved icon quality for users with high density display. (thanks to @bijancamp)
