@@ -27,7 +27,7 @@
                 "popup/actions.js", "popup/style.js", "popup/button.js",
                 "common/urlparse.js", "common/jquery-2.1.4.min.js",
                 "old/engine-editor.js", "old/extractform.js",
-                "popup/positioning.js", "popup/init_script.js"],
+                "popup/positioning.js", "popup/autohide.js", "popup/init_script.js"],
                 "run_at" : "document_end",
                 "all_frames" : true
         },

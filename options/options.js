@@ -274,6 +274,7 @@ $(document).ready(function(){
 		$("#opt-sort-by-click").attr('checked', response.options.sort_by_click);
 
 		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
+		$("#opt-auto-hide-delay").val(response.options.auto_hide_delay);
 
 		$("#blacklist-definitions").val(response.blacklist.join('\n'));
 
@@ -466,6 +467,10 @@ $(document).ready(function(){
 			selection_limit = -1;
 		}
 
+		var auto_hide_delay = parseInt($("#opt-auto-hide-delay").val());
+		if(isNaN(auto_hide_delay) || auto_hide_delay < 0){
+			auto_hide_delay = 0;
+		}
 
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
@@ -489,6 +494,7 @@ $(document).ready(function(){
 			circular_menu: $('#circular_menu').is(':checked'),
 			sort_by_click: $('#opt-sort-by-click').is(':checked'),
 			selection_length_limit: selection_limit,
+			auto_hide_delay: auto_hide_delay,
 		});
 
 
