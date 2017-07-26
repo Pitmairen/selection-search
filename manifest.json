@@ -24,7 +24,7 @@
         {
             "matches": ["http://*/*", "https://*/*", "file://*/*"],
             "js": ["popup/popup.js", "popup/popup_modifier.js", "popup/circular_popup.js", "popup/activators.js", "common/actionutils.js",
-                "popup/actions.js", "popup/style.js", "popup/button.js",
+                "popup/actions.js", "popup/style.js", "popup/button.js", "common/encoding.js",
                 "common/urlparse.js", "common/jquery-2.1.4.min.js",
                 "old/engine-editor.js", "old/extractform.js",
                 "popup/positioning.js", "popup/autohide.js", "popup/init_script.js"],

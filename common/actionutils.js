@@ -19,7 +19,10 @@ function BaseActionUtils(){
         // used this placeholder.
         url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection));
 
-
+        if(url.indexOf('{%(CP1251)s}') !== -1){
+            url = url.replace(/\{%\(CP1251\)s\}/g, unicodeToWin1251_UrlEncoded(selection));
+        }
+    
         return url;
     }
 
