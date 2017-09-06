@@ -14,7 +14,11 @@
     },
 
     "options_page": "options/options.html",
-
+    
+    "options_ui": {
+      "page" : "options/options.html"
+    },
+      
     "background": {
         "page" : "background/background.html",
         "persistent" : true
