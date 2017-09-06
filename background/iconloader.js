@@ -26,18 +26,19 @@ function IconLoader(src, onload){
     }
 
     this.getDataURL = function(){
-        if(_urlCache !== null)
-            return _urlCache;
-
-        if(_isError){
-            _reloadImage();
-            return IconLoader.getDefaultIcon();
-        }
-
-        IconLoader._context.clearRect(0, 0, 16, 16);
-        IconLoader._context.drawImage(_img, 0, 0, 16, 16);
-        _urlCache = IconLoader._canvas.toDataURL("image/png");
-        return _urlCache;
+        return src;
+        // if(_urlCache !== null)
+        //     return _urlCache;
+        //
+        // if(_isError){
+        //     _reloadImage();
+        //     return IconLoader.getDefaultIcon();
+        // }
+        //
+        // IconLoader._context.clearRect(0, 0, 16, 16);
+        // IconLoader._context.drawImage(_img, 0, 0, 16, 16);
+        // _urlCache = IconLoader._canvas.toDataURL("image/png");
+        // return _urlCache;
     }
 
 
