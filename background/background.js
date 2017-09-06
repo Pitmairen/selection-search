@@ -50,8 +50,8 @@ function openAllUrls(request, sendResponse, parent_tab){
             'active' : !_shouldOpenInNewTab(opt.background_tab, request.in_background_tab),
         };
 
-        if(parent_tab.id >= 0)
-            tab_opts['openerTabId'] = parent_tab.id;
+        //if(parent_tab.id >= 0)
+        //    tab_opts['openerTabId'] = parent_tab.id;
 
         if(!opt.open_new_tab_last){
             tab_opts.index = parent_tab.index + 1 + i;
