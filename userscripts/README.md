@@ -6,8 +6,8 @@ The scripts in this folder are used to make searches in selections earch work fo
 
 First you need to install **one** of the following extensions that let you add user scripts to Chrome.
 
-[Violentmonkey](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag)
-[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+* [Violentmonkey](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag)
+* [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
 I prefer Violentmonkey, as I think it looks a little bit nicer.  
 
