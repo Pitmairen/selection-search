@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Selection Search for woerterbuchnetz.de
 // @namespace    https://github.com/Pitmairen/selection-search
-// @version      0.3
+// @version      0.4
 // @description  Use search url: http://woerterbuchnetz.de/cgi-bin/WBNetz/wbgui_py?sigle=DWB#_selectionsearch_=%s
 // @author       Pitmairen
+// @license      GPLv3
 // @match        http://woerterbuchnetz.de/cgi-bin/WBNetz/wbgui_py*
 // @homepageURL  https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
 // @supportURL   https://github.com/Pitmairen/selection-search/issues
