@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Selection Search for gog.com
 // @namespace    https://github.com/Pitmairen/selection-search
-// @version      0.2
+// @version      0.3
 // @description  Use search url: https://www.gog.com/#_selectionsearch_=%s
 // @author       Pitmairen
 // @license      GPLv3
@@ -14,16 +14,18 @@
     'use strict';
     var separator = '_selectionsearch_=';
     if(location.hash.indexOf(separator) !== -1){
-        var query = decodeURIComponent(location.hash.split(separator)[1]);
+        setTimeout(function(){
+            var query = decodeURIComponent(location.hash.split(separator)[1]);
 
-        document.querySelector('.js-menu-search .menu-link--search').click();
+            document.querySelector('.js-menu-search .menu-link--search').click();
 
-        var searchInput = document.querySelector('.menu-search-input input');
+            var searchInput = document.querySelector('.menu-search-input input');
 
-        searchInput.value = query;
+            searchInput.value = query;
 
-        var evt = document.createEvent("HTMLEvents");
-        evt.initEvent("change", false, true);
-        searchInput.dispatchEvent(evt);
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+            searchInput.dispatchEvent(evt);
+        }, 250);
     }
 })();
