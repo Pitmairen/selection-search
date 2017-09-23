@@ -16,4 +16,8 @@ https://openuserjs.org/group/SelectionSearchExtension
 
 Find the site you want in the list and click it, then click the install button at the script page.
 
+Next go to selection search's [options page](chrome-extension://gipnlpdeieaidmmeaichnddnmjmcakoe/options/options.html) and add a new search url for the site.
+Click the "Add New Search Engine" button and use the serch url that you find in the description of the user script, look for "Use search url: ..."
+
+
 If you need script for other sites you can make a request in the [issue tracker](https://github.com/Pitmairen/selection-search/issues).
