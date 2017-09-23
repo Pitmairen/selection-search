@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Selection Search for gog.com
 // @namespace    https://github.com/Pitmairen/selection-search
-// @version      0.1
+// @version      0.2
 // @description  Use search url: https://www.gog.com/#_selectionsearch_=%s
 // @author       Pitmairen
 // @license      GPLv3
@@ -18,7 +18,7 @@
 
         document.querySelector('.js-menu-search .menu-link--search').click();
 
-        var searchInput = document.query = document.querySelector('.menu-search-input input');
+        var searchInput = document.querySelector('.menu-search-input input');
 
         searchInput.value = query;
 
