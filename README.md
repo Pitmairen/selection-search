@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.23*
+- Added keyboard hotkeys to activate search engines
+
 *0.8.22*
 - Added experimental support for cyrillic encoding of the search placeholder. This can be used by using the following placeholder in the url: {%(CP1251)s}
 
