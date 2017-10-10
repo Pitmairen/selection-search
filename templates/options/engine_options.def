@@ -87,6 +87,15 @@
         <hr>
         <input class="nosync" id="engine-opt-sync-{{=it.id}}" type="checkbox" />
         <label for="engine-opt-sync-{{=it.id}}">Synchronize</label>
+
+        {{ if(!it.en.is_separator) { }}
+        <hr>
+        <input class="hotkey-definition-input" id="engine-opt-hotkey-{{=it.id}}" type="text" placeholder="Hotkey" />
+        <a href="#" class="clear-hotkey">[Clear hotkey]</a>
+        <p class="separate-menus-msg">
+            Use this shortcut hotkey to search the selected text with this search engine.
+        </p>
+        {{ } }}
     </div>
 </td>
 <td>

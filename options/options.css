@@ -281,6 +281,13 @@ a{
 	border: 1px solid #aaa;
 	-webkit-border-radius: 3px;
 	-webkit-box-shadow: 0 0 3px #aaa;
+	width: 400px;
+}
+
+.clear-hotkey{
+	font-size: 0.8em;
+	margin-left: 0.5em;
+	color: #333;
 }
 
 #export-import a.selected{

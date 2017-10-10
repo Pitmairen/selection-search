@@ -146,7 +146,13 @@ function _addEngineOptions(en, el){
     // folders
     opts.find('.hidemenu').attr('checked', Boolean(en.hidemenu));
 
-
+	if(!en.is_separator){
+		var hotkeys = HotKeys.createHotkeyInputForElement(opts.find('.hotkey-definition-input'), en.hotkey || []);
+		opts.find('.clear-hotkey').on('click', function(){
+			hotkeys.clearCombo();
+			return false;
+		});
+	}
 }
 
 
@@ -410,6 +416,13 @@ $(document).ready(function(){
 				delete en.background_global;
 			}
 
+            delete en['hotkey-definition-input'];
+
+            en.hotkey = $(this).find('.hotkey-definition-input').data('hotkey');
+			if(en.hotkey != undefined && en.hotkey.length === 0){
+				delete en.hotkey;
+			}
+
 			if($(this).hasClass('menu-folder')){
 
 				if(!en.openall){
@@ -651,16 +664,14 @@ $(document).ready(function(){
 	});
 
 
-	$('#k_and_m_keys').focus(function(){
-
-		var top = $(this).offset().top - $("#hotkey_info").outerHeight() - 5;
-
-		$("#hotkey_info").css({'top' : top+ 'px', 'left' : $(this).offset().left + 'px'});
-
-		$("#hotkey_info").show(100);
+	$(document).on('focus', '.hotkey-definition-input', function(){
+		var _input = $(this);
+		var top = _input.offset().top - $("#hotkey_info").outerHeight() - 5;
+		$("#hotkey_info").css({'top' : top+ 'px', 'left' : _input.offset().left + 'px'});
+		$("#hotkey_info").slideToggle(100);
 	});
 
-	$('#k_and_m_keys').blur(function(){
+	$(document).on('blur', '.hotkey-definition-input', function(){
 		$("#hotkey_info").hide(100);
 	});
 
