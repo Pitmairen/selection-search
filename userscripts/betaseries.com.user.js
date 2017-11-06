@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Use search url: https://www.betaseries.com/#_selectionsearch_=%s
 // @author       Pitmairen
-// @license      GPLv3
+// @license      GPL-3.0
 // @match        https://www.betaseries.com/*
 // @homepageURL  https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
 // @supportURL   https://github.com/Pitmairen/selection-search/issues
