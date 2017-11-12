@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.24*
+- Changed the default popup activation button to left mouse button. This was done because 
+google is threatening to remove the extension from the web store because they claim it "does not work".
+
 *0.8.23*
 - Added keyboard hotkeys to activate search engines
 
