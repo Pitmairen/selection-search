@@ -4,7 +4,7 @@
 // @version      0.3
 // @description  Use search url: https://www.gog.com/#_selectionsearch_=%s
 // @author       Pitmairen
-// @license      GPLv3
+// @license      GPL-3.0
 // @match        https://www.gog.com/*
 // @homepageURL  https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
 // @supportURL   https://github.com/Pitmairen/selection-search/issues
