@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.25*
+- Change to use closed shadow dom for the popup to prevent the websites from beeing able to seeing the search engines a user has installed.
+- Added option to allow single search engines to negate the global "open in new tab" option.
+
 *0.8.24*
 - Changed the default popup activation button to left mouse button. This was done because 
 google is threatening to remove the extension from the web store because they claim it "does not work".
