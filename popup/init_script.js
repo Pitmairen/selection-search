@@ -3,7 +3,7 @@
 
 
     var shadowElement = document.createElement("div");
-    var shadowDOM = shadowElement.createShadowRoot();
+    var shadowDOM = shadowElement.attachShadow({mode: 'closed'});
 
     document.documentElement.appendChild(shadowElement);
 
