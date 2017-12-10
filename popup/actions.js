@@ -54,7 +54,7 @@ function DefaultAction(popup, utils, options)
             return;
         }
 
-        if(options.newtab){
+        if((options.newtab && !Boolean(engine.negate_newtab_option)) || (!options.newtab && Boolean(engine.negate_newtab_option))){
 
             if(options.background_tab || engine.background_tab){
                 utils.openEngine(engine, popup.getSelection());

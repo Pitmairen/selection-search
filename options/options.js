@@ -143,6 +143,8 @@ function _addEngineOptions(en, el){
         opts.find('.engine-opt-background_tab').show();
     }
 
+    opts.find(".negate_newtab_option").attr('checked', Boolean(en.negate_newtab_option));
+
     // folders
     opts.find('.hidemenu').attr('checked', Boolean(en.hidemenu));
 
@@ -414,6 +416,10 @@ $(document).ready(function(){
 				if(en.background_global)
 					delete en.background_tab;
 				delete en.background_global;
+			}
+
+			if(!en.negate_newtab_option){
+				delete en.negate_newtab_option;
 			}
 
             delete en['hotkey-definition-input'];

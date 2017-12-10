@@ -81,6 +81,14 @@
             <p class="separate-menus-msg">
                 The search will open in a new incognito window
             </p>
+
+            <hr>
+            <input class="negate_newtab_option" id="engine-opt-negate-newtab-option-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-negate-newtab-option-{{= it.id }}">Negate newtab option</label>
+            <p class="separate-menus-msg">
+                When this option is enabled, it will negate the global open in new tab option for this search engine.
+            </p>
+
         {{ } }}
 
 
