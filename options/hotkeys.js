@@ -26,8 +26,13 @@ var HotKeys = new function(){
 
 	this.createHotkeyInput = function(_selector, _default){
 
-
 		return new HotkeyEditor($(_selector), _default);
+
+	}
+
+	this.createHotkeyInputForElement = function(_element, _default){
+
+		return new HotkeyEditor(_element, _default);
 
 	}
 
@@ -39,6 +44,7 @@ var HotKeys = new function(){
 		var _keys = {}
 		var _key_combo = [];
 		var _last_combo = [];
+		var _this = this;
 
 
 		this.getCombo = function(){
@@ -46,6 +52,12 @@ var HotKeys = new function(){
 			if(_last_combo.length == 0)
 				return _default_combo;
 			return _last_combo;
+		}
+
+		this.clearCombo = function(){
+			_last_combo = [];	
+			_default_combo = [];	
+			update_input();
 		}
 		
 		function get_combo_name(){
@@ -56,10 +68,12 @@ var HotKeys = new function(){
 		}
 
 
+		function update_input(){
+			_input.val(get_combo_name());
+			_input.data('hotkey', _this.getCombo());
+		}
 
-		
-		_input.val(get_combo_name());
-
+		update_input();
 
 		_input.focus(function(){
 			_restart = false;
@@ -70,7 +84,7 @@ var HotKeys = new function(){
 		});
 
 		_input.blur(function(){
-			$(this).val(get_combo_name());
+			update_input();
 		});
 
 

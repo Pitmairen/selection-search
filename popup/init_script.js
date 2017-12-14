@@ -3,7 +3,7 @@
 
 
     var shadowElement = document.createElement("div");
-    var shadowDOM = shadowElement; //.createShadowRoot();
+    var shadowDOM = shadowElement; // shadowElement.attachShadow({mode: 'closed'});
 
     document.documentElement.appendChild(shadowElement);
 
@@ -47,6 +47,7 @@
 
         popup.setSearchEngines(response.engines);
 
+        SearchEngineHotKeys(response.engines, response.options, utils);
 
         var actions = new ActionCollection();
         actions.setDefaultAction(new DefaultAction(popup, utils, response.options));

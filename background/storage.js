@@ -15,7 +15,7 @@ var Storage = new function (){
     ];
 
     var _defaultOptions = {
-        button: 1,
+        button: 0,
         newtab: false,
         activator: 'click',
         remove_icons: 'no',
@@ -70,7 +70,7 @@ var Storage = new function (){
     }
 
     this.getButton = function(){
-        return parseInt(_getValue(_BUTTON_KEY, 1), 10);
+        return parseInt(_getValue(_BUTTON_KEY, 0), 10);
     }
 
 

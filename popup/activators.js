@@ -4,59 +4,26 @@ function Activator(_options){
 
     var _inCombo = false;
     var _this = this;
+    var _selectionUtil = new SelectionUtil(_options);
 
     this.setInCombo = function(in_combo){
         _inCombo = in_combo;
     }
 
     this.getSelectionRect = function(){
-        var range = window.getSelection().getRangeAt(0);
-        if(range){
-
-            return range.getBoundingClientRect();
-
-        }
-        return undefined;
+        return _selectionUtil.getSelectionRect();
     }
 
     this.getSelection = function(){
-        return window.getSelection().toString().trim();
+        return _selectionUtil.getSelection();
     }
 
     this.hasSelection = function(){
-
-        var sel = this.getSelection();
-
-        if (sel.length == 0)
-            return false;
-        
-        if (_options.selection_length_limit >= 0){
-            if(sel.length > _options.selection_length_limit){
-                return false;
-            }
-        }
-
-        return sel.indexOf("\n") == -1;
+        return _selectionUtil.hasSelection();
     }
 
-
     this.isPointOnSelection = function(x, y){
-
-        var rx = window.pageXOffset;
-        var ry = window.pageYOffset;
-
-        var rect = this.getSelectionRect();
-
-        if(rect){
-            rx += rect.left;
-            ry += rect.top;
-        }
-
-        if ((y >= ry && y <= ry + rect.height && x >= rx && x <= rx + rect.width)){
-            return true;
-        }
-        return false;
-
+        return _selectionUtil.isPointOnSelection(x, y);
     }
 
     this.isInCombo = function(){

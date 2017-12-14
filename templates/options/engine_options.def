@@ -81,12 +81,29 @@
             <p class="separate-menus-msg">
                 The search will open in a new incognito window
             </p>
+
+            <hr>
+            <input class="negate_newtab_option" id="engine-opt-negate-newtab-option-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-negate-newtab-option-{{= it.id }}">Negate newtab option</label>
+            <p class="separate-menus-msg">
+                When this option is enabled, it will negate the global open in new tab option for this search engine.
+            </p>
+
         {{ } }}
 
 
         <hr>
         <input class="nosync" id="engine-opt-sync-{{=it.id}}" type="checkbox" />
         <label for="engine-opt-sync-{{=it.id}}">Synchronize</label>
+
+        {{ if(!it.en.is_separator) { }}
+        <hr>
+        <input class="hotkey-definition-input" id="engine-opt-hotkey-{{=it.id}}" type="text" placeholder="Hotkey" />
+        <a href="#" class="clear-hotkey">[Clear hotkey]</a>
+        <p class="separate-menus-msg">
+            Use this shortcut hotkey to search the selected text with this search engine.
+        </p>
+        {{ } }}
     </div>
 </td>
 <td>
