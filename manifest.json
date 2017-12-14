@@ -13,15 +13,12 @@
         "128": "img/icon128.png"
     },
 
-    "options_page": "options/options.html",
-    
     "options_ui": {
       "page" : "options/options.html"
     },
       
     "background": {
-        "page" : "background/background.html",
-        "persistent" : true
+        "page" : "background/background.html"
     },
 
     "content_scripts": [
