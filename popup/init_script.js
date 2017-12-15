@@ -3,7 +3,7 @@
 
 
     var shadowElement = document.createElement("div");
-    var shadowDOM = shadowElement; // shadowElement.attachShadow({mode: 'closed'});
+    var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
     document.documentElement.appendChild(shadowElement);
 

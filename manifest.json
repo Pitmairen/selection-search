@@ -1,6 +1,6 @@
 {
     "name": "Selection Search",
-    "version": "0.8.25",
+    "version": "0.8.26",
     "manifest_version" : 2,
 
     "description": "Search for the selected text in search engines",
@@ -24,7 +24,7 @@
     "content_scripts": [
         {
             "matches": ["http://*/*", "https://*/*", "file://*/*"],
-            "js": ["popup/popup.js", "popup/popup_modifier.js", "popup/circular_popup.js", "popup/activators.js", "common/actionutils.js", "popup/selection_util.js",
+            "js": ["common/browsersupport.js", "popup/popup.js", "popup/popup_modifier.js", "popup/circular_popup.js", "popup/activators.js", "common/actionutils.js", "popup/selection_util.js",
                 "popup/actions.js", "popup/style.js", "popup/button.js", "common/encoding.js",
                 "common/urlparse.js", "common/jquery-2.1.4.min.js",
                 "old/engine-editor.js", "old/extractform.js",
@@ -34,7 +34,7 @@
         },
         {
             "matches": ["http://mycroftproject.com/*"],
-            "js": ["old/opensearch.js", "sites/mycroft.js"],
+            "js": ["common/browsersupport.js", "old/opensearch.js", "sites/mycroft.js"],
             "run_at" : "document_end"
         }
     ],
