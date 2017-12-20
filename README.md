@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.27*
+- Added configurable delay for opening the popup when using the auto popup activator
+
 *0.8.26*
 - Make the popup work in older versions of Chrome that don't support Shadow DOM
 
