@@ -37,6 +37,7 @@ var Storage = new function (){
         sort_by_click: false, // Sort the search engines by usage count
         selection_length_limit: -1,
         auto_hide_delay: 0,
+        auto_open_delay: 300,
     };
 
     var _blacklist = [];

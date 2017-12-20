@@ -243,7 +243,7 @@ function AutoActivator(_popup, _button, _options){
             if (_this.hasSelection()){
                 if(_lastTimer != undefined)
                     window.clearTimeout(_lastTimer);
-                _lastTimer = window.setTimeout(_tryShow, 300, e);
+                _lastTimer = window.setTimeout(_tryShow, _options.auto_open_delay, e);
             }
         });
 

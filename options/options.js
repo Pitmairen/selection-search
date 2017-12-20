@@ -283,6 +283,7 @@ $(document).ready(function(){
 
 		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
 		$("#opt-auto-hide-delay").val(response.options.auto_hide_delay);
+		$("#opt-auto-open-delay").val(response.options.auto_open_delay);
 
 		$("#blacklist-definitions").val(response.blacklist.join('\n'));
 
@@ -491,6 +492,11 @@ $(document).ready(function(){
 			auto_hide_delay = 0;
 		}
 
+		var auto_open_delay = parseInt($("#opt-auto-open-delay").val());
+		if(isNaN(auto_open_delay) || auto_open_delay < 0){
+			auto_open_delay = 0;
+		}
+
 		Storage.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
 			newtab: $("input[name='newtab']").is(':checked'),
@@ -514,6 +520,7 @@ $(document).ready(function(){
 			sort_by_click: $('#opt-sort-by-click').is(':checked'),
 			selection_length_limit: selection_limit,
 			auto_hide_delay: auto_hide_delay,
+			auto_open_delay: auto_open_delay,
 		});
 
 
