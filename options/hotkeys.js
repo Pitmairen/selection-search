@@ -115,6 +115,9 @@ var HotKeys = new function(){
 
 		_input.keyup(function(e){
 
+			update_input();
+			$(this).trigger('input');
+
 			if(_key_combo.indexOf(e.which) == _key_combo.length-1){
 
 				_key_combo.pop();
