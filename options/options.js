@@ -78,7 +78,11 @@ function _addSeparator(template_data, level){
 function _addEngineOptions(en, el){
 
 
-    var opts = el.find('.engine-options-popup');
+	var opts = el.find('.engine-options-popup');
+	
+	opts.on('click', function(e){
+		e.stopPropagation();
+	})
 
     opts.find('.close-popup').click(function(){
 		opts.fadeOut(100);
@@ -302,6 +306,10 @@ $(document).ready(function(){
 
 			addNewEngine(en, 0);
 		}
+
+		$(document).on('click', function(){
+			$('.engine-options-popup').hide();
+		});
 
 		$('#select_theme').change();
 
