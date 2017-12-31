@@ -9,6 +9,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.28*
+- Some improvements to the save button on the options page
+- Auto close search engine options popup on options page when clicking outside page
+- Bugfix: Don't follow the link when clicking on a submenu without the "open all" option enabled
+
 *0.8.27*
 - Added configurable delay for opening the popup when using the auto popup activator
 
