@@ -37,10 +37,12 @@ function DefaultAction(popup, utils, options)
 
     this.onClick = function(evt, engine, anchorElement){
 
-        if(engine.is_submenu && engine.openall){
+        if(engine.is_submenu){
             evt.preventDefault();
             evt.stopPropagation();
-            _clickSubmenu(engine);
+            if(engine.openall){
+                _clickSubmenu(engine);
+            }
             return;
         }
         else if(engine.url.substr(0, 11) === "javascript:")
