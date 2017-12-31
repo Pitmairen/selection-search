@@ -189,7 +189,36 @@ hr{
 	height: 15em;
 }
 #save-buttons{
-	margin-top: 4em;
+	padding: 1em;
+}
+
+#save {
+	margin-right: 3em;
+}
+.save-restore-buttons-wrapper {
+	height: 4em;
+	margin-top: 3em;
+}
+.save-restore-buttons {
+	width: 100%;
+	transition: background 0.5s;
+}
+.save-restore-buttons.changed{
+	backdrop-filter: blur(2px);
+	background-color: rgba(125, 193, 102, 0.9);
+	border-radius: 4px;
+}
+.save-restore-buttons.changed.floating{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 94%;
+	margin: 0 auto;
+	border-radius: 4px 4px 0 0;
+}
+.save-restore-buttons.changed.floating #save-buttons{
+	padding: 0.5em 1em;
 }
 
 

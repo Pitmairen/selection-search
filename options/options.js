@@ -370,10 +370,7 @@ $(document).ready(function(){
 
 
 
-
-	$('#save').click(function(){
-
-
+	function saveCurrentSettingsToStore(dataStore){
 		var folder_stack = [{engines:[]}]; // folder stack with the root item
 
 		$('#engines tr:gt(0)').each(function(index){
@@ -472,9 +469,9 @@ $(document).ready(function(){
 		k_and_m_combo.push(parseInt($("#k_and_m_button").val(), 10));
 
 
-		Storage.setSearchEngines(new_engines);
+		dataStore.setSearchEngines(new_engines);
 
-		Storage.setStyle(jQuery.trim($('#style').val()));
+		dataStore.setStyle(jQuery.trim($('#style').val()));
 
 
         var act_combo = $('input[name=activator_combo]:checked').map(function() {
@@ -497,7 +494,7 @@ $(document).ready(function(){
 			auto_open_delay = 0;
 		}
 
-		Storage.setOptions({
+		dataStore.setOptions({
 			button: parseInt($("input[name='button']:checked").val(), 10),
 			newtab: $("input[name='newtab']").is(':checked'),
 			background_tab: $("input[name='background_tab']").is(':checked'),
@@ -524,7 +521,7 @@ $(document).ready(function(){
 		});
 
 
-		Storage.setSyncOptions({
+		dataStore.setSyncOptions({
 			sync_engines: $('#opt-sync-engines').is(':checked'),
 			sync_settings: $("#opt-sync-settings").is(':checked'),
 			sync_style: $('#opt-sync-style').is(':checked'),
@@ -537,14 +534,19 @@ $(document).ready(function(){
             return value.length > 0;
         });
 
-        Storage.setBlacklistDefinitions(blacklist);
+        dataStore.setBlacklistDefinitions(blacklist);
 
+	}
+
+	$('#save').click(function(){
+		saveCurrentSettingsToStore(Storage);
 		chrome.runtime.sendMessage({action:"storageUpdated"});
-
-
-		location.reload();
-
+		$(document).trigger('settings-saved');
 	});
+
+	$('#cancel').click(function(){
+		location.reload();
+	})
 
 
 	$('#restore').click(function(){
@@ -936,6 +938,43 @@ $(document).ready(function(){
 
 
 
+	// Detect changes in settings and show floating save button if changes are detected
+	setTimeout(function(){
 
+		function checkForChanges(){
+			var tmpStore = newTempStorageDuplicate();
+			saveCurrentSettingsToStore(tmpStore);
+			if (tmpStore.hasChanges(Storage)) {
+				$('.save-restore-buttons').addClass('changed');
+			} else {
+				$('.save-restore-buttons').removeClass('changed');
+			}
+		}
 
+		var _changeDetectTimeout = null;
+
+		function detectChanges(){
+			if(_changeDetectTimeout != null){
+				clearTimeout(_changeDetectTimeout);
+			}
+			_changeDetectTimeout = setTimeout(function(){
+				checkForChanges();
+				_changeDetectTimeout = null;
+			}, 250);
+		}
+
+		$(document).on('settings-saved', detectChanges);
+		$(document).on('change', 'input,select,textarea', detectChanges);
+		$(document).on('input', 'input,textarea', detectChanges);
+		$(document).on('mouseup', '#new-engine, #new-separator, #new-folder, .delete, .drag-target, .clear-hotkey', detectChanges);
+
+	}, 500);
+
+	$(window).on('scroll', function(){
+		if((window.innerHeight + window.scrollY) < (document.body.offsetHeight - 100)){
+			$('.save-restore-buttons').addClass('floating');
+		}else{
+			$('.save-restore-buttons').removeClass('floating');
+		}
+	});
 });

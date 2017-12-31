@@ -1,5 +1,8 @@
 
-var Storage = new function (){
+// Global main storage object used to store user settings
+var Storage = new DataStore(localStorage);
+
+function DataStore(kwStore){
 
     _SEARCH_ENGINES_KEY = 'searchEngines';
     _STYLE_KEY = 'styleSheet';
@@ -79,7 +82,7 @@ var Storage = new function (){
         var options  = JSON.parse(_getValue(_OPTIONS_KEY, '{}'));
 
         // Before it was stored as its own value
-        if(localStorage[_BUTTON_KEY] != undefined)
+        if(kwStore[_BUTTON_KEY] != undefined)
             options.button = _that.getButton();
 
         return $.extend({}, _defaultOptions, options);
@@ -114,7 +117,7 @@ var Storage = new function (){
 
     this.setOptions = function(options){
 
-        if(localStorage[_BUTTON_KEY] != undefined)
+        if(kwStore[_BUTTON_KEY] != undefined)
             _removeValue(_BUTTON_KEY);
 
 
@@ -175,9 +178,35 @@ var Storage = new function (){
     }
 
 
+    // Checks if  this storage is different from the other storage
+    this.hasChanges = function(other){
+        if(!_eq(this.getOptions(), other.getOptions())){
+            return true;
+        } else if(!_eq(this.getStyle(), other.getStyle())){
+            return true;
+        } else if(!_eq(this.getSearchEngines(), other.getSearchEngines())){
+            return true;
+        } else if(!_eq(this.getBlacklistDefinitions(), other.getBlacklistDefinitions())){
+            return true;
+        } else if(!_eq(this.getSyncOptions(), other.getSyncOptions())){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Copies the other storage storage into this storage
+    this.copyInto = function(other){
+        other.setOptions(this.getOptions());
+        other.setStyle(this.getStyle());
+        other.setSearchEngines(this.getSearchEngines());
+        other.setBlacklistDefinitions(this.getBlacklistDefinitions());
+        other.setSyncOptions(this.getSyncOptions());
+    }
+
     function _getValue(key, default_value){
 
-        var value = localStorage[key];
+        var value = kwStore[key];
 
         if(value == undefined)
             return default_value;
@@ -187,11 +216,11 @@ var Storage = new function (){
 
     function _setValue(key, value){
 
-        localStorage[key] = value;
+        kwStore[key] = value;
     }
 
     function _removeValue(key){
-        localStorage.removeItem(key);
+        kwStore.removeItem(key);
     }
 
 
@@ -320,5 +349,120 @@ var Storage = new function (){
 
 
     }
+
+
+    //
+    // Taken and slightly modified from https://github.com/jashkenas/underscore
+    // Used to detect changes in the settings on the options page.
+    //
+    function _eq(a, b, aStack, bStack) {
+        // Identical objects are equal. `0 === -0`, but they aren't identical.
+        // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+        if (a === b) return a !== 0 || 1 / a === 1 / b;
+        // `null` or `undefined` only equal to itself (strict comparison).
+        if (a == null || b == null) return false;
+        // `NaN`s are equivalent, but non-reflexive.
+        if (a !== a) return b !== b;
+        // Exhaust primitive checks
+        var type = typeof a;
+        if (type !== 'function' && type !== 'object' && typeof b != 'object') return false;
+        return _deepEq(a, b, aStack, bStack);
+    };
+
+    // Internal recursive comparison function for `isEqual`.
+    function _deepEq(a, b, aStack, bStack) {
+        // Compare `[[Class]]` names.
+        var className = toString.call(a);
+        if (className !== toString.call(b)) return false;
+        switch (className) {
+            // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+            case '[object RegExp]':
+            // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+            case '[object String]':
+                // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+                // equivalent to `new String("5")`.
+                return '' + a === '' + b;
+            case '[object Number]':
+                // `NaN`s are equivalent, but non-reflexive.
+                // Object(NaN) is equivalent to NaN.
+                if (+a !== +a) return +b !== +b;
+                // An `egal` comparison is performed for other numeric values.
+                return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+            case '[object Date]':
+            case '[object Boolean]':
+                // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+                // millisecond representations. Note that invalid dates with millisecond representations
+                // of `NaN` are not equivalent.
+                return +a === +b;
+        }
+
+        var areArrays = className === '[object Array]';
+        if (!areArrays) {
+            if (typeof a != 'object' || typeof b != 'object') return false;
+        }
+        // Assume equality for cyclic structures. The algorithm for detecting cyclic
+        // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+
+        // Initializing stack of traversed objects.
+        // It's done here since we only need them for objects and arrays comparison.
+        aStack = aStack || [];
+        bStack = bStack || [];
+        var length = aStack.length;
+        while (length--) {
+            // Linear search. Performance is inversely proportional to the number of
+            // unique nested structures.
+            if (aStack[length] === a) return bStack[length] === b;
+        }
+
+        // Add the first object to the stack of traversed objects.
+        aStack.push(a);
+        bStack.push(b);
+
+        // Recursively compare objects and arrays.
+        if (areArrays) {
+            // Compare array lengths to determine if a deep comparison is necessary.
+            length = a.length;
+            if (length !== b.length) return false;
+            // Deep compare the contents, ignoring non-numeric properties.
+            while (length--) {
+                if (!_eq(a[length], b[length], aStack, bStack)) return false;
+            }
+        } else {
+            // Deep compare objects.
+            var keys = Object.keys(a), key;
+            length = keys.length;
+            // Ensure that both objects contain the same number of properties before comparing deep equality.
+            if (Object.keys(b).length !== length) return false;
+            while (length--) {
+                // Deep compare each member
+                key = keys[length];
+                if (!(b.hasOwnProperty(key) && _eq(a[key], b[key], aStack, bStack))) return false;
+            }
+        }
+        // Remove the first object from the stack of traversed objects.
+        aStack.pop();
+        bStack.pop();
+        return true;
+    };
+
+
+
 }
 
+
+// The temp storeage is used on the options page to detect changes to the settings so that we can show 
+// the save button conditionally.  It is a duplicate of the global "Storage" store, the duplicate is modified
+// when the user changes settings and then it is compared to the global storage to detect changed.
+function newTempStorageDuplicate(){
+
+    // Simple key value store that implement the methods that the DataStore expects.
+    function TempKWStore(){
+        this.removeItem = function(key){
+            delete this[key];
+        }
+    }
+
+    var tmpStore = new DataStore(new TempKWStore());
+    Storage.copyInto(tmpStore);
+    return tmpStore;
+}
