@@ -50,8 +50,8 @@ var HotKeys = new function(){
 		this.getCombo = function(){
 
 			if(_last_combo.length == 0)
-				return _default_combo;
-			return _last_combo;
+				return _default_combo.slice();
+			return _last_combo.slice();
 		}
 
 		this.clearCombo = function(){
