@@ -7,7 +7,7 @@
 
 
     // Added in version 0.1.4
-    localStorage['VERSION'] = '0.8.27';
+    localStorage['VERSION'] = '0.8.28';
 
 
 
