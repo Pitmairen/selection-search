@@ -34,6 +34,7 @@ function DataStore(kwStore){
         disable_effects: false,
         auto_popup_relative_to_mouse: false,
         auto_popup_show_menu_directly: false,
+        auto_popup_in_inputs: false,
         activator_combo: [],
         show_tooltips: false,
         circular_menu: false,

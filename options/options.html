@@ -126,18 +126,26 @@ Previously opened tabs must be reloaded to show the new engines.</p>
     <p>
     <input type="checkbox" id="auto_popup_show_menu_directly" /> <label for="auto_popup_show_menu_directly">Show the menu directly when selecting text.</label>
     </p>
-    <p>By default, a small button will appear when some text is selected,
+    <p class="info">By default, a small button will appear when some text is selected,
      and you can open the menu by moving the mouse over the button. Selecting
      the above option skips showing this button and shows the menu directly.</p>
     <div id="auto_popup_relative_to_mouse_content">
       <p>
         <input type="checkbox" id="auto_popup_relative_to_mouse" /> <label for="auto_popup_relative_to_mouse">Position the button relative to the mouse cursor.</label>
       </p>
-      <p>
+      <p class="info">
         When placed relative to the mouse cursor the button will appear to the top right of the cursor.
         If you want to tweak the position this can be done with some custom css under "Advanced settings".
       </p>
 	</div>
+    <p>
+    <input type="checkbox" id="auto_popup_in_inputs" /> <label for="auto_popup_in_inputs">Auto show in inputs.</label>
+    </p>
+	<p class="info">
+		With this option enabled, the auto activator will be enabled for inputs and textareas. Without this options 
+		you have to CTRL + Left Click the selection in the input for the menu to show. 
+		Make sure the "Show in inputs and textareas" in the advanced settings is enabled for this to work.
+	</p>
 	<p class="section-option">
 		<label for="opt-auto-open-delay">Auto Open Delay:</label>
 		<input id="opt-auto-open-delay" placeholder="Auto open delay" type="number" name="auto-open-delay" min="0" /> (in milliseconds, 1000 = 1 second)

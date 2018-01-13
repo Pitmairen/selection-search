@@ -215,7 +215,7 @@ function AutoActivator(_popup, _button, _options){
 
             if(e.target.nodeName in {'INPUT':1, 'TEXTAREA':1} || e.target.isContentEditable){
                 _startedInInput = true;
-                if(!e.ctrlKey || !_options.show_in_inputs)
+                if(!e.ctrlKey || !_options.show_in_inputs || _options.auto_popup_in_inputs)
                     return;
 
                 if(_this.hasSelection() && e.button == 0){
@@ -234,22 +234,29 @@ function AutoActivator(_popup, _button, _options){
 
         document.addEventListener('mouseup', function(e){
 
-            if(_startedInInput)
+            if(_startedInInput && (!_options.show_in_inputs || !_options.auto_popup_in_inputs))
                 return;
 
             if(e.button != 0 || _popup.isActive())
                 return;
 
             if (_this.hasSelection()){
+
                 if(_lastTimer != undefined)
                     window.clearTimeout(_lastTimer);
-                _lastTimer = window.setTimeout(_tryShow, _options.auto_open_delay, e);
+
+                _lastTimer = window.setTimeout(
+                    _tryShow, 
+                    _options.auto_open_delay, 
+                    e,
+                    _options.auto_popup_relative_to_mouse || (_startedInInput && _options.auto_popup_in_inputs)
+                );
             }
         });
 
     }
 
-    function _tryShow(e){
+    function _tryShow(e, relative_to_mouse){
         if (_this.hasSelection() && !_popup.isActive()){
 
             var sel = _this.getSelection();
@@ -267,9 +274,9 @@ function AutoActivator(_popup, _button, _options){
             }else{
                 var dimensions = Positioning.enableDimensions(_button.getNode());
 
-                if (_options.auto_popup_relative_to_mouse){
-                    x = e.pageX + _button.getNode().clientWidth;
-                    y = e.pageY - _button.getNode().clientHeight - 10;
+                if (relative_to_mouse){
+                    x = e.pageX + _button.getNode().clientWidth + 5;
+                    y = e.pageY - _button.getNode().clientHeight - 15;
                 }else{
                     x = window.pageXOffset + rect.right;
                     y = window.pageYOffset + rect.top - _button.getNode().clientHeight - 10;

@@ -275,6 +275,7 @@ $(document).ready(function(){
 
 		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
 		$("#auto_popup_show_menu_directly").attr('checked', response.options.auto_popup_show_menu_directly).change();
+		$("#auto_popup_in_inputs").attr('checked', response.options.auto_popup_in_inputs);
 
 		$("#opt-sync-engines").attr('checked', response.sync_options.sync_engines);
 		$("#opt-sync-settings").attr('checked', response.sync_options.sync_settings);
@@ -520,6 +521,7 @@ $(document).ready(function(){
 			show_tooltips: $('#opt-show-tooltips').is(':checked'),
 			auto_popup_relative_to_mouse: $('#auto_popup_relative_to_mouse').is(':checked'),
 			auto_popup_show_menu_directly: $('#auto_popup_show_menu_directly').is(':checked'),
+			auto_popup_in_inputs: $("#auto_popup_in_inputs").is(':checked'),
             activator_combo: act_combo,
 			circular_menu: $('#circular_menu').is(':checked'),
 			sort_by_click: $('#opt-sort-by-click').is(':checked'),
