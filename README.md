@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.29*
+- Added option to enable auto activator in inputs and textareas
+
 *0.8.28*
 - Some improvements to the save button on the options page
 - Auto close search engine options popup on options page when clicking outside page
