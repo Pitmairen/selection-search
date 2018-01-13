@@ -980,11 +980,16 @@ $(document).ready(function(){
 
 	}, 500);
 
-	$(window).on('scroll', function(){
+
+	function _update_save_button_state(){
 		if((window.innerHeight + window.scrollY) < (document.body.offsetHeight - 100)){
 			$('.save-restore-buttons').addClass('floating');
 		}else{
 			$('.save-restore-buttons').removeClass('floating');
 		}
-	});
+	}
+
+	$(window).on('scroll', _update_save_button_state);
+	_update_save_button_state();
+
 });
