@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.30*
+- Made the special "open selected url" search engine (when using only '%s' as search engine to open non-hyperlinked urls in a webpage) 
+  use the same settings as other search engines with respect to opening the result in new tab or not.
+
 *0.8.29*
 - Added option to enable auto activator in inputs and textareas
 
