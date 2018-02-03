@@ -95,6 +95,10 @@ function BaseActionUtils(){
 
     this.createSearchUrlWithOptions = function(engine, selection){
         var url = _this.createSearchUrl(engine, selection);
+        return _this.createUrlWithOptions(engine, url);
+    }
+
+    this.createUrlWithOptions = function(engine, url){
         return {url: url, incognito: engine.open_in_incognito};
     }
 

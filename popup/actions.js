@@ -50,7 +50,7 @@ function DefaultAction(popup, utils, options)
 
     
         if(engine.open_in_incognito){
-            utils.openEngine(engine, popup.getSelection());
+            _clickEngine(engine);
             evt.preventDefault();
             evt.stopPropagation();
             return;
@@ -59,7 +59,7 @@ function DefaultAction(popup, utils, options)
         if((options.newtab && !Boolean(engine.negate_newtab_option)) || (!options.newtab && Boolean(engine.negate_newtab_option))){
 
             if(options.background_tab || engine.background_tab){
-                utils.openEngine(engine, popup.getSelection());
+                _clickEngine(engine);
                 evt.preventDefault();
                 evt.stopPropagation();
             }
@@ -72,6 +72,10 @@ function DefaultAction(popup, utils, options)
 
     function _clickSubmenu(engine){
         utils.openAllInSubmenu(engine, popup.getSelection());
+    }
+
+    function _clickEngine(engine){
+        utils.openEngine(engine, popup.getSelection());
     }
 
 
@@ -110,7 +114,7 @@ DomainAction.prototype = Object.create(PopupAction);
 /*
  * Simply puts the selection into the href of the link.
  */
-function DomainAction(popup)
+function DomainAction(popup, utils, options)
 {
 
     PopupAction.call(this);
@@ -123,6 +127,30 @@ function DomainAction(popup)
         anchorElement.href = href;
     }
 
+    this.onClick = function(evt, engine, anchorElement){
+
+        if(engine.open_in_incognito){
+            _openUrl(engine, anchorElement.href);
+            evt.preventDefault();
+            evt.stopPropagation();
+            return;
+        }
+
+        if(_shouldOpenSearchInNewTab(engine, options)){
+
+            if(options.background_tab || engine.background_tab){
+                _openUrl(engine, anchorElement.href);
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+            else
+                anchorElement.target = "_blank";
+        }
+    }
+
+    function _openUrl(engine, url){
+        utils.openAllUrlsWithOptions(engine, [utils.createUrlWithOptions(engine, url)], popup.getSelection());
+    }
 }
 
 
@@ -236,3 +264,9 @@ function PopupActionUtils(){
 
 }
 
+
+
+// Helper function 
+function _shouldOpenSearchInNewTab(engine, options){
+    return (options.newtab && !Boolean(engine.negate_newtab_option)) || (!options.newtab && Boolean(engine.negate_newtab_option));
+}

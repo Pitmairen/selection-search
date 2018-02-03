@@ -52,7 +52,7 @@
         var actions = new ActionCollection();
         actions.setDefaultAction(new DefaultAction(popup, utils, response.options));
         actions.addAction("COPY", new CopyAction(popup));
-        actions.addAction("%s", new DomainAction(popup));
+        actions.addAction("%s", new DomainAction(popup, utils, response.options));
 
         if(response.options.sort_by_click){
             popup.addActionListener(new SearchCounter(response.options));
