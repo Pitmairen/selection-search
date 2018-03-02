@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
-*0.8.31
+*0.8.31*
 - Fixed bug on options page where the content in the some search engine fields (name, search url, icon url) would disappear 
   if the double quote character appeared in any of those fields.
 
