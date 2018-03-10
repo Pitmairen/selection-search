@@ -68,7 +68,7 @@ IconLoader.loadCurrentDomainIcon = function(tab, onload){
 }
 
 IconLoader.getFaviconUrl = function(host){
-    return "https://plus.google.com/_/favicon?domain="+host;
+    return "https://s2.googleusercontent.com/s2/favicons?domain_url="+host;
 }
 
 IconLoader.getDefaultIcon = function(){
