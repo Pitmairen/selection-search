@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.32*
+- Added support for search engine placeholders with converters. E.g. {%s|upper} and {%s|lower} will tranform the selection to all upper case or all lower case respectively.
+- Updated the service url where the search engine icons are loaded from.
+
 *0.8.31*
 - Fixed bug on options page where the content in the some search engine fields (name, search url, icon url) would disappear 
   if the double quote character appeared in any of those fields.
