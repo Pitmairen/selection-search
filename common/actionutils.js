@@ -5,13 +5,54 @@ function BaseActionUtils(){
 
     var _this = this;
 
+    var _selectionConverters = {
+        lower: function(value){
+            return value.toLowerCase();
+        },
+        upper: function(value){
+            return value.toUpperCase();
+        },
+    }
+
+    var _selectionEncoders = {
+        '': function(selection){
+            return encodeURIComponent(selection);
+        },
+        // Replace spaces with +
+        '+': function(selection){
+            return encodeURIComponent(selection).replace(/%20/g, '+');
+        },
+        // For some russian sites
+        '(CP1251)': function(selection){
+            return unicodeToWin1251_UrlEncoded(selection);
+        },
+    }
+
+    // Replaces placeholders defined in one of the following format:
+    // {%s} or with converters {%s|upper|lower} 
+    // {%+s} and with one or more converters {%+s|upper|lower} 
+    // {%(CP1251)s} and with one or more converters {%(CP1251)s|upper|lower} 
+    function replaceWithConverters(url, selection){
+        return url.replace(/{%(.*?)s\|?(.*?)}/g, function(match, encoder, converters){
+
+            if(!(encoder in _selectionEncoders)){
+                return match;
+            }
+
+            var converterNames = converters.split('|');
+            var convertedSelection = selection;
+            for(var i in converterNames){
+                if(converterNames[i] in _selectionConverters){
+                    convertedSelection = _selectionConverters[converterNames[i]](convertedSelection);
+                }
+            }
+
+            return _selectionEncoders[encoder](convertedSelection);
+        });
+    }
+
 
     this.replaceSelection = function(url, selection){
-
-    	url = url.replace(/%s/g, encodeURIComponent(selection));
-
-        url = url.replace(/\{%\+s\}/g, encodeURIComponent(selection).replace(
-				/%20/g, '+'));
 
         // This placeholder should no be used any more. Its only here because it was 
         // used to wrongly fix a bug. This bug has now been fixed properly,
@@ -19,9 +60,9 @@ function BaseActionUtils(){
         // used this placeholder.
         url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection));
 
-        if(url.indexOf('{%(CP1251)s}') !== -1){
-            url = url.replace(/\{%\(CP1251\)s\}/g, unicodeToWin1251_UrlEncoded(selection));
-        }
+        url = replaceWithConverters(url, selection);
+
+        url = url.replace(/%s/g, encodeURIComponent(selection));
     
         return url;
     }

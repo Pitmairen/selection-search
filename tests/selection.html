@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Selections</title>
+</head>
+
+<body>
+
+<script src="../common/actionutils.js"></script>
+<script src="../common/encoding.js"></script>
+<script>
+
+function assertEquals(a, b, msg){
+    if(a === b){
+        console.log('OK: ' + (msg || ''));
+    }else{
+        throw new Error(a + ' !== ' + b + ': ' + (msg || 'Test failed'));
+    }
+}
+
+let utils = new BaseActionUtils();
+
+let simplePlaceholders = {
+    '%s': '1234',
+    '{%s}': '1234',
+    '{%-s}': '1234',
+    '{%+s}': '1234',
+    '{%(CP1251)s}': unicodeToWin1251_UrlEncoded('1234'),
+    'http://test.com/%s/test/%s': 'http://test.com/1234/test/1234',
+    'http://test.com/{%s}/test/{%s}': 'http://test.com/1234/test/1234',
+    'http://test.com/{%-s}/test/{%-s}': 'http://test.com/1234/test/1234',
+    'http://test.com/{%+s}/test/{%+s}': 'http://test.com/1234/test/1234',
+    'http://test.com/{%(CP1251)s}/test/{%(CP1251)s}': 'http://test.com/'+unicodeToWin1251_UrlEncoded('1234')+'/test/'+unicodeToWin1251_UrlEncoded('1234'),
+    'http://test.com/%s/test/{%+s}/test2/{%(CP1251)s}/test3/%s': 'http://test.com/1234/test/1234/test2/'+unicodeToWin1251_UrlEncoded('1234')+'/test3/1234',
+    'http://test.com/{%.s}/test/{%#s}': 'http://test.com/{%.s}/test/{%#s}', // Unknown placeholders should be ignored
+};
+
+Object.keys(simplePlaceholders).forEach((ph) => {
+    assertEquals(utils.replaceSelection(ph, '1234'), simplePlaceholders[ph], 'Url: ' + ph);
+});
+
+
+
+let testSpaces = {
+    'http://test.com/%s': 'http://test.com/this%20is%20a%20test',
+    'http://test.com/{%+s}': 'http://test.com/this+is+a+test',
+    'http://test.com/{%+s}/test2/%s/test3/{%+s}': 'http://test.com/this+is+a+test/test2/this%20is%20a%20test/test3/this+is+a+test',
+};
+
+Object.keys(testSpaces).forEach((ph) => {
+    assertEquals(utils.replaceSelection(ph, 'this is a test'), testSpaces[ph], 'With Spaces: ' + ph);
+});
+
+
+let testConverters = {
+    'http://test.com/%s/{%s|upper}': 'http://test.com/a%20Test%20123/A%20TEST%20123',
+    'http://test.com/{%s|lower}/{%s|upper}': 'http://test.com/a%20test%20123/A%20TEST%20123',
+    'http://test.com/{%+s|lower}/{%+s|upper}': 'http://test.com/a+test+123/A+TEST+123',
+    'http://test.com/{%(CP1251)s|lower}/{%(CP1251)s|upper}': 'http://test.com/'+unicodeToWin1251_UrlEncoded('a test 123')+'/' + unicodeToWin1251_UrlEncoded('A TEST 123'),
+    'http://test.com/{%s|lower|upper}/{%s|upper|lower}': 'http://test.com/A%20TEST%20123/a%20test%20123',
+    'http://test.com/{%s|upper}/{%s|unknown}': 'http://test.com/A%20TEST%20123/a%20Test%20123', // unknown placeholders should be replaced
+    'http://test.com/{%s|upper}/{%#s|unknown}': 'http://test.com/A%20TEST%20123/{%#s|unknown}', // unknown placeholders should be replaced
+    'http://test.com/{%s|unknown}': 'http://test.com/a%20Test%20123', // unknown converters should be ignored
+    'http://test.com/{%#s|upper}': 'http://test.com/{%#s|upper}', // unknown placeholders should not be replaced
+    'http://test.com/{%#s|unknown}': 'http://test.com/{%#s|unknown}', // unknown placeholders should be replaced
+    'http://test.com/{%#|unknown}': 'http://test.com/{%#|unknown}', // unknown placeholders should be replaced
+};
+
+Object.keys(testConverters).forEach((ph) => {
+    assertEquals(utils.replaceSelection(ph, 'a Test 123'), testConverters[ph], 'With Converters: ' + ph);
+});
+
+
+</script>
+</body>
+
+</html>

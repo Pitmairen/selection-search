@@ -69,6 +69,15 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 	<dt>{%(CP1251)s}</dt>
 		<dd>Using <strong>{%(CP1251)s}</strong> as a placeholder will encode the selection with CP1251/cyrillic encoding. This is used by some russian sites.</dd>
 </dl>
+<strong>Converters:</strong>
+    <p>Converters can be used to transform the selection before it is inserted into the url. They work with the {%s}, {%+s} and {%(CP1251)s} placeholders.</p>
+    <dl>
+        <dt>{%s|upper} or {%+s|upper} or {%(CP1251)s|upper}</dt>
+            <dd>Using the <strong>upper</strong> converter will convert the selection to all upper case letters (My Selection) =&gt; MY SELECTION</dd>
+
+        <dt>{%s|lower} or {%+s|lower} or {%(CP1251)s|lower}</dt>
+        <dd>Using the <strong>lower</strong> converter will convert the selection to all lower case letters. (My Selection =&gt; my selection)</dd>
+    </dl>
 </div>
 
 
