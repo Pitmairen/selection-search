@@ -67,7 +67,8 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 		<dd>Using <strong>{%+s}</strong> as a placeholder will replace spaces in the selection with +</dd>
 	
 	<dt>{%(CP1251)s}</dt>
-		<dd>Using <strong>{%(CP1251)s}</strong> as a placeholder will encode the selection with CP1251/cyrillic encoding. This is used by some russian sites.</dd>
+        <dd>Using <strong>{%(CP1251)s}</strong> as a placeholder will encode the selection with CP1251/cyrillic encoding. This is used by some russian sites. <br><br>
+        For searches using <strong>POST</strong> method you should <strong>not</strong> use the {%(CP1251)s} placeholder, instead append the following to the search url <strong>{POSTENCODING}CP1251</strong>.<br> Example: http://example.com/search/{POSTARGS}q=%s&type=123{POSTENCODING}CP1251</dd>
 </dl>
 <strong>Converters:</strong>
     <p>Converters can be used to transform the selection before it is inserted into the url. They work with the {%s}, {%+s} and {%(CP1251)s} placeholders.</p>
