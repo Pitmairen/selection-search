@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.33*
+- Added help text about encoding when using POST searches.
+
 *0.8.32*
 - Added support for search engine placeholders with converters. E.g. {%s|upper} and {%s|lower} will tranform the selection to all upper case or all lower case respectively.
 - Updated the service url where the search engine icons are loaded from.
