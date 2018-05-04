@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.34*
+- Fixed bug in context menu where the open all option for a sub menu did not work together with the don't show menu option 
+
 *0.8.33*
 - Added help text about encoding when using POST searches.
 
