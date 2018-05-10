@@ -26,6 +26,10 @@ function BaseActionUtils(){
         '(CP1251)': function(selection){
             return unicodeToWin1251_UrlEncoded(selection);
         },
+        // no encoding
+        '(RAW)': function(selection){
+            return selection;
+        },
     }
 
     // Replaces placeholders defined in one of the following format:

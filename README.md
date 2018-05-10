@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.35*
+- Added raw search engine placeholder which does not encode the selected text before inserting it into the search url
+
 *0.8.34*
 - Fixed bug in context menu where the open all option for a sub menu did not work together with the don't show menu option 
 
