@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.36*
+- Disable search hotkeys in inputs/textareas if "Show in inputs and textareas" option is unchecked
+
 *0.8.35*
 - Added raw search engine placeholder which does not encode the selected text before inserting it into the search url
 

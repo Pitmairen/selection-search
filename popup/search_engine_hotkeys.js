@@ -16,13 +16,12 @@ function SearchEngineHotKeys(searchEngines, options, utils){
 
     document.addEventListener('keydown', function(e){
 
-        if(!_hasSelection){
+        if(!_hasSelection || (!options.show_in_inputs && EventUtils.eventInInputElement(e))){
             return;
         }
 
         if(_currentCombo.indexOf(e.which) == -1){
             _currentCombo.push(e.which);
-
             _checkHotkey();
         }
     });
