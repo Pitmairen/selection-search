@@ -26,6 +26,9 @@ function DataStore(kwStore){
         background_tab: true,
         k_and_m_combo: [17, 0], // Keyboard and Mouse activator comination [Key, Key, ..., Mouse] (default [Ctrl, left button])
         context_menu: 'disabled',
+        toolbar_popup: 'enabled',
+        toolbar_popup_style: 'default',
+        toolbar_popup_hotkeys: false,
         separate_menus: false,
         hide_on_click: false,
         disable_formextractor: false,

@@ -45,16 +45,25 @@ function openAllUrls(request, sendResponse, parent_tab){
             continue;
         }
 
+        // If we open multiple urls, and the newtabs option is off, we open the first tab in the
+        // current tab
+        if(i == 0 && !opt.newtab){
+            chrome.tabs.update({url: urls[i].url});
+            continue;
+        }
+
         var tab_opts = {
             'url' : urls[i].url,
             'active' : !_shouldOpenInNewTab(opt.background_tab, request.in_background_tab),
         };
 
-        if(parent_tab.id >= 0)
-            tab_opts['openerTabId'] = parent_tab.id;
+        if(parent_tab != undefined){
+            if(parent_tab.id >= 0)
+                tab_opts['openerTabId'] = parent_tab.id;
 
-        if(!opt.open_new_tab_last){
-            tab_opts.index = parent_tab.index + 1 + i;
+            if(!opt.open_new_tab_last){
+                tab_opts.index = parent_tab.index + 1 + i;
+            }
         }
 
         chrome.tabs.create(tab_opts);
@@ -108,7 +117,7 @@ function getContentScriptData(sendResponse, clickCounter){
 }
 
 
-function getPopupIcons(iconCollection, sendResponse){
+function getIcons(iconCollection, sendResponse){
 
     resp = {};
 
@@ -126,14 +135,16 @@ function getCurrentDomainIcon(iconCollection, sendResponse, tab){
 
     resp.indexes = iconCollection.getCurrentDomainIndexes();
 
-    IconLoader.loadCurrentDomainIcon(tab, function(icon){
-
-        resp.icon = icon.getDataURL();
+    if(resp.indexes.length > 0){
+        IconLoader.loadCurrentDomainIcon(tab, function(icon){
+            resp.icon = icon.getDataURL();
+            sendResponse(resp);
+        });
+        return true;
+    }else{
         sendResponse(resp);
-
-    });
-
-    return true;
+    }
+    return;
 }
 
 function getOptions(sendResponse){
@@ -155,16 +166,29 @@ function getOptions(sendResponse){
 }
 
 
-function loadIcons(iconCollection, engines, options){
+function loadPopupIcons(iconCollection, engines, options){
 
     if(options.remove_icons !== 'no')
         return;
+
+    _loadIcons(iconCollection, engines, en => {
+        return options.separate_menus && en.hide_in_popup
+    })
+}
+
+function loadToolbarIcons(iconCollection, engines, options){
+    _loadIcons(iconCollection, engines, en => {
+        return options.separate_menus && en.hide_in_toolbar
+    })
+}
+
+function _loadIcons(iconCollection, engines, skipCheck){
 
     for(var i=0; i < engines.length; i++){
 
         var en = engines[i];
 
-        if(options.separate_menus && en.hide_in_popup){
+        if(skipCheck(en)){
             continue;
         }
 
@@ -181,8 +205,9 @@ function loadIcons(iconCollection, engines, options){
             iconCollection.addHost(host);
         }
 
-        if(en.is_submenu)
-            loadIcons(iconCollection, en.engines, options);
+        if(en.is_submenu){
+            _loadIcons(iconCollection, en.engines, skipCheck);
+        }
     }
 }
 

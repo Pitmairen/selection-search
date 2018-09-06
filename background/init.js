@@ -31,7 +31,9 @@
         // Create a new icon collection object. And reload 
         // all the icons.
         _iconCollection = new IconCollection();
-        loadIcons(_iconCollection, engines, _options);
+        _toolbarIconCollection = new IconCollection();
+        loadPopupIcons(_iconCollection, engines, _options);
+        loadToolbarIcons(_toolbarIconCollection, engines, _options);
 
 
         if(is_click_count_update == undefined || !is_click_count_update){
@@ -39,6 +41,12 @@
         }
 
         Blacklist.setDefinitions(Storage.getBlacklistDefinitions());
+
+        if(_options.toolbar_popup === 'enabled'){
+            chrome.browserAction.enable();
+        }else{
+            chrome.browserAction.disable();
+        }
 
     }
 
@@ -52,6 +60,7 @@
     var _options = Storage.getOptions();
     var _contextMenu = new ContextMenu(_options, _updateClickCount);
     var _iconCollection = new IconCollection();
+    var _toolbarIconCollection = new IconCollection();
     var _clickCounter = new ClickCounter();
 
     _storageUpdated();
@@ -68,7 +77,9 @@
                 sendResponse({});
                 return;
             case "getPopupIcons":
-                return getPopupIcons(_iconCollection, sendResponse);
+                return getIcons(_iconCollection, sendResponse);
+            case "getToolbarIcons":
+                return getIcons(_toolbarIconCollection, sendResponse);
             case "getOptions":
                 return getOptions(sendResponse);
             case "copyToClipboard":
@@ -77,6 +88,8 @@
                 return openAllUrls(request, sendResponse, sender.tab);
             case "getCurrentDomainIcon":
                 return getCurrentDomainIcon(_iconCollection, sendResponse, sender.tab);
+            case "getCurrentDomainIconToolbar":
+                return getCurrentDomainIcon(_toolbarIconCollection, sendResponse, {url: request.url});
             case "saveEngine":
                 saveEngine(request, sendResponse);
                 _storageUpdated();

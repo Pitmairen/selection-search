@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+.container{
+    width: 300px;
+    padding: 0.3em;
+}
+.search-input {
+    padding: 0.5em;
+    width: 100%;
+    -webkit-appearance: textfield;
+}
+.search-engines{
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;    
+    padding: 0;
+    margin: 0.8em 0 0 0;
+}
+.search-engines li{
+    flex: 0 50%;
+    width: 50%;
+}
+.search-engines a{
+    padding: 0.5em;
+    display: flex;
+    text-decoration: none;
+    color: #115f93;
+    border-radius: 2px;
+}
+
+.search-engines a:focus {
+    background: none; 
+    outline: 1px solid #789bb9;
+    box-shadow: 0 0 2px #333;
+} 
+
+.search-engines a:hover{
+    background: #ddd;
+}
+.search-engines .node {
+    display: none;
+}
+.search-engines img {
+    vertical-align: middle;
+    flex: 0 auto;
+    width: 16px;
+    height: 16px;
+}
+.search-engines .engine-name{
+    padding-left: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.search-engines.icons-only .engine-name{
+    display: none;
+}
+
+.search-engines.icons-only li{
+    flex: 0 10%;
+    width: 12%;
+    text-align: center;
+}
+.search-engines.icons-only a{
+    padding: 0.5em;
+    display: inline-block;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<input class="search-input" name="q" type="search" placeholder="Search something!" autofocus>
+<ul class="popup search-engines"></ul>
+<template id="search-engine-template">
+  <li class="node">
+    <a href="#" class="engine-link">
+        <img src="#" class="engine-img">
+        <span class="engine-name"></span>
+    </a>
+    </a>
+  </li>
+</template>
+
+<script src="/common/encoding.js"></script>
+<script src="/common/actionutils.js"></script>
+<script src="/common/urlparse.js"></script>
+<script src="/popup/event_utils.js"></script>
+<script src="/popup/search_engine_hotkeys.js"></script>
+<script src="actionutils.js"></script>
+<script src="popup.js"></script>
+</div>
+
+</body>
+</html> 

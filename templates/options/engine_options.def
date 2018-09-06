@@ -18,6 +18,10 @@
             <input type="checkbox" class="hide_in_popup" id="engine-opt-popup-{{=it.id}}">
             <label for="engine-opt-popup-{{=it.id}}">Popup</label>
         </p>
+        <p>
+            <input type="checkbox" class="hide_in_toolbar" id="engine-opt-toolbar-{{=it.id}}">
+            <label for="engine-opt-toolbar-{{=it.id}}">Toolbar Popup</label>
+        </p>
         <p class="separate-menus-msg">
             This only has effect when the "Separate search engines" option is checked
             below in "Other Options" section.

@@ -164,8 +164,9 @@ function Popup(options, style){
 
     function _addEngine(engine, _parent){
             
-        if(options.separate_menus && engine.hide_in_popup)
+        if(options.separate_menus && engine.hide_in_popup){
             return;
+        }
 
         if(engine.is_submenu){
             _parent.appendChild(_createSubMenu(engine));

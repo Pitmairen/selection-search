@@ -278,10 +278,10 @@ a{
 #activator_heading{
 	margin-bottom: 0.5em;
 }
-.theme_def, .activator_options, #contextmenu_active{
+.theme_def, .activator_options, #contextmenu_active, #toolbar_popup_active{
 	display: none;
 }
-.activator_options, #contextmenu_active{
+.activator_options, #contextmenu_active, #toolbar_popup_active{
 	margin-left: 3em;
 	margin-bottom: 2em;
 }

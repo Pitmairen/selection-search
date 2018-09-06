@@ -1,4 +1,5 @@
 
+
 (function(){
 
 
@@ -12,6 +13,16 @@
 
     chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
+        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+            if (request.action == "getSelection"){
+                let selectionUtil = new SelectionUtil(response.options)
+                if(selectionUtil.hasSelection()){
+                    sendResponse({selection: selectionUtil.getSelection()})
+                    return
+                }
+            }
+            sendResponse({});
+        });
 
         if(response.blacklist !== undefined){
             if(_checkBlacklist(response.blacklist)){

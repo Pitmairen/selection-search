@@ -13,6 +13,12 @@ var CONTEXTMENU_OPTIONS = {
 	'disabled' : 'Disabled',
 	'enabled' :  'Enabled'
 }
+
+var TOOLBAR_POPUP_OPTIONS = {
+	'disabled' : 'Disabled',
+	'enabled' :  'Enabled'
+}
+
 var _G_folder_id_count = 0;
 var _G_engine_id_count = 0;
 
@@ -127,6 +133,7 @@ function _addEngineOptions(en, el){
 
 	opts.find('.hide_in_popup').attr('checked', !Boolean(en.hide_in_popup));
     opts.find('.hide_in_ctx').attr('checked', !Boolean(en.hide_in_ctx));
+    opts.find('.hide_in_toolbar').attr('checked', !Boolean(en.hide_in_toolbar));
     opts.find('.nosync').attr('checked', !Boolean(en.nosync));
 	opts.find('.post').attr('checked', Boolean(en.post));
     opts.find('.hide_on_click').attr('checked', Boolean(en.hide_on_click));
@@ -213,6 +220,11 @@ function loadPopupPreview(){
 $(document).ready(function(){
 
 
+	$("#chrome-shortcut").on('click', function(){
+		chrome.tabs.create({'url': "chrome://extensions/shortcuts" } )
+		return false;
+	})
+
 	// var popup = new PopUp();
 
 
@@ -265,6 +277,10 @@ $(document).ready(function(){
 		$("#contextmenu_option option[value='"+response.options.context_menu+"']").attr('selected', true);
 		$("#contextmenu_option").change();
 
+		$("#toolbar_popup_option option[value='"+response.options.toolbar_popup+"']").attr('selected', true);
+		$("#toolbar_popup_option").change();
+		$("#opt-toolbar-popup-icons-only").attr('checked', response.options.toolbar_popup_style === 'icons-only');
+		$("#opt-toolbar-popup-hotkeys").attr('checked', response.options.toolbar_popup_hotkeys);
 
 		$("#opt-separate-engines").attr('checked', response.options.separate_menus).change();
 
@@ -401,6 +417,8 @@ $(document).ready(function(){
 			if(!en.hide_on_click)
 				delete en.hide_on_click;
 
+			// The checkboxes for the hide_* options shows the oposite state of the hide option, so 
+			// if the checkbox is checked it means that the engine should not be hidden.  
 			if(en.hide_in_popup)
 				delete en.hide_in_popup;
 			else
@@ -410,6 +428,11 @@ $(document).ready(function(){
 				delete en.hide_in_ctx;
 			else
 				en.hide_in_ctx = true;
+
+			if(en.hide_in_toolbar)
+				delete en.hide_in_toolbar;
+			else
+				en.hide_in_toolbar = true;
 
 			if(en.nosync)
 				delete en.nosync;
@@ -512,6 +535,9 @@ $(document).ready(function(){
 			show_in_inputs: $('input[name=show_in_inputs]').is(':checked'),
 			k_and_m_combo:k_and_m_combo,
 			context_menu: $('#contextmenu_option option:selected').first().attr('value'),
+			toolbar_popup: $('#toolbar_popup_option option:selected').first().attr('value'),
+			toolbar_popup_style: $('#opt-toolbar-popup-icons-only').is(':checked') ? 'icons-only' : 'default',
+			toolbar_popup_hotkeys: $('#opt-toolbar-popup-hotkeys').is(':checked'),
 			separate_menus: $('#opt-separate-engines').is(':checked'),
 			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
@@ -642,9 +668,13 @@ $(document).ready(function(){
 
 
 	for (var act in CONTEXTMENU_OPTIONS){
-
 		var name = CONTEXTMENU_OPTIONS[act];
 		$('#contextmenu_option').append('<option value="' + act + '">'+name+'</option>');
+	}
+
+	for (var act in TOOLBAR_POPUP_OPTIONS){
+		var name = TOOLBAR_POPUP_OPTIONS[act];
+		$('#toolbar_popup_option').append('<option value="' + act + '">'+name+'</option>');
 	}
 
 
@@ -657,6 +687,18 @@ $(document).ready(function(){
 			$('#contextmenu_active').hide(100);
 		else
 			$('#contextmenu_active').show(100);
+
+	});
+
+	$('#toolbar_popup_option').change(function(){
+
+		var opt = $('#toolbar_popup_option option:selected').first();
+
+		var val = opt.attr('value');
+		if(val == 'disabled')
+			$('#toolbar_popup_active').hide(100);
+		else
+			$('#toolbar_popup_active').show(100);
 
 	});
 
