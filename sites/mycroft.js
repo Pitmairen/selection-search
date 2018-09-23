@@ -72,7 +72,7 @@ $('a[onClick^=addOpenSearch]').each(function(){
 			engineEditor.show(e.pageX, e.pageY-50);
 
 
-			loadOpenSearch(engineEditor, "http://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
+			loadOpenSearch(engineEditor, "https://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
 			return false;
 		})
 	);

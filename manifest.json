@@ -36,7 +36,7 @@
                 "all_frames" : true
         },
         {
-            "matches": ["http://mycroftproject.com/*"],
+            "matches": ["http://mycroftproject.com/*", "https://mycroftproject.com/*"],
             "js": ["common/browsersupport.js", "old/opensearch.js", "sites/mycroft.js"],
             "run_at" : "document_end"
         }
