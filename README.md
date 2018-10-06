@@ -9,9 +9,13 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.39*
+- Added optional search suggestions to the toolbar popup
+- Fixed some issues with the special COPY and Domain(%s) search engines in the toolbar popup
+
+
 *0.8.38*
 - Fixed mycroftproject integration. The integration failed to work after mycroftproject switched to use https.
-
 
 *0.8.37*
 - Added toolbar popup when clicking the selection search icon next to the address bar in the upper right corner or chorme. The popup can be enabled/disabled on the options page.
