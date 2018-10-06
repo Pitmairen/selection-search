@@ -12,6 +12,16 @@ function ToolbarMenuActionUtils(){
     var _this = this;
 
 
+
+    var parentReplaceSelection = repl = this.replaceSelection;
+
+    this.replaceSelection = function(url, selection){
+        if(url === '%s'){
+            return replaceDomainSelection(selection);
+        }
+        return parentReplaceSelection(url, selection);
+    }
+
     this.replaceVariables = function(url){
 
         for(var i in _urlVariables){

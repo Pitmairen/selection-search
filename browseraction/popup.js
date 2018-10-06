@@ -118,6 +118,19 @@ function highlightQueryBox(){
     return document.querySelector('.search-input').focus();
 }
 
+function isSpecialSearchEngine(en){
+    // TODO: Replace with actions system like in the normal page popup
+    return ['COPY'].indexOf(en.url) !== -1;
+}
+
+function replaceDomainSelection(query){
+    // TODO: Replace with actions system like in the normal page popup
+    if(!query.match(/^(https?|ftp):\/\//)){
+        return 'http://' + query;
+    }
+    return query;
+}
+
 function createEngineNodes(engines, options, in_submenu){
 
     let engineNodes = []
@@ -144,7 +157,11 @@ function createEngineNodes(engines, options, in_submenu){
         let a = node.querySelector('.engine-link')
 
         a.addEventListener('mouseenter', () => {
-            a.href = utils.createSearchUrl(en, getQuery())
+            if(en.url === '%s'){
+                a.href = replaceDomainSelection(getQuery());
+            }else{
+                a.href = utils.createSearchUrl(en, getQuery())
+            }
         })
 
         if(en.is_submenu){
@@ -165,14 +182,14 @@ function createEngineNodes(engines, options, in_submenu){
         }else{
             engineNodes.push(new EngineNode(en, node, []))
             a.addEventListener('click', (e) => {
+                e.stopPropagation()
+                e.preventDefault()
                 if(hasQuery()){
                     utils.openEngine(en, getQuery());
                     if(en.hide_on_click){
                         window.close();
                     }
                 }else{
-                    e.preventDefault()
-                    e.stopPropagation()
                     highlightQueryBox();
                 }
             })
@@ -180,10 +197,12 @@ function createEngineNodes(engines, options, in_submenu){
 
         // Middle click
         a.addEventListener('auxclick', (e) => {
+            e.stopPropagation()
             if(!hasQuery()){
                 e.preventDefault()
-                e.stopPropagation()
                 highlightQueryBox();
+            }else if(isSpecialSearchEngine(en)){
+                e.preventDefault()
             }
         })
 
