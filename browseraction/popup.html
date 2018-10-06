@@ -18,6 +18,10 @@
     padding: 0;
     margin: 0.8em 0 0 0;
 }
+.search-engines.with-suggestions{
+    margin-top: 0;
+}
+
 .search-engines li{
     flex: 0 50%;
     width: 50%;
@@ -70,12 +74,46 @@
     display: inline-block;
 }
 
+.input-wrapper{
+    position:relative;
+}
+
+.suggestions{
+    /* position: absolute; */
+    padding: 0.4em;
+    margin: 0;
+    background: #ffffff;
+    list-style-type: none;
+    box-sizing: border-box;
+    width: 100%;
+    display: none;
+}
+.suggestions li.active{
+    background: #eee;
+    font-weight: bold;
+}
+.suggestions a {
+    display: inline-block;
+    padding: 0.4em;
+    display: block;
+    text-decoration: none;
+    color: #333;
+}
+
 </style>
 </head>
 <body>
 <div class="container">
 
-<input class="search-input" name="q" type="search" placeholder="Search something!" autofocus>
+<div class="input-wrapper">
+<input class="search-input" name="q" type="search" placeholder="Search something!" autocomplete="off" autofocus>
+<ul class="suggestions">
+</ul>
+<template id="suggestion-template">
+  <li><a href="#"><img src="#" class="engine-img"></a></li>
+</template>
+</div>
+
 <ul class="popup search-engines"></ul>
 <template id="search-engine-template">
   <li class="node">
@@ -93,6 +131,7 @@
 <script src="/popup/event_utils.js"></script>
 <script src="/popup/search_engine_hotkeys.js"></script>
 <script src="actionutils.js"></script>
+<script src="suggestions.js"></script>
 <script src="popup.js"></script>
 </div>
 

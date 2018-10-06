@@ -29,6 +29,7 @@ function DataStore(kwStore){
         toolbar_popup: 'enabled',
         toolbar_popup_style: 'default',
         toolbar_popup_hotkeys: false,
+        toolbar_popup_suggestions: true,
         separate_menus: false,
         hide_on_click: false,
         disable_formextractor: false,

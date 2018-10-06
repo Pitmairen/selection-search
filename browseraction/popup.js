@@ -72,8 +72,6 @@ function showEngines(engineNodes, show_back_button, add_back_focus){
         document.querySelector('.search-input').focus();
     }
 }
-
-
 function createEngineListNode(label){
 
     let tpl = engineTemplate.content.cloneNode(true);
@@ -114,10 +112,6 @@ function setQuery(query){
 
 function hasQuery(){
     return getQuery().length > 0
-}
-
-function disableSearches(){
-
 }
 
 function highlightQueryBox(){
@@ -215,7 +209,9 @@ function SelectionUtil(){
 
 
 let engineTemplate = document.getElementById('search-engine-template')
+let suggestionTemplate = document.getElementById('suggestion-template')
 let searchEngines = document.querySelector('.search-engines')
+let suggestions = document.querySelector('.suggestions')
 let utils = new ToolbarMenuActionUtils()
 
 
@@ -234,6 +230,12 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
         });
     }
 })
+
+
+function openFirstSearch(){
+    document.querySelector('.engine a').click();
+}
+
 
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
@@ -269,8 +271,43 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
         }
     })
 
+    hideSuggestions();
     // Show top level menu
     showEngines(engineNodes, false);
+
+
+    if(response.options.toolbar_popup_suggestions){
+        setupSuggestions();
+    }
+
+    document.querySelector('.search-input').addEventListener('keydown', e => {
+        if(e.code === 'Tab' && isSuggestionsActive()){
+            hideSuggestions();
+        }
+    })
+
+    document.querySelector('.search-input').addEventListener('keyup', e => {
+
+        if(e.code == 'Enter' && hasQuery()){
+            if(!isSuggestionsActive() || !hasActiveSuggestion()){
+                openFirstSearch();
+                window.close();
+                return;
+            }
+        }else if(!isSuggestionsActive() || !response.options.toolbar_popup_suggestions){
+            return;
+        } 
+
+        if(e.code === 'ArrowDown'){
+            nextSuggestions();
+        }
+        else if(e.code === 'ArrowUp'){
+            previousSuggestion();
+        }else if(e.code === 'Enter'){
+            setActiveSuggestion();
+        }
+    })
+
 
 })
 

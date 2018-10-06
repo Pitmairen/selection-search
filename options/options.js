@@ -281,6 +281,7 @@ $(document).ready(function(){
 		$("#toolbar_popup_option").change();
 		$("#opt-toolbar-popup-icons-only").attr('checked', response.options.toolbar_popup_style === 'icons-only');
 		$("#opt-toolbar-popup-hotkeys").attr('checked', response.options.toolbar_popup_hotkeys);
+		$("#opt-toolbar-popup-suggestions").attr('checked', response.options.toolbar_popup_suggestions);
 
 		$("#opt-separate-engines").attr('checked', response.options.separate_menus).change();
 
@@ -538,6 +539,7 @@ $(document).ready(function(){
 			toolbar_popup: $('#toolbar_popup_option option:selected').first().attr('value'),
 			toolbar_popup_style: $('#opt-toolbar-popup-icons-only').is(':checked') ? 'icons-only' : 'default',
 			toolbar_popup_hotkeys: $('#opt-toolbar-popup-hotkeys').is(':checked'),
+			toolbar_popup_suggestions: $('#opt-toolbar-popup-suggestions').is(':checked'),
 			separate_menus: $('#opt-separate-engines').is(':checked'),
 			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
