@@ -343,15 +343,12 @@ function DataStore(kwStore){
             sync_style : false
         });
 
-        var notification = webkitNotifications.createNotification(
-            'img/icon48.png',
-            'Online Synchronization',
-            'Synchronization of search engines and settings between browsers is now available. It has been disabled by default, but can be enabled in the settings.'
-        );
-
-        notification.show();
-
-
+        chrome.notifications.create({
+            type: 'basic',
+            iconUrl: '/img/icon48.png',
+            title: 'Online Synchronization',
+            message: 'Synchronization of search engines and settings between browsers is now available. It has been disabled by default, but can be enabled in the settings.'
+        });
 
     }
 

@@ -76,13 +76,12 @@ var Sync = new function(){
                 sync_style : false
             });
 
-            var notification = webkitNotifications.createNotification(
-                    'img/icon48.png',
-                    'Synchronization Error',
-                    'Failed to synchronize you settings. Sync has been disabled. ('+chrome.runtime.lastError['message']+')'
-            );
-
-            notification.show();
+            chrome.notifications.create({
+                type: 'basic',
+                iconUrl: '/img/icon48.png',
+                title: 'Synchronization Error',
+                message: 'Failed to synchronize you settings. Sync has been disabled. ('+chrome.runtime.lastError['message']+')'
+            });
 
         });
 
@@ -185,13 +184,12 @@ var Sync = new function(){
             var engines = JSON.parse(chunks.join(''));
         }
         catch(e){
-            var notification = webkitNotifications.createNotification(
-                'img/icon48.png',
-                'Synchronization Error',
-                'Failed to parse chunked search engines ('+e+')'
-            );
-
-            notification.show();
+            chrome.notifications.create({
+                type: 'basic',
+                iconUrl: '/img/icon48.png',
+                title: 'Synchronization Error',
+                message: 'Failed to parse chunked search engines ('+e+')'
+            });
             return [];
 
         }
@@ -207,13 +205,12 @@ var Sync = new function(){
 
             if(chrome.runtime.lastError !== undefined){
 
-                var notification = webkitNotifications.createNotification(
-                    'img/icon48.png',
-                    'Synchronization Error',
-                    'Failed to update synced settings ('+chrome.runtime.lastError['message']+')'
-                );
-
-                notification.show();
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: '/img/icon48.png',
+                    title: 'Synchronization Error',
+                    message: 'Failed to update synced settings ('+chrome.runtime.lastError['message']+')'
+                });
                 return;
             }
 

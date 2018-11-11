@@ -107,20 +107,20 @@
 
 
     });
-    
+
 
     chrome.storage.sync.get(null, function(items){
 
         if(chrome.runtime.lastError !== undefined){
 
-            var notification = webkitNotifications.createNotification(
-                'img/icon48.png',
-                'Synchronization Error',
-                'Failed to load synced settings ('+chrome.runtime.lastError['message']+')'
-            );
+            chrome.notifications.create({
+                type: 'basic',
+                iconUrl: '/img/icon48.png',
+                title: 'Synchronization Error',
+                message: 'Failed to load synced settings ('+chrome.runtime.lastError['message']+')'
+            });
 
             _storageUpdated();
-            notification.show();
             return;
         }
 
