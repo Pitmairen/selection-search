@@ -3,7 +3,7 @@
 This is the code for the [Selection Search](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe) chrome extension.
 
 
-https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe 
+https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
 
 
 
@@ -27,7 +27,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 - Added raw search engine placeholder which does not encode the selected text before inserting it into the search url
 
 *0.8.34*
-- Fixed bug in context menu where the open all option for a sub menu did not work together with the don't show menu option 
+- Fixed bug in context menu where the open all option for a sub menu did not work together with the don't show menu option
 
 *0.8.33*
 - Added help text about encoding when using POST searches.
@@ -37,11 +37,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 - Updated the service url where the search engine icons are loaded from.
 
 *0.8.31*
-- Fixed bug on options page where the content in the some search engine fields (name, search url, icon url) would disappear 
+- Fixed bug on options page where the content in the some search engine fields (name, search url, icon url) would disappear
   if the double quote character appeared in any of those fields.
 
 *0.8.30*
-- Made the special "open selected url" search engine (when using only '%s' as search engine to open non-hyperlinked urls in a webpage) 
+- Made the special "open selected url" search engine (when using only '%s' as search engine to open non-hyperlinked urls in a webpage)
   use the same settings as other search engines with respect to opening the result in new tab or not.
 
 *0.8.29*
@@ -63,7 +63,7 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 - Added option to allow single search engines to negate the global "open in new tab" option.
 
 *0.8.24*
-- Changed the default popup activation button to left mouse button. This was done because 
+- Changed the default popup activation button to left mouse button. This was done because
 google is threatening to remove the extension from the web store because they claim it "does not work".
 
 *0.8.23*
@@ -76,7 +76,7 @@ google is threatening to remove the extension from the web store because they cl
 - Added optional auto hiding of the popup if it has not been used after a configurable delay
 
 *0.8.20*
-- Fixed bug in Keyboard+Mouse activator where the popup would trigger without holding the keyboard key when returning to the page 
+- Fixed bug in Keyboard+Mouse activator where the popup would trigger without holding the keyboard key when returning to the page
 after the page lost focus because of certain keyboard shortcuts. (thanks to @bijancamp)
 - Improved icon quality for users with high density display. (thanks to @bijancamp)
 
@@ -124,31 +124,31 @@ after the page lost focus because of certain keyboard shortcuts. (thanks to @bij
 - Add option to show tooltips when hovering the search engines in the popup
 - Fix for sub menus not showing first item when using the "No selection" style
 
-*0.8.7* 
+*0.8.7*
 - Add option to position the auto popup button relative to the mouse
 - Fix preview of the auto popup button on options page
 
-*0.8.6* 
+*0.8.6*
 - Try to reload icons if they don't load the first time
 
-*0.8.5* 
+*0.8.5*
 - Revert the old way where the popup would not open when there was a newline in the selection.
 - Prevent the menu from wrapping when the menu hits the edge of the page. (Does not update custom styles)
 - Set default text direction to left to right.
 
 
-*0.8.4* 
+*0.8.4*
 - Fix loading of sub menu icons.
 - Fix styling of sub menus. The css has also changed a little bit
   so custom styling may need to be updated.
 
-*0.8.3* 
+*0.8.3*
 - Fix icon scaling.
 
-*0.8.2* 
+*0.8.2*
 - Fix bug in the icon loading introduced in the previous version.
 
-*0.8.1* 
+*0.8.1*
 - Big rewrite of a lot of the code. It now uses a shadow DOM to prevent interference to/from the page
   where the popup is inserted. The code should also be cleaner.
 - Fix for extension breaking search in the pdfviewer.
@@ -171,16 +171,16 @@ after the page lost focus because of certain keyboard shortcuts. (thanks to @bij
 
 *0.7.21/22:*
 - Added additional placeholder "{%+s}" that replaces spaces with +
-- Changed the way the search engines are stored to increase the number of search engines that can be synced. 
+- Changed the way the search engines are stored to increase the number of search engines that can be synced.
 
 *0.7.20:*
-- Add option to disable javascript effects. (Fade in/out of popup menu) 
+- Add option to disable javascript effects. (Fade in/out of popup menu)
 
 *0.7.19:*
-- Add better error message. 
+- Add better error message.
 
 *0.7.18:*
-- Fixed POST searches. 
+- Fixed POST searches.
 
 *0.7.17:*
 - Removed unneeded permissions. The tabs and clipboard was not  actually needed.
@@ -230,7 +230,7 @@ after the page lost focus because of certain keyboard shortcuts. (thanks to @bij
 *0.7.1:*
 - Added submenus
 - Added separators
-- ** If the submenus or separators don't look correct, you should try to reload 
+- ** If the submenus or separators don't look correct, you should try to reload
   you menu style. You can reload the style by reselecting the style you are using and save.**
 
 *0.6.0:*

@@ -14,9 +14,9 @@ function Style(shadowDOM){
     // an integer value such as "10px", then the element is moved that amount
     // (only by pixels) in the corresponding direction, without any automatic
     // positioning done beforehand.
-    
+
     var _defaultStyleConfig = {
-        "submenu_corner" : "topleft", 
+        "submenu_corner" : "topleft",
         "submenu_position" : "topright",
         "menu_edge_right" : "auto",
         "menu_edge_bottom" : "auto",

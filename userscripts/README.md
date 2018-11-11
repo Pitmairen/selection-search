@@ -1,6 +1,6 @@
 # User scripts for sites that requires javascript to search
 
-The scripts in this folder are used to make searches in selections earch work for sites that uses javascript to trigger search and show the search results. These sites does not use traditional techniques that let you specify the search query in the url, so a little bit of scripting is needed to make these sites work with selcetion search. 
+The scripts in this folder are used to make searches in selections earch work for sites that uses javascript to trigger search and show the search results. These sites does not use traditional techniques that let you specify the search query in the url, so a little bit of scripting is needed to make these sites work with selcetion search.
 
 ## How to use
 
@@ -9,7 +9,7 @@ First you need to install **one** of the following extensions that let you add u
 * [Violentmonkey](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag)
 * [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
-I prefer Violentmonkey, as I think it looks a little bit nicer.  
+I prefer Violentmonkey, as I think it looks a little bit nicer.
 
 Next you can install the scripts from the following url at openuserjs.org:
 https://openuserjs.org/group/SelectionSearchExtension

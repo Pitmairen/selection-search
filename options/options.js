@@ -32,7 +32,7 @@ function addNewEngine(en, level){
 		_addSeparator(template_data, level);
         return;
 	}
-    
+
     if(en.is_submenu)
         template_data.folder_id = ++_G_folder_id_count;
 
@@ -85,7 +85,7 @@ function _addEngineOptions(en, el){
 
 
 	var opts = el.find('.engine-options-popup');
-	
+
 	opts.on('click', function(e){
 		e.stopPropagation();
 	})
@@ -107,7 +107,7 @@ function _addEngineOptions(en, el){
 		return false;
 	});
 
-    
+
 	el.find('.delete').click(function(){
 
 		if(el.hasClass('menu-folder')){
@@ -418,8 +418,8 @@ $(document).ready(function(){
 			if(!en.hide_on_click)
 				delete en.hide_on_click;
 
-			// The checkboxes for the hide_* options shows the oposite state of the hide option, so 
-			// if the checkbox is checked it means that the engine should not be hidden.  
+			// The checkboxes for the hide_* options shows the oposite state of the hide option, so
+			// if the checkbox is checked it means that the engine should not be hidden.
 			if(en.hide_in_popup)
 				delete en.hide_in_popup;
 			else

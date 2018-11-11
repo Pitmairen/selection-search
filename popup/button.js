@@ -2,7 +2,7 @@
 
 
 function Button(_popup, style){
-    
+
 
     var _buttonNode = _createButtonNode();
 
@@ -44,7 +44,7 @@ function Button(_popup, style){
         _active = false;
     }
 
-    
+
     /*
      * Shows the button
      * Used to create a preview of the button on

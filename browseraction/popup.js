@@ -1,18 +1,18 @@
 /**
  * The popup works like this:
- * 
- * All search engines that are not disabled for the toolbar popup is loaded into 
+ *
+ * All search engines that are not disabled for the toolbar popup is loaded into
  * the search engine list. Separators are currently not added to the toolbar popup.
- * 
+ *
  * Then the icons are loaded and inserted into each search engine.
- * 
+ *
  * The engines are initially hidden from the popup. Depending on if a sub menu or the
  * top level menue is active, the relevant search engines are shown.
- * 
- * The initial hiding of the engines is done to make it easier to match the correct icon 
+ *
+ * The initial hiding of the engines is done to make it easier to match the correct icon
  * with the correct search engine, because the icons and the search engine will have the same
  * index in their respective lists.
- * 
+ *
  */
 
 
@@ -315,7 +315,7 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
             }
         }else if(!isSuggestionsActive() || !response.options.toolbar_popup_suggestions){
             return;
-        } 
+        }
 
         if(e.code === 'ArrowDown'){
             nextSuggestions();

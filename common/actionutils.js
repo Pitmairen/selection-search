@@ -33,9 +33,9 @@ function BaseActionUtils(){
     }
 
     // Replaces placeholders defined in one of the following format:
-    // {%s} or with converters {%s|upper|lower} 
-    // {%+s} and with one or more converters {%+s|upper|lower} 
-    // {%(CP1251)s} and with one or more converters {%(CP1251)s|upper|lower} 
+    // {%s} or with converters {%s|upper|lower}
+    // {%+s} and with one or more converters {%+s|upper|lower}
+    // {%(CP1251)s} and with one or more converters {%(CP1251)s|upper|lower}
     function replaceWithConverters(url, selection){
         return url.replace(/{%(.*?)s\|?(.*?)}/g, function(match, encoder, converters){
 
@@ -58,16 +58,16 @@ function BaseActionUtils(){
 
     this.replaceSelection = function(url, selection){
 
-        // This placeholder should no be used any more. Its only here because it was 
+        // This placeholder should no be used any more. Its only here because it was
         // used to wrongly fix a bug. This bug has now been fixed properly,
-        // so this line is here only to not break the searches for anyone who 
+        // so this line is here only to not break the searches for anyone who
         // used this placeholder.
         url = url.replace(/\{%\-s\}/g, encodeURIComponent(selection));
 
         url = replaceWithConverters(url, selection);
 
         url = url.replace(/%s/g, encodeURIComponent(selection));
-    
+
         return url;
     }
 
@@ -94,7 +94,7 @@ function BaseActionUtils(){
         });
 
     }
-    
+
     this.openAllUrlsWithOptions = function(engine, urlsWithOptions, selection){
 
         chrome.runtime.sendMessage({
@@ -128,7 +128,7 @@ function BaseActionUtils(){
 
         if(engine.post === true)
             return _this.createPostUrl(url, selection);
-        
+
         return url;
     }
 

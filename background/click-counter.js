@@ -2,8 +2,8 @@
 /**
  * Used to track the number of clicks on each search engine.
  *
- * Currenlty it uses the search url to keep track of the count. 
- * If there are multiple search engines with the same url a click on 
+ * Currenlty it uses the search url to keep track of the count.
+ * If there are multiple search engines with the same url a click on
  * one of them will increment the count of both.
  *
  */
@@ -70,7 +70,7 @@ function ClickCounter(){
             }
             else if(en.is_separator){
                 // Remove and keep track of the separators so that
-                // we can insert them at the correct position again 
+                // we can insert them at the correct position again
                 // after the sorting.
                 var el = engines.splice(i, 1)[0];
                 // Because i is decremented by one for each separator we

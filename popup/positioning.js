@@ -3,7 +3,7 @@ var Positioning = new function(){
 
 
     this.getOffsetRect = function(elem){
-        
+
         var box = elem.getBoundingClientRect();
 
         var body = document.body;
@@ -61,7 +61,7 @@ var Positioning = new function(){
             diffY = _calculateDiff(pos.bottom, bounds.bottom, diffConfig.bottom)
         else if (pos.top < bounds.top) // Goes outside on the top
             diffY = _calculateDiff(pos.top, bounds.top, diffConfig.top)
-        
+
 
         if(pos.right > bounds.right) // Goes outside on the right
             diffX = _calculateDiff(pos.right, bounds.right, diffConfig.right)

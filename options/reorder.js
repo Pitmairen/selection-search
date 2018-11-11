@@ -56,7 +56,7 @@ var Reorder = new function(){
 
 				if(_current_tr.hasClass('menu-folder')){
 
-					
+
 					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).andSelf().add($('#end-'+_current_tr.attr('id')));
 
 					prev.before(elms);
@@ -69,7 +69,7 @@ var Reorder = new function(){
 						$(this).data('level', $(this).data('level') + diff);
 					});
 					_current_tr.data('level', level);
-					
+
 					_setBackgrounds(elms);
 				}
 				else{
@@ -92,13 +92,13 @@ var Reorder = new function(){
 
 					if(end.length == 0)
 						return;
-					
+
 					end.after(elms);
 
 					var level = $('#end-'+_current_tr.attr('id')).next().data('level') || 0;
 
 					var diff = level - _current_tr.data('level');
-					
+
 					elms.each(function(){
 						$(this).data('level', $(this).data('level') + diff);
 					});
@@ -137,7 +137,7 @@ var Reorder = new function(){
 
 			for(var i = level; i >= 0; --i){
 
-				
+
 				if(i == level){
 
 
@@ -148,15 +148,15 @@ var Reorder = new function(){
 
 					}
 
-	
+
 					if(el.hasClass('menu-folder-end'))
 						bg = 'url("../img/tree-end.png") no-repeat '+((i-1)*16)+'px center';
 					else
 						bg = 'url("../img/tree.png") no-repeat '+((i-1)*16)+'px center';
-					
-				
+
+
 					backgrounds.push(bg);
-					
+
 				}
 				else{
 					backgrounds.push('url("../img/tree-left.png") no-repeat '+((i-1)*16 )+'px center');
@@ -166,12 +166,12 @@ var Reorder = new function(){
 
 			backgrounds.reverse();
 			el.find('td:eq(1)').css('background', backgrounds.join(','));
-			
 
-			
+
+
 		});
 
-		
+
 	}
 
 }

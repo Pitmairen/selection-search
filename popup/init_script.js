@@ -139,7 +139,7 @@
     }
 
     function _getActivator(activator, popup, options, dom){
-        
+
         switch(activator){
             case "combo":
                 return _createComboActivator(popup, options, dom);

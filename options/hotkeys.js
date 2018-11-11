@@ -55,11 +55,11 @@ var HotKeys = new function(){
 		}
 
 		this.clearCombo = function(){
-			_last_combo = [];	
-			_default_combo = [];	
+			_last_combo = [];
+			_default_combo = [];
 			update_input();
 		}
-		
+
 		function get_combo_name(){
 
 			if(_last_combo.length == 0)
@@ -129,7 +129,7 @@ var HotKeys = new function(){
 
 		});
 
-		
+
 	}
 
 

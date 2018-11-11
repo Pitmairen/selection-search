@@ -2,7 +2,7 @@
 
 
 function Popup(options, style){
-    
+
 
     var _popupNode = _createPopupNode();
     _popupNode.classList.add("mainmenu");
@@ -17,11 +17,11 @@ function Popup(options, style){
     var _this = this;
 
 
-    
+
     this.setModifier = function(mod){
         _modifier = mod;
     }
-    
+
     this.addActionListener = function(listener){
         _listeners.push(listener);
     }
@@ -82,7 +82,7 @@ function Popup(options, style){
         _active = false;
     }
 
-    
+
     /*
      * Shows the menu.
      * Used to create a preview of the popup on
@@ -163,7 +163,7 @@ function Popup(options, style){
 
 
     function _addEngine(engine, _parent){
-            
+
         if(options.separate_menus && engine.hide_in_popup){
             return;
         }
@@ -206,7 +206,7 @@ function Popup(options, style){
         var input = document.createElement('input');
         input.type = 'text';
         item.appendChild(input);
-        
+
         _addInputEvents(input);
         parentItem.appendChild(item);
         // document.documentElement.appendChild(item);
@@ -236,7 +236,7 @@ function Popup(options, style){
 
         var node = _createPopupNode();
 
-        
+
         node.classList.add("submenu");
 
         li.appendChild(node);
@@ -315,7 +315,7 @@ function Popup(options, style){
         });
     }
 
-    
+
     function _onClickAction(evt, engine, a){
 
         for(var i in _listeners){

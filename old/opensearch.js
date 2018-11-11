@@ -9,7 +9,7 @@ var OpenSearch = {
 		if(OpenSearch._req && OpenSearch._req.readyState != 0)
 			OpenSearch._req.abort();
 	},
-	
+
 	getEngineFromURL : function (url, callback){
 
 		OpenSearch.cancelReq();
@@ -39,7 +39,7 @@ var OpenSearch = {
 	getEngineFromXML : function (xml){
 
 		var ret = {'status' : 'ERROR', 'msg' : 'Error parsing opensearch document'}
-		
+
 		var name = $(xml).find('ShortName').first().text();
 
 		var _url = $(xml).find('Url[type="text/html"]').first();
@@ -59,7 +59,7 @@ var OpenSearch = {
 
 				var _params = [];
 				_url.find('Param').each(function(){
-					
+
 					_params.push($(this).attr('name') + '=' + $(this).attr('value'))
 				});
 				_params = _params.join('&');

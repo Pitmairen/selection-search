@@ -28,7 +28,7 @@
         else
             _contextMenu.disable();
 
-        // Create a new icon collection object. And reload 
+        // Create a new icon collection object. And reload
         // all the icons.
         _iconCollection = new IconCollection();
         _toolbarIconCollection = new IconCollection();

@@ -65,7 +65,7 @@
             <div class="engine-opt-background_tab">
                 <hr>
                 <p>Open in background tab</p>
-            
+
                 <input type="checkbox" class="background_global" id="engine-opts-background_tab_global-{{=it.id}}"/>
                 <label for="engine-opts-background_tab_global-{{=it.id}}">Use global settings</label>
 

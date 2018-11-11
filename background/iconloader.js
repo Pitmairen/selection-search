@@ -42,7 +42,7 @@ function IconLoader(src, onload){
 
 
     function _onError(e){
-        _isError = true;        
+        _isError = true;
     }
 
     function _onLoad(e){

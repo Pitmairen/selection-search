@@ -93,7 +93,7 @@ function DataStore(kwStore){
         return $.extend({}, _defaultOptions, options);
 
     }
-    
+
     this.getBlacklistDefinitions = function(){
         return JSON.parse(_getValue(_BLACKLIST_KEY, '[]'));
     }
@@ -282,7 +282,7 @@ function DataStore(kwStore){
         if(!_versionIsNewer('0.8.8'))
             return;
 
-        // Fix for bug in "No selection" style 
+        // Fix for bug in "No selection" style
         // The style template was not updated in version 0.8.3 -> 0.8.4 so someone
         // who has selected this style after the update has not gotten the fix
         // in the storege upgrade for the 0.8.3 -> 0.8.4.
@@ -307,7 +307,7 @@ function DataStore(kwStore){
         if(!_versionIsNewer('0.8.1'))
             return;
 
-        // Fix is done in setStyle 
+        // Fix is done in setStyle
         _that.setStyle(style);
 
         opts.remove_icons = 'no';
@@ -452,7 +452,7 @@ function DataStore(kwStore){
 }
 
 
-// The temp storeage is used on the options page to detect changes to the settings so that we can show 
+// The temp storeage is used on the options page to detect changes to the settings so that we can show
 // the save button conditionally.  It is a duplicate of the global "Storage" store, the duplicate is modified
 // when the user changes settings and then it is compared to the global storage to detect changed.
 function newTempStorageDuplicate(){

@@ -48,7 +48,7 @@ function DefaultAction(popup, utils, options)
         else if(engine.url.substr(0, 11) === "javascript:")
             return;
 
-    
+
         if(engine.open_in_incognito){
             _clickEngine(engine);
             evt.preventDefault();
@@ -79,7 +79,7 @@ function DefaultAction(popup, utils, options)
     }
 
 
-    
+
 
 }
 
@@ -266,7 +266,7 @@ function PopupActionUtils(){
 
 
 
-// Helper function 
+// Helper function
 function _shouldOpenSearchInNewTab(engine, options){
     return (options.newtab && !Boolean(engine.negate_newtab_option)) || (!options.newtab && Boolean(engine.negate_newtab_option));
 }

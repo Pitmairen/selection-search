@@ -16,7 +16,7 @@ function ContextMenu(options, _clickCounterCallback){
 
     }
 
-    
+
     this.disable = function(){
         _removeRootItem();
 
@@ -77,7 +77,7 @@ function ContextMenu(options, _clickCounterCallback){
 
     }
 
-    
+
 
     function _addSubMenuItem(engine, parentItem){
 
@@ -104,7 +104,7 @@ function ContextMenu(options, _clickCounterCallback){
 
         _addEngines(engine.engines, id);
     }
-    
+
     function _onEngineClick(engine, info, tab){
         var utils = new ContextMenuActionUtils(info, tab);
         utils.openEngine(engine, info.selectionText)

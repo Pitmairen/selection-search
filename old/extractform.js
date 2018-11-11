@@ -1,7 +1,7 @@
 
 function initFormExtractor(engineEditor){
 
-	
+
 
 	var _keys = {
 		17 : false, // Ctrl
@@ -86,6 +86,6 @@ function initFormExtractor(engineEditor){
 		return true;
 
 	}
-	
+
 }
 

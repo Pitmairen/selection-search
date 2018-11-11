@@ -12,7 +12,7 @@ function SelectionUtil(options){
 
         if (sel.length == 0)
             return false;
-        
+
         if (options.selection_length_limit >= 0){
             if(sel.length > options.selection_length_limit){
                 return false;

@@ -45,7 +45,7 @@ function Activator(_options){
 
             links[i].addEventListener('click', _disableEvent);
             links[i].addEventListener('mouseup', _disableEvent);
-            
+
         }
     }
 
@@ -246,8 +246,8 @@ function AutoActivator(_popup, _button, _options){
                     window.clearTimeout(_lastTimer);
 
                 _lastTimer = window.setTimeout(
-                    _tryShow, 
-                    _options.auto_open_delay, 
+                    _tryShow,
+                    _options.auto_open_delay,
                     e,
                     _options.auto_popup_relative_to_mouse || (_startedInInput && _options.auto_popup_in_inputs)
                 );

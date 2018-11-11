@@ -1,4 +1,4 @@
-#!/usr/bin sh 
+#!/usr/bin sh
 
 # doT templates is needed. (npm install dot)
 
