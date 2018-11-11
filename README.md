@@ -9,10 +9,15 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.40*
+- No new features, only internal changes and tweaks for better compatibility with other browsers
+- Updated to use newer notifications api for better compatibility with other browsers
+- Updated JQuery version
+- A firefox version of the extension is now available
+
 *0.8.39*
 - Added optional search suggestions to the toolbar popup
 - Fixed some issues with the special COPY and Domain(%s) search engines in the toolbar popup
-
 
 *0.8.38*
 - Fixed mycroftproject integration. The integration failed to work after mycroftproject switched to use https.
