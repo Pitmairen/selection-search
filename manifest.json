@@ -21,6 +21,14 @@
         }
     },
 
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+F"
+            }
+        }
+    },
+
     "icons": {
         "16": "img/icon16.png",
         "48": "img/icon48.png",
