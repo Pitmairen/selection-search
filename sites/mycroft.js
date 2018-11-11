@@ -29,6 +29,10 @@ initFormExtractor(engineEditor)
 
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
+	if(chrome.runtime.lastError !== undefined){
+		return
+	}
+
     style.setDefaultStyle(response.default_style);
     if(response.extra_style)
         style.setCustomStyle(response.extra_style);

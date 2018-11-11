@@ -13,6 +13,10 @@
 
     chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
+        if(chrome.runtime.lastError !== undefined){
+            return
+        }
+
         chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             if (request.action == "getSelection"){
                 let selectionUtil = new SelectionUtil(response.options)
