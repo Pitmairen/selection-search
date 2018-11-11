@@ -29,7 +29,7 @@
             "matches": ["http://*/*", "https://*/*", "file://*/*"],
             "js": ["common/browsersupport.js", "popup/popup.js", "popup/popup_modifier.js", "popup/circular_popup.js", "popup/activators.js", "common/actionutils.js", "popup/selection_util.js",
                 "popup/actions.js", "popup/style.js", "popup/button.js", "common/encoding.js", "popup/event_utils.js",
-                "common/urlparse.js", "common/jquery-2.1.4.min.js",
+                "common/urlparse.js", "common/jquery-3.3.1.min.js",
                 "old/engine-editor.js", "old/extractform.js",
                 "popup/positioning.js", "popup/autohide.js", "popup/search_engine_hotkeys.js", "popup/init_script.js"],
                 "run_at" : "document_end",
