@@ -7,21 +7,46 @@
 
     "minimum_chrome_version": "35",
 
+    "applications": {
+        "gecko": {
+            "id": "selection-search@myr1.net",
+            "strict_min_version": "64.0a2"
+        }
+    },
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "selection-search@myr1.net",
+            "strict_min_version": "64.0a2"
+        }
+    },
+
     "icons": {
         "16": "img/icon16.png",
         "48": "img/icon48.png",
         "128": "img/icon128.png"
     },
 
-    "options_page": "options/options.html",
+
+    "options_ui": {
+      "page" : "options/options.html",
+      "browser_style": false,
+      "chrome_style": false,
+      "open_in_tab": true
+    },
 
     "background": {
-        "page" : "background/background.html",
-        "persistent" : true
+        "page" : "background/background.html"
     },
 
     "browser_action": {
-        "default_popup": "browseraction/popup.html"
+        "default_popup": "browseraction/popup.html",
+        "default_icon": {
+            "16": "img/icon16.png",
+            "48": "img/icon48.png",
+            "128": "img/icon128.png"
+        }
+
     },
 
     "content_scripts": [
@@ -47,7 +72,8 @@
         "storage",
         "notifications",
         "clipboardWrite",
-        "tabs"
+        "tabs",
+        "<all_urls>"
     ],
 
     "web_accessible_resources": [
