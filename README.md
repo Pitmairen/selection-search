@@ -1,10 +1,13 @@
 # Selection Search
 
-This is the code for the [Selection Search](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe) chrome extension.
+This is the code for the Selection Search extension for
+[Chrome](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe)
+and
+[Firefox](https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/).
 
 
-https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
-
+* https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
+* https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/
 
 
 ## Changelog
