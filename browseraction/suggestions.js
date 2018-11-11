@@ -7,7 +7,7 @@ function createSuggestion(label){
     let tpl = suggestionTemplate.content.cloneNode(true);
 
     let labelNode = tpl.querySelector('a')
-    labelNode.innerHTML = label; //.replace(getQuery(), '<b>' + getQuery() + '</b>');
+    labelNode.innerText = label; //.replace(getQuery(), '<b>' + getQuery() + '</b>');
 
     labelNode.addEventListener('click', () => {
         setQuery(label);

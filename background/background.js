@@ -83,7 +83,7 @@ function copyToClipboard(request, sendResponse) {
     var copyDiv = document.createElement('div');
     copyDiv.contentEditable = true;
     document.body.appendChild(copyDiv);
-    copyDiv.innerHTML = request.text;
+    copyDiv.innerText = request.text;
     copyDiv.unselectable = "off";
     copyDiv.focus();
     document.execCommand('SelectAll');
