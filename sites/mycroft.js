@@ -67,7 +67,7 @@ $('a[onClick^=addOpenSearch]').each(function(){
 
 	$(this).before(
 		$('<a href="#"></a>').append(
-			$('<img class="icon" alt="Add to Chrome Selection Search" title="Add to Chrome Selection Search" />').attr('src', chrome.extension.getURL('img/icon16.png')).css({
+			$('<img class="icon" alt="Add to Firefox Selection Search" title="Add to Firefox Selection Search" />').attr('src', chrome.extension.getURL('img/icon16.png')).css({
 				'margin' : '0 8px',
 				'width' : '16px', 'hwight' : '16px',
 			})
@@ -89,8 +89,8 @@ $('a[onClick^=addEngine]').each(function(){
 });
 
 $('table.altrowgw:last tr:first-child').after(
-	$('<tr><td><img class="icon" title="Chrome Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('img/icon16.png')+'" />'+
-	' Add search engine to Chrome <a href="https://chrome.google.com/extensions/detail/gipnlpdeieaidmmeaichnddnmjmcakoe">Selection Search</a> extension.</td></tr>')
+	$('<tr><td><img class="icon" title="Firefox Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('img/icon16.png')+'" />'+
+	' Add search engine to the Firefox <a href="https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/">Selection Search</a> extension.</td></tr>')
 );
 
 
