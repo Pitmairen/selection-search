@@ -111,7 +111,7 @@
 
     chrome.storage.sync.get(null, function(items){
 
-        if(chrome.runtime.lastError !== undefined){
+        if (BrowserSupport.hasLastError()) {
 
             chrome.notifications.create({
                 type: 'basic',

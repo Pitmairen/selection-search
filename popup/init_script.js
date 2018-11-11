@@ -13,7 +13,7 @@
 
     chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
-        if(chrome.runtime.lastError !== undefined){
+        if(BrowserSupport.hasLastError()){
             return
         }
 

@@ -10,6 +10,10 @@ var BrowserSupport = {
         }else{
             return element;
         }
+    },
+
+    hasLastError: function(){
+        return chrome.runtime.lastError != undefined && chrome.runtime.lastError != null;
     }
 
 }

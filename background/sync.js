@@ -67,7 +67,7 @@ var Sync = new function(){
 
         chrome.storage.sync.set(data, function(){
 
-            if(chrome.runtime.lastError == undefined)
+            if(!BrowserSupport.hasLastError())
                 return;
 
             storage.setSyncOptions({
@@ -203,7 +203,7 @@ var Sync = new function(){
 
         chrome.storage.sync.get(null, function(items){
 
-            if(chrome.runtime.lastError !== undefined){
+            if(BrowserSupport.hasLastError()){
 
                 chrome.notifications.create({
                     type: 'basic',
