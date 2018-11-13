@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.41*
+- Fix potential bug on options page when opening the options page with an empty database
+
+
 *0.8.40*
 - No new features, only internal changes and tweaks for better compatibility with other browsers
 - Updated to use newer notifications api for better compatibility with other browsers
