@@ -73,9 +73,10 @@ function DataStore(kwStore){
     }
 
     this.getStyle = function(default_value){
-
+        if(default_value === undefined){
+            default_value = ''
+        }
         return _getValue(_STYLE_KEY, default_value);
-
     }
 
     this.getButton = function(){
@@ -187,7 +188,7 @@ function DataStore(kwStore){
     this.hasChanges = function(other){
         if(!_eq(this.getOptions(), other.getOptions())){
             return true;
-        } else if(!_eq(this.getStyle(), other.getStyle())){
+        } else if(!_eq(this.getStyle(''), other.getStyle(''))){
             return true;
         } else if(!_eq(this.getSearchEngines(), other.getSearchEngines())){
             return true;
@@ -203,7 +204,7 @@ function DataStore(kwStore){
     // Copies the other storage storage into this storage
     this.copyInto = function(other){
         other.setOptions(this.getOptions());
-        other.setStyle(this.getStyle());
+        other.setStyle(this.getStyle(''));
         other.setSearchEngines(this.getSearchEngines());
         other.setBlacklistDefinitions(this.getBlacklistDefinitions());
         other.setSyncOptions(this.getSyncOptions());
