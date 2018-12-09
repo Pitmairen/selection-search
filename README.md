@@ -9,9 +9,12 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.42*
+- Fixed bug where the popup could not be opened with the click activator when the "open on double click" option was active
+- Fixed options page reloading when checking the circular menu option
+
 *0.8.41*
 - Fix potential bug on options page when opening the options page with an empty database
-
 
 *0.8.40*
 - No new features, only internal changes and tweaks for better compatibility with other browsers
