@@ -149,10 +149,15 @@ function DoubleClickActivator(_popup, _options){
     this.setup = function(){
 
         document.addEventListener('mousedown', function(e){
-            if(_doubleTimer != null)
+            if(_doubleTimer != null){
                 clearTimeout(_doubleTimer);
-            else if(_popup.isActive())
-                _popup.hide();
+            }
+            // The popup should not be hidden here, as it causes the popup to be erroneously hidden
+            // on click when the double click activator is combined with the click activator.
+            // Currently we don't have to hide the popup here, as the double click activator
+            // is enabled independently from the other activators, and one of the other activators
+            // will always be active, and the other activators will hide the menu on mouse down if it is
+            // visible.
         });
 
 
