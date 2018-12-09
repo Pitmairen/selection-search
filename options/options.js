@@ -392,6 +392,7 @@ $(document).ready(function(){
         }
 
         $("#save").click();
+        location.reload();
     });
 
 
