@@ -28,12 +28,16 @@
             sendResponse({});
         });
 
+
+        var utils = new PopupActionUtils();
+
+        SearchEngineHotKeys(response.engines, response.options, utils);
+
         if(response.blacklist !== undefined){
             if(_checkBlacklist(response.blacklist)){
                 return; // Disable the popup
             }
         }
-
 
         if(!response.options.disable_formextractor){
             var engineEditor = new EngineEditor(shadowDOM);
@@ -47,12 +51,9 @@
         // jquery effects
         $.fx.off = response.options.disable_effects;
 
-
         style.setDefaultStyle(response.default_style);
         if(response.extra_style)
             style.setCustomStyle(response.extra_style);
-
-        var utils = new PopupActionUtils();
 
         var popup = new Popup(response.options, style);
 
@@ -61,8 +62,6 @@
         }
 
         popup.setSearchEngines(response.engines);
-
-        SearchEngineHotKeys(response.engines, response.options, utils);
 
         var actions = new ActionCollection();
         actions.setDefaultAction(new DefaultAction(popup, utils, response.options));

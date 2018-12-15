@@ -12,6 +12,9 @@ and
 
 ## Changelog
 
+*0.8.43*
+- Enable the search engine hotkeys even when the inline popup menu is disabled
+
 *0.8.42*
 - Fixed bug where the popup could not be opened with the click activator when the "open on double click" option was active
 - Fixed options page reloading when checking the circular menu option
