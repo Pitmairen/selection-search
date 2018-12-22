@@ -57,7 +57,7 @@ var Reorder = new function(){
 				if(_current_tr.hasClass('menu-folder')){
 
 
-					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).andSelf().add($('#end-'+_current_tr.attr('id')));
+					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).addBack().add($('#end-'+_current_tr.attr('id')));
 
 					prev.before(elms);
 
@@ -86,7 +86,7 @@ var Reorder = new function(){
 
 				if(_current_tr.hasClass('menu-folder')){
 
-					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).andSelf().add($('#end-'+_current_tr.attr('id')));
+					var elms = _current_tr.nextUntil('#end-'+_current_tr.attr('id')).addBack().add($('#end-'+_current_tr.attr('id')));
 
 					var end = $('#end-'+_current_tr.attr('id')).next();
 
