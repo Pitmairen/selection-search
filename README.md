@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.44*
+- Fix bug that prevented sub menus from being dragged/moved on the options page
+
 *0.8.43*
 - Enable the search engine hotkeys even when the inline popup menu is disabled
 
