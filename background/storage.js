@@ -46,6 +46,7 @@ function DataStore(kwStore){
         selection_length_limit: -1,
         auto_hide_delay: 0,
         auto_open_delay: 300,
+        selection_allow_newline: false,
     };
 
     var _blacklist = [];

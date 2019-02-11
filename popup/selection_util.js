@@ -19,6 +19,10 @@ function SelectionUtil(options){
             }
         }
 
+        if (options.selection_allow_newline){
+            return true;
+        }
+
         return sel.indexOf("\n") == -1;
     }
 

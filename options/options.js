@@ -303,6 +303,7 @@ $(document).ready(function(){
 
 		$("#opt-sort-by-click").attr('checked', response.options.sort_by_click);
 
+		$("#opt-selection-allow-newline").attr('checked', response.options.selection_allow_newline);
 		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
 		$("#opt-auto-hide-delay").val(response.options.auto_hide_delay);
 		$("#opt-auto-open-delay").val(response.options.auto_open_delay);
@@ -554,6 +555,7 @@ $(document).ready(function(){
             activator_combo: act_combo,
 			circular_menu: $('#circular_menu').is(':checked'),
 			sort_by_click: $('#opt-sort-by-click').is(':checked'),
+			selection_allow_newline: $('#opt-selection-allow-newline').is(':checked'),
 			selection_length_limit: selection_limit,
 			auto_hide_delay: auto_hide_delay,
 			auto_open_delay: auto_open_delay,

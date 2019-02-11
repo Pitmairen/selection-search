@@ -325,7 +325,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 
 	</div>
 
-	<h4 class="subsection-heading" id="head-selection-length-limit">Selecion length limit</h4>
+	<h4 class="subsection-heading" id="head-selection-length-limit">Selection length limit</h4>
 	<div class="subsection">
 		<p class="info">
 			You can set the maximum length of the selection that will activate the search popup.
@@ -471,6 +471,12 @@ www.example.com/test
 <p class="section-option"><label for="opt-disable-extractform">Disable <strong style="font-size: 85%;">CTRL+ALT+click</strong> shortcut for adding search engines:</label><input id="opt-disable-extractform" type="checkbox" /> (It can sometimes be buggy so if you don't use it you can disable it.)</p>
 
 <p class="section-option"><label for="opt-sort-by-click">Sort engines by usage count</label><input id="opt-sort-by-click" type="checkbox" />(The engines will be sorted by usage count so that the most used search engines will be placed first in the menu.)</p>
+
+<p class="section-option"><label for="opt-selection-allow-newline">Allow newline / linebreak in selection</label><input id="opt-selection-allow-newline" type="checkbox" /> 
+		(Allow the inline popup and toolbar popup to open when the selection contains newline / linebreak characters. 
+		<i>May sometimes cause the popup to open when it is not supposed to.</i>
+		Only affects the inline popup / toolbar popup.)
+</p>
 
 </div>
 
