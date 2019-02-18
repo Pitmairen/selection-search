@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.46*
+- Replace newlines in selection with spaces
+
 *0.8.45*
 - Added option to allow the popup to open when there are newlines in the selection. Only affects the inline popup and toolbar popup.
 
