@@ -3,7 +3,11 @@
 function SelectionUtil(options){
 
     this.getSelection = function(){
-        return window.getSelection().toString().trim();
+        let selection = window.getSelection().toString().trim();
+        if (options.selection_allow_newline){
+            return selection.replace(/\n/g, ' ');
+        }
+        return selection;
     }
 
     this.hasSelection = function(){
