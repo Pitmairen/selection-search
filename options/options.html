@@ -352,7 +352,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	</div>
 
 
-	<h4 class="subsection-heading" id="head-blacklist">Blacklist</h4>
+	<h4 class="subsection-heading" id="head-blacklist">Blacklist / Whitelist</h4>
 	<div class="subsection">
 		<p class="info">
         The blacklist can be used to disable the popup on specific sites. [<a href="#" id="show-blacklist-info">Show Definition Syntax</a>]
@@ -376,6 +376,10 @@ www.example.com/test
 </pre>
         </div>
 
+		<p class="section-option"><label for="opt-use-whitelist">Use as whitelist</label>
+			<input id="opt-use-whitelist" type="checkbox" name="use-whitelist" />
+			<span class="separate-menus-msg">(When enabled the list will be used as a whitelist, i.e the popup will only load on matched sites. The list must be non-empty for this option to take effect.)</span>
+		</p>
         <textarea id="blacklist-definitions" rows="8" placeholder="For example: www.example.com"></textarea>
 
 	</div>

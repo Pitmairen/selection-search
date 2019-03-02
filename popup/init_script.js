@@ -34,8 +34,16 @@
         SearchEngineHotKeys(response.engines, response.options, utils);
 
         if(response.blacklist !== undefined){
-            if(_checkBlacklist(response.blacklist)){
-                return; // Disable the popup
+
+            let blacklistMatch = _checkBlacklist(response.blacklist);
+
+            if(response.options.use_whitelist && !blacklistMatch){
+                // We use the blacklist as a whitelist and skip the popup
+                // if the blacklist does not match the current url
+                return;
+            }
+            else if(!response.options.use_whitelist && blacklistMatch){
+                return; // Blacklist match, disable the popup
             }
         }
 
