@@ -47,6 +47,7 @@ function DataStore(kwStore){
         auto_hide_delay: 0,
         auto_open_delay: 300,
         selection_allow_newline: false,
+        use_whitelist: false, // If enabled, the blacklist will be used as a whitelist
     };
 
     var _blacklist = [];

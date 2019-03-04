@@ -14,6 +14,31 @@ function BaseActionUtils(){
         },
     }
 
+    // The regular expression converter has the following syntax:
+    // re:<match>:::<replacement>:::<flags>, the flags part is optional
+    // eg:
+    // re:\s+:::_:::g  // replaces all whitespace with underscore
+    // re:\s+:::_     // replaces only the first block of whitespace with underscore
+    // re:([a-z]+)\d+:::$1:::g // removes digits at the end of words in the string.
+    // The $n in the replacement section is replaced with the corresponding match
+    // group.
+    // ::: Is used as a separator to try to minimize the chance of clashing with
+    // a value the user might use in the converter expression.
+    function _regexConverter(regexp, inputValue) {
+        let parts = regexp.split(':::')
+        if(parts.length < 2){
+            return inputValue;
+        }
+
+        let re;
+        if(parts.length == 2){
+            re = new RegExp(parts[0]);
+        }else{
+            re = new RegExp(parts[0], parts[2]);
+        }
+        return inputValue.replace(re, parts[1]);
+    }
+
     var _selectionEncoders = {
         '': function(selection){
             return encodeURIComponent(selection);
@@ -43,11 +68,32 @@ function BaseActionUtils(){
                 return match;
             }
 
-            var converterNames = converters.split('|');
+            // The character "|" has special meaning in reglar expressions. If it is going
+            // to be used in an expression, a double "||" must be used as the converter separator
+            // so that we don't split on the "|" in the reqular expression.
+            // If the converters string start with a "|" we know that there was a double "||" because
+            // of the way the replace reqular expression is defined above, in this case we use the double
+            // "||" as converter separator.
+            let converterNames;
+            if(converters.startsWith('|')){
+                converterNames = converters.substr(1).split('||');
+            } else{
+                converterNames = converters.split('|');
+            }
+
             var convertedSelection = selection;
             for(var i in converterNames){
-                if(converterNames[i] in _selectionConverters){
-                    convertedSelection = _selectionConverters[converterNames[i]](convertedSelection);
+
+                var converterName = converterNames[i];
+
+                if(converterName in _selectionConverters){
+                    convertedSelection = _selectionConverters[converterName](convertedSelection);
+                } else if(converterName.startsWith('re:')){ // Special handling for reqular expressions
+                    try{
+                        convertedSelection = _regexConverter(converterName.substr(3), convertedSelection);
+                    } catch(err){
+                        console.warn("SelectionSearch: Failed to do regexp replacement. ", err.message);
+                    }
                 }
             }
 
