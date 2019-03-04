@@ -9,6 +9,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.47*
+- Added regular expression selection converter. See under "More Variables" on options page.
+- Added option to turn in-site popup blacklist into a whitelist.
+- Improved toolbar popup support for older chrome versions.
+
 *0.8.46*
 - Replace newlines in selection with spaces
 
