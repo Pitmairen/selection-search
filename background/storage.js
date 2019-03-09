@@ -1,15 +1,17 @@
 
 // Global main storage object used to store user settings
-var Storage = new DataStore(localStorage);
+var Storage = new DataStore(new MemoryKWStore());
 
 function DataStore(kwStore){
 
-    _SEARCH_ENGINES_KEY = 'searchEngines';
-    _STYLE_KEY = 'styleSheet';
-    _BUTTON_KEY = 'button'; // Used in previous versions
-    _OPTIONS_KEY = 'options';
-    _BLACKLIST_KEY = 'blacklist';
-    _SYNC_KEY = 'sync';
+    var _SEARCH_ENGINES_KEY = 'searchEngines';
+    var _STYLE_KEY = 'styleSheet';
+    var _BUTTON_KEY = 'button'; // Used in previous versions
+    var _OPTIONS_KEY = 'options';
+    var _BLACKLIST_KEY = 'blacklist';
+    var _SYNC_KEY = 'sync';
+    var _CLICK_COUNT_KEY = 'click-count';
+    var _VERSION_KEY = 'VERSION';
 
     var _defaultEngines = searchEngines = [
         {name: 'Google', url: 'http://google.com/search?q=%s'},
@@ -58,16 +60,34 @@ function DataStore(kwStore){
         sync_style: true
     };
 
+    var _storageListeners = [];
+
     var _that = this;
+
+    // Directly update the internal kw store with the 
+    // key => values provided in the data, without triggering
+    // the listeners.
+    this.setData = function(data){
+        for(let key in data){
+            kwStore[key] = data[key];
+        }
+    }
+
+    this.addListener = function(listener){
+        _storageListeners.push(listener);
+    }
+
+    this.getVersion = function(){
+        return _getValue(_VERSION_KEY);
+    }
+
+    this.getClickCount = function(){
+        return _getValue(_CLICK_COUNT_KEY, {});
+    }
 
     this.getSearchEngines = function(){
 
-        var engines =  _getValue(_SEARCH_ENGINES_KEY);
-
-        if(engines != undefined)
-            engines = JSON.parse(engines);
-        else
-            engines = [];
+        var engines =  _getValue(_SEARCH_ENGINES_KEY, []);
 
         if(engines.length == 0)
             return _defaultEngines;
@@ -82,12 +102,12 @@ function DataStore(kwStore){
     }
 
     this.getButton = function(){
-        return parseInt(_getValue(_BUTTON_KEY, 0), 10);
+        return _getValue(_BUTTON_KEY, 0);
     }
 
 
     this.getOptions = function(){
-        var options  = JSON.parse(_getValue(_OPTIONS_KEY, '{}'));
+        var options  = _getValue(_OPTIONS_KEY, {});
 
         // Before it was stored as its own value
         if(kwStore[_BUTTON_KEY] != undefined)
@@ -98,21 +118,22 @@ function DataStore(kwStore){
     }
 
     this.getBlacklistDefinitions = function(){
-        return JSON.parse(_getValue(_BLACKLIST_KEY, '[]'));
+        return _getValue(_BLACKLIST_KEY, []);
     }
 
     this.getSyncOptions = function(){
 
-        var options  = JSON.parse(_getValue(_SYNC_KEY, '{}'));
+        var options  = _getValue(_SYNC_KEY, {});
 
         return $.extend({}, _syncOptions, options);
-
     }
 
+    this.setVersion = function(version){
+        return _setValue(_VERSION_KEY, version);
+    }
 
     this.setSearchEngines = function(engines){
-        _setValue(_SEARCH_ENGINES_KEY, JSON.stringify(engines));
-
+        _setValue(_SEARCH_ENGINES_KEY, engines);
     }
 
     this.setStyle = function(style){
@@ -128,23 +149,23 @@ function DataStore(kwStore){
         if(kwStore[_BUTTON_KEY] != undefined)
             _removeValue(_BUTTON_KEY);
 
-
-        _setValue(_OPTIONS_KEY, JSON.stringify(options))
+        _setValue(_OPTIONS_KEY, options);
     }
 
     this.setBlacklistDefinitions = function(blacklist){
-        _setValue(_BLACKLIST_KEY, JSON.stringify(blacklist))
+        _setValue(_BLACKLIST_KEY, blacklist);
     }
 
     this.setSyncOptions = function(options){
-
-        _setValue(_SYNC_KEY, JSON.stringify(options))
+        _setValue(_SYNC_KEY, options);
     }
 
+    this.setClickCount = function(clickCount){
+        return _setValue(_CLICK_COUNT_KEY, clickCount);
+    }
 
     this.clear = function(style){
 
-        //localStorage.clear(); // This will clear VERSION stored in the background tab
         _that.clearStyle();
         _that.clearSearchEngines();
         _that.clearButton();
@@ -225,10 +246,18 @@ function DataStore(kwStore){
     function _setValue(key, value){
 
         kwStore[key] = value;
+
+        _storageListeners.forEach(listener => {
+            listener.valueChanged(key, value);
+        });
     }
 
     function _removeValue(key){
         kwStore.removeItem(key);
+
+        _storageListeners.forEach(listener => {
+            listener.valueRemoved(key);
+        });
     }
 
 
@@ -251,10 +280,13 @@ function DataStore(kwStore){
 
 
 
-    this.storage_upgrades = function(prev_version){
+    this.storage_upgrades = function(prev_version, import_from_localstorage){
 
         _prevVersion = prev_version;
 
+        if(import_from_localstorage === undefined || import_from_localstorage){
+            v0_8_48_load_from_localstorage();
+        }
 
         var opts = _that.getOptions();
 
@@ -277,6 +309,44 @@ function DataStore(kwStore){
         css = css.replace(/#engine-editor/g, ".engine-editor");
 
         return css;
+
+    }
+
+    function v0_8_48_load_from_localstorage(){
+        if(!_versionIsNewer('0.8.48')){
+            return;
+        }
+        else if(localStorage['IMPORTED'] === '1'){
+            // If we have already imported the data, we skip
+            return;
+        }
+
+
+        // When setting the values, the storage local syncer listern should store
+        // the values in the chrome.storage.local.
+        _setValue(_OPTIONS_KEY, JSON.parse(_getFromOldLocalStorage(_OPTIONS_KEY, '{}')));
+        _setValue(_STYLE_KEY, _getFromOldLocalStorage(_STYLE_KEY, ''));
+        _setValue(_SYNC_KEY, JSON.parse(_getFromOldLocalStorage(_SYNC_KEY, '{}')));
+
+        var engines =  _getFromOldLocalStorage(_SEARCH_ENGINES_KEY);
+
+        if(engines !== undefined){
+            engines = JSON.parse(engines);
+        }
+
+        _setValue(_SEARCH_ENGINES_KEY, engines);
+        _setValue(_BLACKLIST_KEY, JSON.parse(_getFromOldLocalStorage(_BLACKLIST_KEY, '[]')));
+        _setValue(_CLICK_COUNT_KEY, JSON.parse(_getFromOldLocalStorage(_CLICK_COUNT_KEY, '{}')));
+        _setValue(_VERSION_KEY, localStorage[_VERSION_KEY]);
+
+        localStorage['IMPORTED'] = '1';
+    }
+
+    function _getFromOldLocalStorage(key, default_value){
+        var value = localStorage[key];
+        if(value == undefined)
+            return default_value;
+        return value;
 
     }
 
@@ -454,20 +524,18 @@ function DataStore(kwStore){
 
 }
 
+// Simple key value store that implement the methods that the DataStore expects.
+function MemoryKWStore(){
+    this.removeItem = function(key){
+        delete this[key];
+    }
+}
 
 // The temp storeage is used on the options page to detect changes to the settings so that we can show
 // the save button conditionally.  It is a duplicate of the global "Storage" store, the duplicate is modified
 // when the user changes settings and then it is compared to the global storage to detect changed.
 function newTempStorageDuplicate(){
-
-    // Simple key value store that implement the methods that the DataStore expects.
-    function TempKWStore(){
-        this.removeItem = function(key){
-            delete this[key];
-        }
-    }
-
-    var tmpStore = new DataStore(new TempKWStore());
+    var tmpStore = new DataStore(new MemoryKWStore());
     Storage.copyInto(tmpStore);
     return tmpStore;
 }

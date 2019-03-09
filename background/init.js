@@ -1,15 +1,5 @@
 
-(function(){
-
-    var _previousVersion = localStorage['VERSION'];
-
-    Storage.storage_upgrades(_previousVersion);
-
-
-    // Added in version 0.1.4
-    localStorage['VERSION'] = '0.8.47';
-
-
+function initBackground(_previousVersion){
 
     function _storageUpdated(is_click_count_update){
 
@@ -61,7 +51,7 @@
     var _contextMenu = new ContextMenu(_options, _updateClickCount);
     var _iconCollection = new IconCollection();
     var _toolbarIconCollection = new IconCollection();
-    var _clickCounter = new ClickCounter();
+    var _clickCounter = new ClickCounter(Storage);
 
     _storageUpdated();
 
@@ -126,7 +116,7 @@
 
         Sync.loadStorage(Storage, items);
 
-        Storage.storage_upgrades(_previousVersion);
+        Storage.storage_upgrades(_previousVersion, false);
 
         _storageUpdated();
 
@@ -142,6 +132,32 @@
         Sync.updateStorage(Storage, changes);
 
         _storageUpdated();
+
+    });
+}
+
+(function(){
+
+    let CURRENT_VERSION = '0.8.48';
+
+    storageLocalSyncInit(Storage).then(values => {
+
+        var _previousVersion = values.VERSION;
+        var _do_localstorage_import = false;
+        if(values.VERSION === undefined){
+            _previousVersion = localStorage['VERSION'];
+            // If there was no VERSION value in the storage, we probably have to
+            // import from the old localStorage.
+            _do_localstorage_import = true;
+        }
+
+        Storage.storage_upgrades(_previousVersion, _do_localstorage_import);
+
+        // The version value was added in version 0.1.4 (stored in localStorage)
+        // Was moved to chrome.storage.local in version 0.8.48
+        Storage.setVersion(CURRENT_VERSION);
+
+        initBackground(_previousVersion);
 
     });
 

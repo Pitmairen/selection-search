@@ -7,12 +7,9 @@
  * one of them will increment the count of both.
  *
  */
-function ClickCounter(){
-
-    var STORE_KEY = 'click-count';
+function ClickCounter(storage){
 
     var clicks = {};
-
 
     this.sortEngines = function(engines){
         return _sortEnginesByClickCount(engines.slice());
@@ -50,12 +47,11 @@ function ClickCounter(){
     }
 
     function _loadFromStorage(){
-        var value = localStorage[STORE_KEY] || '{}';
-        return JSON.parse(value);
+        return storage.getClickCount()
     }
 
     function _updateStorage(){
-        localStorage[STORE_KEY] = JSON.stringify(clicks);
+        return storage.setClickCount(clicks);
     }
 
 

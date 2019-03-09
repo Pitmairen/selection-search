@@ -217,8 +217,7 @@ function loadPopupPreview(){
 }
 
 
-$(document).ready(function(){
-
+function initOptionsPage(){
 
 	$("#chrome-shortcut").on('click', function(){
 		chrome.tabs.create({'url': "chrome://extensions/shortcuts" } )
@@ -773,8 +772,9 @@ $(document).ready(function(){
 
 		if(!jQuery.isEmptyObject(to_export)){
 
-			if(localStorage.hasOwnProperty('VERSION'))
-				to_export.VERSION = localStorage['VERSION'];
+			if(Storage.getVersion() !== undefined){
+				to_export.VERSION = Storage.getVersion();
+			}
 
 			to_export = JSON.stringify(to_export);
 
@@ -1041,4 +1041,11 @@ $(document).ready(function(){
 	$(window).on('scroll', _update_save_button_state);
 	_update_save_button_state();
 
+}
+
+
+$(document).ready(function(){
+	storageLocalSyncInit(Storage).then(values => {
+		initOptionsPage();
+	});
 });

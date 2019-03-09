@@ -128,23 +128,23 @@ var Sync = new function(){
 
         if(changes.hasOwnProperty('settings') && opts.sync_settings)
         {
-            storage.setOptions(changes.settings.newValue);
+            storage.setOptions(_getNewValueOrDefault(changes.settings, {}));
         }
 
         if(changes.hasOwnProperty('blacklist') && opts.sync_settings)
         {
-            storage.setBlacklistDefinitions(changes.blacklist.newValue);
+            storage.setBlacklistDefinitions(_getNewValueOrDefault(changes.blacklist, []));
         }
 
         if(changes.hasOwnProperty('style') && opts.sync_style)
         {
-            storage.setStyle(changes.style.newValue);
+            storage.setStyle(_getNewValueOrDefault(changes.style, ''));
         }
 
         if(opts.sync_engines){
 
             if(changes.hasOwnProperty('engines')){
-                storage.setSearchEngines(_getEnginesToLoad(storage, changes.engines.newValue));
+                storage.setSearchEngines(_getEnginesToLoad(storage, _getNewValueOrDefault(changes.engines, [])));
             }
             else{
 
@@ -161,6 +161,13 @@ var Sync = new function(){
 
 
         }
+    }
+
+    function _getNewValueOrDefault(option, default_value){
+        if(option.newValue === undefined){
+            return default_value;
+        }
+        return option.newValue;
     }
 
     function _getChunkedEngines(sync_items)
@@ -215,7 +222,6 @@ var Sync = new function(){
             }
 
             Sync.loadStorage(storage, items);
-            _update_context_menu();
 
         });
 
