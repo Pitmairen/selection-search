@@ -340,6 +340,7 @@ function DataStore(kwStore){
         _setValue(_VERSION_KEY, localStorage[_VERSION_KEY]);
 
         localStorage['IMPORTED'] = '1';
+        localStorage['NO-LONGER-USED'] = 'These settings in localStorage are no longer used. They were used for older versions of the extension, and can be safely removed when using selection search version 0.8.48 or higher.';
     }
 
     function _getFromOldLocalStorage(key, default_value){
