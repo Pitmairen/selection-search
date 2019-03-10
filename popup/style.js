@@ -33,25 +33,35 @@ function Style(shadowDOM){
     var _circularStyleNode = document.createElement('style');
     var _customStyleNode = document.createElement('style');
 
+
+    // FIREFOX-BUG?: In firefox, depending on a sites Content Security Policy header, the
+    // content must be set to empty strings, before appending to the dom, 
+    // or else firefox logs warnings about blocked inline content.
+    _defaultStyleNode.textContent = '';
+    _circularStyleNode.textContent = '';
+    _customStyleNode.textContent = '';
+
     shadowDOM.appendChild(_defaultStyleNode);
     shadowDOM.appendChild(_circularStyleNode);
     shadowDOM.appendChild(_customStyleNode);
 
 
     this.setDefaultStyle = function(style){
-        _defaultStyleNode.appendChild(document.createTextNode(style));
+        // FIREFOX-BUG?: Depending on a sites Content Security Policy, the old method 
+        // of appending a text node is blocked, setting the textContent works.
+        _defaultStyleNode.textContent = style;
     }
 
     this.setCustomStyle = function(style){
         _resetCustomStyle();
-        _customStyleNode.appendChild(document.createTextNode(style));
+        _customStyleNode.textContent = style;
         _styleConfig = {};
         _parseStyleOptions(style);
     }
 
     this.setCircularStyle = function(style){
         _resetCircularStyle();
-        _circularStyleNode.appendChild(document.createTextNode(style));
+        _circularStyleNode.textContent = style;
     }
 
     this.getConfigValue = function(key){

@@ -1,12 +1,22 @@
 
 function EngineEditor(_shadowDOM){
 
-	var _editorContainer = $('<div style="display: none; position: absolute;"></div>')
-		.attr('class', 'engine-editor common');
+	// FIREFOX-BUG?: Depending on the sites Content Security Policy, the 
+	// styles that was previously set using inline style attributes when
+	// creating the element would sometimes be blocked. 
+	// Setting the style with javascript after the element has been
+	// created seems to work.
 
-	var _editor = $('<div style="display: none;"></div>');
-	var _loading = $('<div></div>');
-	var _errorMsg = $('<p style="display: none; color: #CB4345;"></p>');
+	var _editorContainer = $('<div></div>')
+		.attr('class', 'engine-editor common')
+		.css({display: 'none', position: 'absolute'});
+
+	var _editor = $('<div></div>')
+				.css({display: 'none'});
+	var _loading = $('<div></div>')
+				.css({display: 'none'});
+	var _errorMsg = $('<p></p>')
+				.css({display: 'none', color: '#CB4345'});
 
 	var _nameEdit = $('<input type="text" />');
 	var _urlEdit = $('<input type="text" />');
@@ -27,7 +37,18 @@ function EngineEditor(_shadowDOM){
 	_editor.append(_iconEdit);
 
 
-	var _titleBar = $('<h4 style="padding-left: 20px; background: url(\''+chrome.extension.getURL('img/icon16.png')+'\') no-repeat left top;"><input style="background: url(\''+chrome.extension.getURL('img/close.png')+'\') no-repeat center center;" class="close" type="button" value="" /><span class="title">Add search engine</span></h4>');
+
+	var _titleBar = $('<h4></h4>')
+		.css({
+			paddingLeft: '20px',
+			background: 'url(\''+chrome.extension.getURL('img/icon16.png')+'\') no-repeat left top'
+		})
+		.append(
+			$('<input class="close" type="button" value="" />')
+			.css({background: 'url(\''+chrome.extension.getURL('img/close.png')+'\') no-repeat center center'})
+		)
+		.append($('<span class="title">Add search engine</span>'));
+
 	_editorContainer.append(_titleBar);
 	_editorContainer.append(_editor);
 	_editorContainer.append(_loading);
