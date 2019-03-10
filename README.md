@@ -16,6 +16,10 @@ and
 - Moved data storage from localStorage to chrome.storage.local to prevent data from getting lost when clearing browser cache (Reported on firefox).
   It should not change the behaviour of the extension for the user, it should continue to work as before.
 
+Firefox specific changes in 0.8.48:
+- Fixed some issues with the inline popup not working on some sites using some special Content Security Policy values.
+
+
 *0.8.47*
 - Added regular expression selection converter. See under "More Variables" on options page.
 - Added option to turn in-site popup blacklist into a whitelist.
