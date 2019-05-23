@@ -12,6 +12,10 @@ and
 
 ## Changelog
 
+*0.8.48.1*
+- Fix bug where saving changes on options page did not work in Firefox
+
+
 *0.8.48*
 - Moved data storage from localStorage to chrome.storage.local to prevent data from getting lost when clearing browser cache (Reported on firefox).
   It should not change the behaviour of the extension for the user, it should continue to work as before.
