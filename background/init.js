@@ -85,10 +85,12 @@ function initBackground(_previousVersion){
                 _storageUpdated();
                 return;
             case "storageUpdated":
-                Sync.saveStorage(Storage);
-                _storageUpdated();
-                sendResponse({});
-                return;
+                storageLocalRefresh(Storage).then(function(){
+                    Sync.saveStorage(Storage);
+                    _storageUpdated();
+                    sendResponse({});
+                });
+                return true;
             default:
                 sendResponse({});
                 return;

@@ -42,6 +42,17 @@ function storageLocalSyncInit(storage){
     });
 }
 
+/* Reloads and updates the storage object with data from storage.local */
+function storageLocalRefresh(storage){
+    return new Promise(function(resolve, reject){
+        chrome.storage.local.get(null, (values) => {
+            storage.setData(values);
+            resolve()
+        });
+    });
+}
+
+
 // Listens on the storage object to save new values 
 // to the chrome.storage.local
 function _StorageLocalSyncer(){
