@@ -163,6 +163,12 @@ function DoubleClickActivator(_popup, _options){
 
         document.addEventListener('dblclick', function(e){
 
+            if(EventUtils.eventInInputElement(e)){
+                // Ignore doulbe click in input elements. If the "show in inputs" option is active it can be opened
+                // using the ctrl+click option.
+                return;
+            }
+
             _doubleTimer = setTimeout(function(){
 
                 _doubleTimer = null;
