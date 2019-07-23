@@ -99,7 +99,7 @@ function CopyAction(popup)
     this.onClick = function(evt, engine, anchorElement){
 
         chrome.runtime.sendMessage({
-            action:'copyToClipboard', text: popup.getSelection(),
+            action:'copyToClipboard', text: popup.getRawSelection(),
         });
 
         evt.preventDefault();
