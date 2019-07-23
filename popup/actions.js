@@ -16,7 +16,7 @@ function PopupAction()
 
 
 
-CopyAction.prototype = Object.create(PopupAction);
+DefaultAction.prototype = Object.create(PopupAction);
 
 function DefaultAction(popup, utils, options)
 {
