@@ -90,6 +90,11 @@ function ClickActivator(_popup, _options){
 
         _this.preventClickOnLinks();
 
+        document.addEventListener("scroll", function (e) {
+            if(!_this.isInCombo() && _popup.isActive()){
+                _popup.hide();
+            }
+        });
 
         document.addEventListener("mousedown", function(e){
 
@@ -208,6 +213,12 @@ function AutoActivator(_popup, _button, _options){
     var _this = this;
 
     this.setup = function(){
+
+        document.addEventListener("scroll", function (e) {
+            if(!_this.isInCombo() && _popup.isActive()){
+                _popup.hide();
+            }
+        });
 
         document.addEventListener('mousedown', function(e){
 
@@ -358,6 +369,11 @@ function KeyAndMouseActivator(_popup, _options){
                 _keys[e.which] = false;
         });
 
+        document.addEventListener("scroll", function (e) {
+            if(!_this.isInCombo() && _popup.isActive()){
+                _popup.hide();
+            }
+        });
 
         document.addEventListener('mousedown', function(e){
 
@@ -409,6 +425,12 @@ function ComboActivator(_popup, _activators){
 
 
     this.setup = function(){
+
+        document.addEventListener("scroll", function (e) {
+            if(_popup.isActive()){
+                _popup.hide();
+            }
+        });
 
         document.addEventListener('mousedown', function(e){
 
