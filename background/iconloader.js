@@ -3,6 +3,7 @@
 function IconLoader(src, onload){
 
     var _img = new Image();
+    _img.setAttribute('crossOrigin', 'anonymous'); 
 
     _img.addEventListener("error", _onError);
 
@@ -34,9 +35,12 @@ function IconLoader(src, onload){
             return IconLoader.getDefaultIcon();
         }
 
-        IconLoader._context.clearRect(0, 0, 16, 16);
-        IconLoader._context.drawImage(_img, 0, 0, 16, 16);
-        _urlCache = IconLoader._canvas.toDataURL("image/png");
+        try{
+            _urlCache = _loadIconUrl();
+        }catch(err){
+            console.warn('Failed to load icon: ', src, err.message)
+            _urlCache = IconLoader.getDefaultIcon();
+        }
         return _urlCache;
     }
 
@@ -51,6 +55,28 @@ function IconLoader(src, onload){
 
     function _reloadImage(){
         _img.src = src + "#" + new Date().getTime();
+    }
+
+    function _loadIconUrl(){
+
+        // Factor to scale the canvas by to support various display densities
+        var pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
+
+        var canvas = document.createElement("canvas");
+        canvas.width = 16 * pixelRatio;
+        canvas.height = 16 * pixelRatio;
+
+        var context = canvas.getContext("2d");
+        context.scale(pixelRatio, pixelRatio);
+        context.clearRect(0, 0, 16, 16);
+        context.drawImage(_img, 0, 0, 16, 16);
+
+        try{
+            return canvas.toDataURL("image/png");
+        }
+        finally{
+            canvas.remove();
+        }
     }
 }
 
@@ -74,15 +100,6 @@ IconLoader.getFaviconUrl = function(host){
 IconLoader.getDefaultIcon = function(){
     return chrome.extension.getURL('img/default_favicon.png');
 }
-
-// Factor to scale the canvas by to support various display densities
-var pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
-
-IconLoader._canvas = document.createElement("canvas");
-IconLoader._canvas.width = 16 * pixelRatio;
-IconLoader._canvas.height = 16 * pixelRatio;
-IconLoader._context = IconLoader._canvas.getContext("2d");
-IconLoader._context.scale(pixelRatio, pixelRatio);
 
 
 function IconCollection(){
