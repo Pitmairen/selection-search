@@ -9,6 +9,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.49*
+- Fix icons failing to loading in Chrome 76
+- Copy raw selection (preserves whitespace) when using the special COPY search engine
+- Disable double click activator in input elements
+
 *0.8.48*
 - Moved data storage from localStorage to chrome.storage.local to prevent data from getting lost when clearing browser cache (Reported on firefox).
   It should not change the behaviour of the extension for the user, it should continue to work as before.
