@@ -12,9 +12,13 @@ and
 
 ## Changelog
 
+*0.8.49*
+- Fix icons failing to loading in Chrome 76
+- Copy raw selection (preserves whitespace) when using the special COPY search engine
+- Disable double click activator in input elements
+
 *0.8.48.1*
 - Fix bug where saving changes on options page did not work in Firefox
-
 
 *0.8.48*
 - Moved data storage from localStorage to chrome.storage.local to prevent data from getting lost when clearing browser cache (Reported on firefox).

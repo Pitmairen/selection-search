@@ -9,6 +9,7 @@ function Popup(options, style){
 
     var _input = _createInputField(_popupNode);
     var _currentSelection = "";
+    var _currentRawSelection = "";
     var _active = false;
     var _listeners = [];
 
@@ -37,8 +38,8 @@ function Popup(options, style){
     /*
      * Sets the current selection
      */
-    this.setSelection = function(sel){
-        _setSelection(sel);
+    this.setSelection = function(sel, rawSelection){
+        _setSelection(sel, rawSelection);
         _input.value = sel;
     }
 
@@ -49,6 +50,12 @@ function Popup(options, style){
         return _currentSelection;
     }
 
+    /*
+     * Returns the current raw selections. Whitespace/newlines not removed.
+     */
+    this.getRawSelection = function(){
+        return _currentRawSelection;
+    }
 
     /*
      * Returns the root popup node element.
@@ -140,8 +147,13 @@ function Popup(options, style){
 
 
 
-    function _setSelection(value){
+    function _setSelection(value, rawSelection){
         _currentSelection = value;
+        if(rawSelection !== undefined){
+            _currentRawSelection = rawSelection
+        }else{
+            _currentRawSelection = value;
+        }
     }
 
     function _createIconNode(url){

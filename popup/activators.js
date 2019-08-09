@@ -1,6 +1,6 @@
 
 
-function Activator(_options){
+function Activator(_options, _popup){
 
     var _inCombo = false;
     var _this = this;
@@ -28,6 +28,10 @@ function Activator(_options){
 
     this.isInCombo = function(){
         return _inCombo;
+    }
+
+    this.updatePopupSelection = function(){
+        _popup.setSelection(_this.getSelection(), _selectionUtil.getRawSelection());
     }
 
 
@@ -69,7 +73,7 @@ ClickActivator.prototype = Object.create(Activator);
 
 function ClickActivator(_popup, _options){
 
-    Activator.call(this, _options);
+    Activator.call(this, _options, _popup);
 
     var _doubleClickTime = 0;
     var _this = this;
@@ -113,8 +117,7 @@ function ClickActivator(_popup, _options){
 
             if(in_input || _this.isPointOnSelection(e.pageX, e.pageY)){
 
-                var sel = _this.getSelection();
-                _popup.setSelection(sel)
+                _this.updatePopupSelection();
 
                 _popup.show(e.pageX, e.pageY);
 
@@ -140,7 +143,7 @@ DoubleClickActivator.prototype = Object.create(Activator);
 
 function DoubleClickActivator(_popup, _options){
 
-    Activator.call(this, _options);
+    Activator.call(this, _options, _popup);
 
     var _doubleTimer = null;
 
@@ -163,6 +166,12 @@ function DoubleClickActivator(_popup, _options){
 
         document.addEventListener('dblclick', function(e){
 
+            if(EventUtils.eventInInputElement(e)){
+                // Ignore doulbe click in input elements. If the "show in inputs" option is active it can be opened
+                // using the ctrl+click option.
+                return;
+            }
+
             _doubleTimer = setTimeout(function(){
 
                 _doubleTimer = null;
@@ -170,8 +179,7 @@ function DoubleClickActivator(_popup, _options){
                 if (!_this.hasSelection())
                     return;
 
-                var sel = _this.getSelection();
-                _popup.setSelection(sel)
+                _this.updatePopupSelection();
                 _popup.show(e.pageX, e.pageY);
 
                 e.stopPropagation();
@@ -195,7 +203,7 @@ AutoActivator.prototype = Object.create(Activator);
 
 function AutoActivator(_popup, _button, _options){
 
-    Activator.call(this, _options);
+    Activator.call(this, _options, _popup);
 
     var _lastTimer;
     var _startedInInput = false;
@@ -225,8 +233,7 @@ function AutoActivator(_popup, _button, _options){
 
                 if(_this.hasSelection() && e.button == 0){
 
-                    var sel = _this.getSelection();
-                    _popup.setSelection(sel)
+                    _this.updatePopupSelection();
                     _popup.show(e.pageX, e.pageY);
 
                     e.stopPropagation();
@@ -264,8 +271,7 @@ function AutoActivator(_popup, _button, _options){
     function _tryShow(e, relative_to_mouse){
         if (_this.hasSelection() && !_popup.isActive()){
 
-            var sel = _this.getSelection();
-            _popup.setSelection(sel);
+            _this.updatePopupSelection();
 
             var rect = _this.getSelectionRect();
 
@@ -307,7 +313,7 @@ KeyAndMouseActivator.prototype = Object.create(Activator);
 function KeyAndMouseActivator(_popup, _options){
 
 
-    Activator.call(this, _options);
+    Activator.call(this, _options, _popup);
 
     var _keys = {}; // Keybard Combo
     var _mouseButton = 0;
@@ -367,8 +373,7 @@ function KeyAndMouseActivator(_popup, _options){
             if (!_this.hasSelection() || !_is_keyboard_combo_activated() || _mouseButton != e.button)
                 return;
 
-            var sel = _this.getSelection();
-            _popup.setSelection(sel)
+            _this.updatePopupSelection();
             _popup.show(e.pageX, e.pageY);
 
             e.stopPropagation();

@@ -2,6 +2,10 @@
 
 function SelectionUtil(options){
 
+    this.getRawSelection = function(){
+        return window.getSelection().toString();
+    }
+
     this.getSelection = function(){
         let selection = window.getSelection().toString().trim();
         if (options.selection_allow_newline){

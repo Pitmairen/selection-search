@@ -16,7 +16,7 @@ function PopupAction()
 
 
 
-CopyAction.prototype = Object.create(PopupAction);
+DefaultAction.prototype = Object.create(PopupAction);
 
 function DefaultAction(popup, utils, options)
 {
@@ -99,7 +99,7 @@ function CopyAction(popup)
     this.onClick = function(evt, engine, anchorElement){
 
         chrome.runtime.sendMessage({
-            action:'copyToClipboard', text: popup.getSelection(),
+            action:'copyToClipboard', text: popup.getRawSelection(),
         });
 
         evt.preventDefault();
