@@ -209,6 +209,7 @@ function AutoActivator(_popup, _button, _options){
 
     this.setup = function(){
 
+
         document.addEventListener('mousedown', function(e){
 
 
@@ -409,6 +410,7 @@ function ComboActivator(_popup, _activators){
 
 
     this.setup = function(){
+
 
         document.addEventListener('mousedown', function(e){
 
