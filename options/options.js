@@ -307,6 +307,7 @@ function initOptionsPage(){
 		$("#opt-selection-length-limit").val(response.options.selection_length_limit).trigger('input');
 		$("#opt-auto-hide-delay").val(response.options.auto_hide_delay);
 		$("#opt-auto-open-delay").val(response.options.auto_open_delay);
+		$("#opt-hide-on-scroll").attr('checked', response.options.hide_on_scroll);
 
 		$("#opt-use-whitelist").attr('checked', response.options.use_whitelist);
 		$("#blacklist-definitions").val(response.blacklist.join('\n'));
@@ -562,6 +563,7 @@ function initOptionsPage(){
 			selection_length_limit: selection_limit,
 			auto_hide_delay: auto_hide_delay,
 			auto_open_delay: auto_open_delay,
+			hide_on_scroll: $('#opt-hide-on-scroll').is(':checked'),
 		});
 
 

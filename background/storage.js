@@ -49,6 +49,7 @@ function DataStore(kwStore){
         selection_length_limit: -1,
         auto_hide_delay: 0,
         auto_open_delay: 300,
+        hide_on_scroll: false,
         selection_allow_newline: false,
         use_whitelist: false, // If enabled, the blacklist will be used as a whitelist
     };

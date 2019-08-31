@@ -40,3 +40,13 @@ function EnableAutoHide(domNode, popupObject, hideDelay){
     domNode.addEventListener('mouseleave', _startTimer);
     _wrapShowMethod();
 }
+
+
+// Used to hide both the popup and the auto popup button on scroll
+function EnableAutoHideOnScroll(popupObject){
+    document.addEventListener("scroll", function (e) {
+        if(popupObject.isActive()){
+            popupObject.hide();
+        }
+    });
+}

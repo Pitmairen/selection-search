@@ -87,6 +87,9 @@
         if(response.options.auto_hide_delay > 0){
             EnableAutoHide(popup.getNode(), popup, response.options.auto_hide_delay);
         }
+        if(response.options.hide_on_scroll){
+            EnableAutoHideOnScroll(popup)
+        }
 
         var activator = _getActivator(response.options.activator, popup, response.options, shadowDOM);
         activator.setup();
@@ -166,6 +169,9 @@
         var button = new Button(popup, style);
         if(options.auto_hide_delay > 0){
             EnableAutoHide(button.getNode(), button, options.auto_hide_delay);
+        }
+        if(options.hide_on_scroll){
+            EnableAutoHideOnScroll(button);
         }
         var act = new AutoActivator(popup, button, options);
         dom.appendChild(button.getNode());
