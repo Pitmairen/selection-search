@@ -286,7 +286,8 @@ function initOptionsPage(){
 
 		$("#opt-disable-extractform").attr('checked', response.options.disable_formextractor);
 
-		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick);
+		$("#opt-open-on-dblclick").attr('checked', response.options.open_on_dblclick).change();
+		$("#opt-dblclick-in-inputs").attr('checked', response.options.dblclick_in_inputs);
 		$("#opt-open-new-tab-last").attr('checked', response.options.open_new_tab_last);
 
 		$("#auto_popup_relative_to_mouse").attr('checked', response.options.auto_popup_relative_to_mouse);
@@ -546,6 +547,7 @@ function initOptionsPage(){
 			hide_on_click: $("input[name='hide-on-click']").is(':checked'),
 			disable_formextractor: $('#opt-disable-extractform').is(':checked'),
 			open_on_dblclick: $('#opt-open-on-dblclick').is(':checked'),
+			dblclick_in_inputs: $('#opt-dblclick-in-inputs').is(':checked'),
 			open_new_tab_last: $('#opt-open-new-tab-last').is(':checked'),
 			disable_effects: $('#opt-disable-effects').is(':checked'),
 			show_tooltips: $('#opt-show-tooltips').is(':checked'),
@@ -756,7 +758,9 @@ function initOptionsPage(){
 
 	});
 
-
+	$('#opt-open-on-dblclick').change(function(){
+		$('#opt-dblclick-in-inputs').attr('disabled', !$(this).is(':checked'));
+	})
 
 	function _load_export(){
 

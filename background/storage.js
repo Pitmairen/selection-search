@@ -36,6 +36,7 @@ function DataStore(kwStore){
         hide_on_click: false,
         disable_formextractor: false,
         open_on_dblclick: false,
+        dblclick_in_inputs: true,
         open_new_tab_last: false,
         disable_effects: false,
         auto_popup_relative_to_mouse: false,
