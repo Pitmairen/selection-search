@@ -9,6 +9,10 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.50*
+- Reverted change in last release to disable double click activator in input elements. Added this as an option instead.
+- Added option to hide popup on document scroll event
+
 *0.8.49*
 - Fix icons failing to loading in Chrome 76
 - Copy raw selection (preserves whitespace) when using the special COPY search engine
