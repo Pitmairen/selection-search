@@ -36,6 +36,7 @@ function DataStore(kwStore){
         hide_on_click: false,
         disable_formextractor: false,
         open_on_dblclick: false,
+        dblclick_in_inputs: true,
         open_new_tab_last: false,
         disable_effects: false,
         auto_popup_relative_to_mouse: false,
@@ -48,6 +49,7 @@ function DataStore(kwStore){
         selection_length_limit: -1,
         auto_hide_delay: 0,
         auto_open_delay: 300,
+        hide_on_scroll: false,
         selection_allow_newline: false,
         use_whitelist: false, // If enabled, the blacklist will be used as a whitelist
     };

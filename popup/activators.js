@@ -166,9 +166,7 @@ function DoubleClickActivator(_popup, _options){
 
         document.addEventListener('dblclick', function(e){
 
-            if(EventUtils.eventInInputElement(e)){
-                // Ignore doulbe click in input elements. If the "show in inputs" option is active it can be opened
-                // using the ctrl+click option.
+            if(!_options.dblclick_in_inputs && EventUtils.eventInInputElement(e)){
                 return;
             }
 
@@ -210,6 +208,7 @@ function AutoActivator(_popup, _button, _options){
     var _this = this;
 
     this.setup = function(){
+
 
         document.addEventListener('mousedown', function(e){
 
@@ -411,6 +410,7 @@ function ComboActivator(_popup, _activators){
 
 
     this.setup = function(){
+
 
         document.addEventListener('mousedown', function(e){
 

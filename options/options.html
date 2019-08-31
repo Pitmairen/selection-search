@@ -340,7 +340,11 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 		<p class="info">
 		Enable this if you want the popup to open when you double click to select a word.
 		</p>
-		<p class="section-option"><label for="opt-open-on-dblclick">Open on double click:</label> <input id="opt-open-on-dblclick" type="checkbox" name="open-on-dblclick" /></p>
+		<p class="section-option">
+			<label for="opt-open-on-dblclick">Open on double click:</label> <input id="opt-open-on-dblclick" type="checkbox" name="open-on-dblclick" />
+			&nbsp;&nbsp;
+			<label for="opt-dblclick-in-inputs">Enabled in inputs/textareas:</label> <input id="opt-dblclick-in-inputs" type="checkbox" name="dblclick-in-inputs" />
+		</p>
 
 	</div>
 
@@ -377,7 +381,7 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 	</div>
 
 
-	<h4 class="subsection-heading" id="head-auto-hide-delay">Auto hide delay</h4>
+	<h4 class="subsection-heading" id="head-auto-hide-delay">Auto hide popup</h4>
 	<div class="subsection">
 		<p class="info">
 			If you set the auto hide delay to a positive number above 0 the popup will automatically be hidden
@@ -387,6 +391,9 @@ Previously opened tabs must be reloaded to show the new engines.</p>
 		<p class="section-option">
 			<label for="opt-auto-hide-delay">Auto hide Delay</label>
 			 <input id="opt-auto-hide-delay" placeholder="0 = no auto hide" type="number" name="auto-hide-delay" min="0" /> (0 = no auto hide, in milliseconds 1000 = 1 second)
+		</p>
+		<p class="section-option">
+			<label for="opt-hide-on-scroll">Hide popup on window scroll</label> <input id="opt-hide-on-scroll" type="checkbox" name="hide-on-scroll" /> (Also hides the auto activator popup button)
 		</p>
 	</div>
 
