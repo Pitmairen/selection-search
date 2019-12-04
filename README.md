@@ -9,9 +9,12 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.52:*
+- Upgraded to latest jquery version to get latest security fixes
+
+
 *0.8.51*
 - Fix issue with saving changed settings on options page
-
 
 *0.8.50*
 - Reverted change in last release to disable double click activator in input elements. Added this as an option instead.
