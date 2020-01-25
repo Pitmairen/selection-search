@@ -78,12 +78,26 @@
         {{?}}
 
 
-        {{ if(!it.en.is_submenu && !it.en.is_separator) { }}
+        {{ if(!it.en.is_separator) { }}
+
             <hr>
             <input class="open_in_incognito" id="engine-opt-open-in-incognito-{{=it.id}}" type="checkbox">
             <label for="engine-opt-open-in-incognito-{{= it.id }}">Incognito mode</label>
             <p class="separate-menus-msg">
                 The search will open in a new incognito window
+                {{ if(it.en.is_submenu) { }}
+                <p class="separate-menus-msg"><strong>(Only if you have defined a custom search url for this submenu.)</strong></p>
+                {{ } }}
+            </p>
+
+            <hr>
+            <input class="open_in_window" id="engine-opt-open-in-window-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-open-in-window-{{= it.id }}">New window</label>
+            <p class="separate-menus-msg">
+                The search will open in a new browser window
+                {{ if(it.en.is_submenu) { }}
+                <p class="separate-menus-msg"><strong>(Only if you have defined a custom search url for this submenu.)</strong></p>
+                {{ } }}
             </p>
 
             <hr>
@@ -91,6 +105,9 @@
             <label for="engine-opt-negate-newtab-option-{{= it.id }}">Negate newtab option</label>
             <p class="separate-menus-msg">
                 When this option is enabled, it will negate the global open in new tab option for this search engine.
+                {{ if(it.en.is_submenu) { }}
+                <p class="separate-menus-msg"><strong>(Only if you have defined a custom search url for this submenu.)</strong></p>
+                {{ } }}
             </p>
 
         {{ } }}

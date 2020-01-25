@@ -38,18 +38,24 @@ function DefaultAction(popup, utils, options)
     this.onClick = function(evt, engine, anchorElement){
 
         if(engine.is_submenu){
-            evt.preventDefault();
-            evt.stopPropagation();
             if(engine.openall){
+                evt.preventDefault();
+                evt.stopPropagation();
                 _clickSubmenu(engine);
+                return;
             }
-            return;
+            else if(!utils.isSubmenuWithUrl(engine)){
+                evt.preventDefault();
+                evt.stopPropagation();
+                return;
+            }
         }
-        else if(engine.url.substr(0, 11) === "javascript:")
+        
+        if(engine.url.substr(0, 11) === "javascript:")
             return;
 
 
-        if(engine.open_in_incognito){
+        if(engine.open_in_incognito || engine.open_in_window){
             _clickEngine(engine);
             evt.preventDefault();
             evt.stopPropagation();
@@ -129,7 +135,7 @@ function DomainAction(popup, utils, options)
 
     this.onClick = function(evt, engine, anchorElement){
 
-        if(engine.open_in_incognito){
+        if(engine.open_in_incognito || engine.open_in_window){
             _openUrl(engine, anchorElement.href);
             evt.preventDefault();
             evt.stopPropagation();
@@ -176,12 +182,12 @@ function MenuHider(popup, options)
 
 
 SearchCounter.prototype = Object.create(PopupAction);
-function SearchCounter(options){
+function SearchCounter(options, utils){
 
     PopupAction.call(this);
 
     this.onClick = function(evt, engine, anchorElement){
-        if(!engine.is_submenu || engine.openall){
+        if(!engine.is_submenu || engine.openall || utils.isSubmenuWithUrl(engine)){
             chrome.runtime.sendMessage({
                 action:'updateClickCount', engine: engine
             });

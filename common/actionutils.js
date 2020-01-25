@@ -14,6 +14,7 @@ function BaseActionUtils(){
         },
     }
 
+    // Old syntax. Still available for backwards compatibility
     // The regular expression converter has the following syntax:
     // re:<match>:::<replacement>:::<flags>, the flags part is optional
     // eg:
@@ -24,8 +25,26 @@ function BaseActionUtils(){
     // group.
     // ::: Is used as a separator to try to minimize the chance of clashing with
     // a value the user might use in the converter expression.
-    function _regexConverter(regexp, inputValue) {
-        let parts = regexp.split(':::')
+    function _regexConverterOld(regexp, inputValue) {
+        return _regexConverter(regexp, inputValue, ':::');
+    }
+
+    // The regular expression converter has the following syntax:
+    // re:<sep><search><sep><replacement><sep><flags>, the flags part is optional
+    // Where <sep> is a single character that separates the <search>, <replacement>
+    // and <flags> parts.
+    //
+    // The syntax is the same as the old syntax, except that the separator is dynamic,
+    // instead of being hard coded to ':::' like before.
+    // E.g:
+    // re2:/\s+/_/g   // replaces all whitespace with underscore
+    // re2:#\s+#_#g   // same, but with different separator.
+    function _regexConverterDynamic(regexp, inputValue){
+        return _regexConverter(regexp.substr(1), inputValue, regexp[0]);
+    }
+
+    function _regexConverter(regexp, inputValue, separator) {
+        let parts = regexp.split(separator)
         if(parts.length < 2){
             return inputValue;
         }
@@ -61,8 +80,13 @@ function BaseActionUtils(){
     // {%s} or with converters {%s|upper|lower}
     // {%+s} and with one or more converters {%+s|upper|lower}
     // {%(CP1251)s} and with one or more converters {%(CP1251)s|upper|lower}
+    // If the "}" character is to be used in any of the converter values it must be
+    // escaped using "\\}"
     function replaceWithConverters(url, selection){
-        return url.replace(/{%(.*?)s\|?(.*?)}/g, function(match, encoder, converters){
+
+        return url.replace(/{%(.*?)s\|?(.*?[^\\])}/g, function(match, encoder, converters){
+
+            converters = converters.replace(/\\}/g, '}');
 
             if(!(encoder in _selectionEncoders)){
                 return match;
@@ -90,7 +114,13 @@ function BaseActionUtils(){
                     convertedSelection = _selectionConverters[converterName](convertedSelection);
                 } else if(converterName.startsWith('re:')){ // Special handling for reqular expressions
                     try{
-                        convertedSelection = _regexConverter(converterName.substr(3), convertedSelection);
+                        convertedSelection = _regexConverterOld(converterName.substr(3), convertedSelection);
+                    } catch(err){
+                        console.warn("SelectionSearch: Failed to do regexp replacement. ", err.message);
+                    }
+                } else if(converterName.startsWith('replace:')){ // Imporoved reqular expressions converter
+                    try{
+                        convertedSelection = _regexConverterDynamic(converterName.substr(8), convertedSelection);
                     } catch(err){
                         console.warn("SelectionSearch: Failed to do regexp replacement. ", err.message);
                     }
@@ -190,7 +220,7 @@ function BaseActionUtils(){
     }
 
     this.createUrlWithOptions = function(engine, url){
-        return {url: url, incognito: engine.open_in_incognito};
+        return {url: url, incognito: engine.open_in_incognito, newwindow: engine.open_in_window};
     }
 
 
@@ -220,6 +250,10 @@ function BaseActionUtils(){
 		return url;
 	}
 
+
+    this.isSubmenuWithUrl = function(engine){
+        return engine.is_submenu && engine.url && engine.url !== 'Submenu';
+    }
 
     /*
      * Recursively get all the urls from the engines.
@@ -252,3 +286,5 @@ function BaseActionUtils(){
     }
 }
 
+
+console.log(new BaseActionUtils().replaceSelection('{%(RAW)s|replace:#/#!#g}', 'test/te'))

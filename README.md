@@ -12,9 +12,16 @@ and
 
 ## Changelog
 
-*0.8.52:*
-- Upgraded to latest jquery version to get latest security fixes
+*0.8.53*
+- Added option to open search in new window
+- Make it possible to add search url to the submenu root item. If a search url is added it will open when clicking the submenu root item,
+  unless the openall on click option is checked.
+- Improved replacement of bracket placeholders ({%s}). If "}" must be used inside the placeholder it can now be escaped using "\}".
+- Improved regexp placeholder replace converter. The old "re:" converter still works for backwards compatibility. The new improved
+  converter is called "replace:", and is documented under "More Variables" at the top of the options page.
 
+*0.8.52*
+- Upgraded to latest jquery version to get latest security fixes
 
 *0.8.51*
 - Fix issue with saving changed settings on options page

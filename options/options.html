@@ -91,32 +91,37 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 		<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">regular expression syntax</a>.
 	</p>
 	<p>Usage:</p>
-	<p>{%s|re:&lt;match&gt;:::&lt;replacement&gt;:::&lt;flags&gt;}</p>
+	<p>{%s|replace:/&lt;match&gt;/&lt;replacement&gt;/&lt;flags&gt;}</p>
 	<p><strong>match</strong> Regular expression to match something in the string</p>
 	<p><strong>replacement</strong> What to replace the match with. Can contain $1, $2,...,$n, values that are 
 	replaced with the corresponding regular expression match group.</p>
 	<p><strong>flags</strong> Optional, a list of regular expression flags.</p>
-	<p><strong>:::</strong> Is used as a separator between the parts to try to minimize the chance of clashing with 
-		any user defined values used in the expressions.
+	<p><strong>/</strong> is normally used as a separator in the expressions. If you need to use this character for
+		something else in the expression you can use any other character as a separator ( "|" and "}" can be problematic).
+		The first character after "replace:" is used as the separator. So {%s|replace:#/#!#g} is valid and will replace all "/" with "!".
 	</p>
 	<p>
 		The character "|", has special meaning in regular expressions. If you want to use this character in your
 		expression you have to use a double "||" as your converter separator.
 	</p>
+	<p>
+		Also if you need to use "}" in the expression, you have to use "\}" as this character is used to enclose the
+		selection placeholder.
+	</p>
 
 	<p>Examples:</p>
 	<dl>
-		<dt>{%s|re:\s+:::-:::g}</dt>
+		<dt>{%s|replace:/\s+/-/g}</dt>
 		<dd>Replaces all whitespace in the selection with "-".</dd>
-		<dt>{%s|re:\s+::::::g}</dt>
+		<dt>{%s|replace:/\s+//g}</dt>
 		<dd>Remove any whitespace in the selection.</dd>
-		<dt>{%s|re:a:::b}</dt>
+		<dt>{%s|replace:/a/b}</dt>
 		<dd>Remove first a in the selection with a b.</dd>
-		<dt>{%s|re:([\d.]+):::$$$1:::g}</dt>
+		<dt>{%s|replace:/([\d.]+)/$$$1/g}</dt>
 		<dd>Adds $ to the front of any number in the selection. A tripple $ must be used because the first two 
 			is needed to produce a literal $ in the replacement, and the last $1 is replaced with the matched number.
 		</dd>
-		<dt>{%s||re:apple|orange:::fruit:::gi}</dt>
+		<dt>{%s||replace:/apple|orange/fruit/gi}</dt>
 		<dd>Replace apple or orange with fruite, ignores case differences. Notice the use of "||" as the converter separator, because 
 			"|" is used in the replacement expression
 		</dd>
