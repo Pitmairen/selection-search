@@ -285,6 +285,3 @@ function BaseActionUtils(){
 
     }
 }
-
-
-console.log(new BaseActionUtils().replaceSelection('{%(RAW)s|replace:#/#!#g}', 'test/te'))
