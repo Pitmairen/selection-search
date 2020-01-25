@@ -9,9 +9,11 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
-*0.8.52:*
-- Upgraded to latest jquery version to get latest security fixes
+*0.8.53*
+- Added option to open search in new window
 
+*0.8.52*
+- Upgraded to latest jquery version to get latest security fixes
 
 *0.8.51*
 - Fix issue with saving changed settings on options page
