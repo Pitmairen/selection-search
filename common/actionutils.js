@@ -190,7 +190,7 @@ function BaseActionUtils(){
     }
 
     this.createUrlWithOptions = function(engine, url){
-        return {url: url, incognito: engine.open_in_incognito};
+        return {url: url, incognito: engine.open_in_incognito, newwindow: engine.open_in_window};
     }
 
 

@@ -49,7 +49,7 @@ function DefaultAction(popup, utils, options)
             return;
 
 
-        if(engine.open_in_incognito){
+        if(engine.open_in_incognito || engine.open_in_window){
             _clickEngine(engine);
             evt.preventDefault();
             evt.stopPropagation();
@@ -129,7 +129,7 @@ function DomainAction(popup, utils, options)
 
     this.onClick = function(evt, engine, anchorElement){
 
-        if(engine.open_in_incognito){
+        if(engine.open_in_incognito || engine.open_in_window){
             _openUrl(engine, anchorElement.href);
             evt.preventDefault();
             evt.stopPropagation();

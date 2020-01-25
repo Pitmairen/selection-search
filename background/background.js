@@ -25,7 +25,7 @@ function openAllUrls(request, sendResponse, parent_tab){
         urls = request.urlsWithOptions;
     }else{
         urls = request.urls.map(function(url){
-            return {url: url, incognito: false};
+            return {url: url, incognito: false, newwindow: false};
         });
     }
 
@@ -41,6 +41,11 @@ function openAllUrls(request, sendResponse, parent_tab){
             chrome.windows.create({
                 'url' : urls[i].url,
                 'incognito' : true
+            });
+            continue;
+        } else if(urls[i].newwindow){
+            chrome.windows.create({
+                'url' : urls[i].url,
             });
             continue;
         }

@@ -87,6 +87,13 @@
             </p>
 
             <hr>
+            <input class="open_in_window" id="engine-opt-open-in-window-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-open-in-window-{{= it.id }}">New window</label>
+            <p class="separate-menus-msg">
+                The search will open in a new browser window
+            </p>
+
+            <hr>
             <input class="negate_newtab_option" id="engine-opt-negate-newtab-option-{{=it.id}}" type="checkbox">
             <label for="engine-opt-negate-newtab-option-{{= it.id }}">Negate newtab option</label>
             <p class="separate-menus-msg">
