@@ -221,6 +221,10 @@ function BaseActionUtils(){
 	}
 
 
+    this.isSubmenuWithUrl = function(engine){
+        return engine.is_submenu && engine.url && engine.url !== 'Submenu';
+    }
+
     /*
      * Recursively get all the urls from the engines.
      */

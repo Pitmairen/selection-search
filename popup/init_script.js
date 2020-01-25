@@ -77,7 +77,7 @@
         actions.addAction("%s", new DomainAction(popup, utils, response.options));
 
         if(response.options.sort_by_click){
-            popup.addActionListener(new SearchCounter(response.options));
+            popup.addActionListener(new SearchCounter(response.options, utils));
         }
         popup.addActionListener(new MenuHider(popup, response.options));
         popup.addActionListener(actions);

@@ -38,14 +38,20 @@ function DefaultAction(popup, utils, options)
     this.onClick = function(evt, engine, anchorElement){
 
         if(engine.is_submenu){
-            evt.preventDefault();
-            evt.stopPropagation();
             if(engine.openall){
+                evt.preventDefault();
+                evt.stopPropagation();
                 _clickSubmenu(engine);
+                return;
             }
-            return;
+            else if(!utils.isSubmenuWithUrl(engine)){
+                evt.preventDefault();
+                evt.stopPropagation();
+                return;
+            }
         }
-        else if(engine.url.substr(0, 11) === "javascript:")
+        
+        if(engine.url.substr(0, 11) === "javascript:")
             return;
 
 
@@ -176,12 +182,12 @@ function MenuHider(popup, options)
 
 
 SearchCounter.prototype = Object.create(PopupAction);
-function SearchCounter(options){
+function SearchCounter(options, utils){
 
     PopupAction.call(this);
 
     this.onClick = function(evt, engine, anchorElement){
-        if(!engine.is_submenu || engine.openall){
+        if(!engine.is_submenu || engine.openall || utils.isSubmenuWithUrl(engine)){
             chrome.runtime.sendMessage({
                 action:'updateClickCount', engine: engine
             });

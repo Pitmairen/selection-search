@@ -82,9 +82,14 @@ function SearchEngineHotKeys(searchEngines, options, utils){
 
     function _onEngineHotKey(engine){
 
-        if(engine.is_submenu && engine.openall){
-            utils.openAllInSubmenu(engine, selectionUtil.getSelection());
-            return;
+        if(engine.is_submenu){
+            if(engine.openall){
+                utils.openAllInSubmenu(engine, selectionUtil.getSelection());
+            }
+
+            if(!utils.isSubmenuWithUrl(engine)){
+                return;
+            }
         }
 
         utils.openEngine(engine, selectionUtil.getSelection());

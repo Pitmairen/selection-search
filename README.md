@@ -11,6 +11,8 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 *0.8.53*
 - Added option to open search in new window
+- Make it possible to add search url to the submenu root item. If a search url is added it will open when clicking the submenu root item,
+  unless the openall on click option is checked.
 
 *0.8.52*
 - Upgraded to latest jquery version to get latest security fixes

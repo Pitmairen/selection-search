@@ -201,7 +201,7 @@ function _loadIcons(iconCollection, engines, skipCheck){
             iconCollection.addURL(en.icon_url);
         else if(en.is_separator)
             continue;
-        else if(en.is_submenu)
+        else if(en.is_submenu && (!en.url || en.url === "Submenu"))
             iconCollection.addURL(chrome.extension.getURL('img/folder.png'));
         else if(en.url == 'COPY')
             iconCollection.addURL(chrome.extension.getURL('img/copy.png'));
