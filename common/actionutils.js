@@ -14,6 +14,7 @@ function BaseActionUtils(){
         },
     }
 
+    // Old syntax. Still available for backwards compatibility
     // The regular expression converter has the following syntax:
     // re:<match>:::<replacement>:::<flags>, the flags part is optional
     // eg:
@@ -24,8 +25,26 @@ function BaseActionUtils(){
     // group.
     // ::: Is used as a separator to try to minimize the chance of clashing with
     // a value the user might use in the converter expression.
-    function _regexConverter(regexp, inputValue) {
-        let parts = regexp.split(':::')
+    function _regexConverterOld(regexp, inputValue) {
+        return _regexConverter(regexp, inputValue, ':::');
+    }
+
+    // The regular expression converter has the following syntax:
+    // re:<sep><search><sep><replacement><sep><flags>, the flags part is optional
+    // Where <sep> is a single character that separates the <search>, <replacement>
+    // and <flags> parts.
+    //
+    // The syntax is the same as the old syntax, except that the separator is dynamic,
+    // instead of being hard coded to ':::' like before.
+    // E.g:
+    // re2:/\s+/_/g   // replaces all whitespace with underscore
+    // re2:#\s+#_#g   // same, but with different separator.
+    function _regexConverterDynamic(regexp, inputValue){
+        return _regexConverter(regexp.substr(1), inputValue, regexp[0]);
+    }
+
+    function _regexConverter(regexp, inputValue, separator) {
+        let parts = regexp.split(separator)
         if(parts.length < 2){
             return inputValue;
         }
@@ -95,7 +114,13 @@ function BaseActionUtils(){
                     convertedSelection = _selectionConverters[converterName](convertedSelection);
                 } else if(converterName.startsWith('re:')){ // Special handling for reqular expressions
                     try{
-                        convertedSelection = _regexConverter(converterName.substr(3), convertedSelection);
+                        convertedSelection = _regexConverterOld(converterName.substr(3), convertedSelection);
+                    } catch(err){
+                        console.warn("SelectionSearch: Failed to do regexp replacement. ", err.message);
+                    }
+                } else if(converterName.startsWith('replace:')){ // Imporoved reqular expressions converter
+                    try{
+                        convertedSelection = _regexConverterDynamic(converterName.substr(8), convertedSelection);
                     } catch(err){
                         console.warn("SelectionSearch: Failed to do regexp replacement. ", err.message);
                     }
@@ -261,3 +286,5 @@ function BaseActionUtils(){
     }
 }
 
+
+console.log(new BaseActionUtils().replaceSelection('{%(RAW)s|replace:#/#!#g}', 'test/te'))
