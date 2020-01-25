@@ -84,7 +84,6 @@ function SearchEngineHotKeys(searchEngines, options, utils){
 
         if(engine.is_submenu && engine.openall){
             utils.openAllInSubmenu(engine, selectionUtil.getSelection());
-            _clickSubmenu(engine);
             return;
         }
 
