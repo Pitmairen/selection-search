@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.54*
+- Revert escape feature (\}) added in previous release. This broke some search placeholders.
+
 *0.8.53*
 - Added option to open search in new window
 - Make it possible to add search url to the submenu root item. If a search url is added it will open when clicking the submenu root item,
