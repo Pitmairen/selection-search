@@ -81,12 +81,10 @@ function BaseActionUtils(){
     // {%+s} and with one or more converters {%+s|upper|lower}
     // {%(CP1251)s} and with one or more converters {%(CP1251)s|upper|lower}
     // If the "}" character is to be used in any of the converter values it must be
-    // escaped using "\\}"
+    // escaped using "\\} (currently not working)"
     function replaceWithConverters(url, selection){
 
-        return url.replace(/{%(.*?)s\|?(.*?[^\\])}/g, function(match, encoder, converters){
-
-            converters = converters.replace(/\\}/g, '}');
+        return url.replace(/{%(.*?)s\|?(.*?)}/g, function(match, encoder, converters){
 
             if(!(encoder in _selectionEncoders)){
                 return match;
