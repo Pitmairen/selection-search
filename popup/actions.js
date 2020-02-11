@@ -69,8 +69,10 @@ function DefaultAction(popup, utils, options)
                 evt.preventDefault();
                 evt.stopPropagation();
             }
-            else
+            else{
                 anchorElement.target = "_blank";
+                anchorElement.rel = "noopener noreferrer";
+            }
         }
 
     }
