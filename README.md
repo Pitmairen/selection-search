@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.55*
+- Possible fix for freezing tabs for searches opened in new foreground tab
+
 *0.8.54*
 - Revert escape feature (\}) added in previous release. This broke some search placeholders.
 
