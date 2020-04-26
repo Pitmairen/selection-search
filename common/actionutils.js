@@ -200,15 +200,20 @@ function BaseActionUtils(){
         var url = _this.replaceSelection(engine.url, selection);
         url = _this.replaceVariables(url);
 
-        if(engine.post === true)
+        if(engine.post === true){
             return _this.createPostUrl(url, selection);
-
+        }else if(engine.url.indexOf('{SPECIALENCODING}') !== -1){
+            return _this.createSpecialEncodingUrl(url);
+        }
         return url;
     }
 
-    this.createPostUrl = function(url, selection){
-
+    this.createPostUrl = function(url){
         return chrome.extension.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
+    }
+
+    this.createSpecialEncodingUrl = function(url){
+        return chrome.extension.getURL('old/encoding-search.html') + '?url='+encodeURIComponent(url);
     }
 
 
