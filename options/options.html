@@ -73,7 +73,25 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 
 	<dt>{%(CP1251)s}</dt>
         <dd>Using <strong>{%(CP1251)s}</strong> as a placeholder will encode the selection with CP1251/cyrillic encoding. This is used by some russian sites. <br><br>
-        For searches using <strong>POST</strong> method you should <strong>not</strong> use the {%(CP1251)s} placeholder, instead append the following to the search url <strong>{POSTENCODING}CP1251</strong>.<br> Example: http://example.com/search/{POSTARGS}q=%s&type=123{POSTENCODING}CP1251</dd>
+		For searches using <strong>POST</strong> method you should <strong>not</strong> use the {%(CP1251)s} placeholder, instead append the following to the search url <strong>{POSTENCODING}CP1251</strong>.<br> Example: http://example.com/search/{POSTARGS}q=%s&type=123{POSTENCODING}CP1251</dd>
+    <dt>{SPECIALENCODING}</dt>
+        <dd>
+			<p>
+			Some web sites require the selected text to be encoded in an encoding other the default UTF-8 encoding.
+			This is often the case for Asian and Russian sites.
+			</p>
+			<p>
+			If your search does not work correctly and the 
+			searched text ends up with weird/scrambled characters, you can try to append {SPECIALENCODING} to the 
+			end of the search url.<br>
+			http://example.com/search?q=%s{SPECIALENCODING}
+			</p>
+			<p>
+			This may be enough to make the search work. If it still does not work, you can specify the excact encoding
+			like so:<br>
+			http://example.com/search?q=%s{SPECIALENCODING}EUC-KR
+			 </p>
+	</dd>
 </dl>
 <strong>Converters:</strong>
     <p>Converters can be used to transform the selection before it is inserted into the url. They work with the {%s}, {%+s} and {%(CP1251)s} placeholders.</p>

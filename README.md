@@ -12,6 +12,10 @@ and
 
 ## Changelog
 
+*0.8.56*
+- Added special search engine marker for sites requiring encodings other than UTF-8. Simply append {SPECIALENCODING} to the end
+  of the search engine url. This enables the feature and the browser should be able to auto detect the correct encoding.
+
 *0.8.55*
 - Possible fix for freezing tabs for searches opened in new foreground tab
 
