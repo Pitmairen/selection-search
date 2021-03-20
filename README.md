@@ -12,6 +12,10 @@ and
 
 ## Changelog
 
+*0.8.57*
+- Fix mycroft integration.
+- Add an additional source for serach engine icons that is used if the default source does not have an icon.
+
 *0.8.56*
 - Added special search engine marker for sites requiring encodings other than UTF-8. Simply append {SPECIALENCODING} to the end
   of the search engine url. This enables the feature and the browser should be able to auto detect the correct encoding.
