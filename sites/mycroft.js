@@ -40,58 +40,49 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 });
 
 
+var foundOpenSearchEngines = false;
 
+$("a[href^='/install.html']").each(function(){
 
-$('a[onClick^=addOpenSearch]').each(function(){
+	var installUrl = $(this).attr('href');
 
-	var adder = $(this).attr('onclick').toString();
+	var match = installUrl.match(/id=(\d+)/i);
 
-	var match = adder.match(/'(.*?)'/gi);
-
-	var params = null;
+	var searchId = null;
 	if(match){
-		params = $.map(match, function(m){
-			return m.slice(1, -1);
-		});
+		searchId = match[1]
 	}
 
-	if(!params || params.length != 5 || (params[4] != 'g' && params[4] != 'p')){
-
-		// Add a placeholder for the image so the alignment look good
-		$(this).before('<span style="display: inline-block; width: 16px; height: 16px; margin: 0 8px;"></span>');
-
+	if(!searchId){
 		return true;
 	}
-
 
 
 	$(this).before(
 		$('<a href="#"></a>').append(
 			$('<img class="icon" alt="Add to Firefox Selection Search" title="Add to Firefox Selection Search" />').attr('src', chrome.extension.getURL('img/icon16.png')).css({
-				'margin' : '0 8px',
-				'width' : '16px', 'hwight' : '16px',
+				'margin' : '0 8px 0 3px',
+				'width' : '16px', 'height' : '16px',
 			})
 		).click(function(e){
 
 			engineEditor.show(e.pageX, e.pageY-50);
 
-
-			loadOpenSearch(engineEditor, "https://mycroftproject.com/installos.php/" + params[3] + "/" + params[0] + ".xml");
+			loadOpenSearch(engineEditor, "https://mycroftproject.com/installos.php/" + searchId + "/opensearch.xml");
 			return false;
 		})
 	);
+
+	foundOpenSearchEngines = true;
 });
 
 
-$('a[onClick^=addEngine]').each(function(){
-
-	$(this).before('<span style="display: inline-block; width: 16px; height: 16px; margin: 0 8px;"></span>');
-});
-
-$('table.altrowgw:last tr:first-child').after(
-	$('<tr><td><img class="icon" title="Firefox Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('img/icon16.png')+'" />'+
-	' Add search engine to the Firefox <a href="https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/">Selection Search</a> extension.</td></tr>')
-);
+if(foundOpenSearchEngines){
+	$('table.altrowgw:last tr:first-child').after(
+		$('<tr><td><img class="icon" title="Firefox Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('img/icon16.png')+'" />'+
+		' Add search engine to the Firefox <a href="https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/">Selection Search</a> extension.</td></tr>')
+	);
+}
 
 
 })();

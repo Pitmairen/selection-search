@@ -141,10 +141,10 @@ function getCurrentDomainIcon(iconCollection, sendResponse, tab){
     resp.indexes = iconCollection.getCurrentDomainIndexes();
 
     if(resp.indexes.length > 0){
-        IconLoader.loadCurrentDomainIcon(tab, function(icon){
-            resp.icon = icon.getDataURL();
+        IconLoader.loadCurrentDomainIcon(tab).then(function(iconUrl){
+            resp.icon = iconUrl
             sendResponse(resp);
-        });
+        })
         return true;
     }else{
         sendResponse(resp);
