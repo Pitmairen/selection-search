@@ -53,13 +53,17 @@ var Positioning = new function(){
         var diffConfig = _getDiffConfig(style, node);
 
         // How much to repositon the menu
-        var diffY = null;
-        var diffX = null;
-
+        var diffY = 0;
+        var diffX = 0;
 
         if (pos.bottom > bounds.bottom) // Goes outside on the bottom
             diffY = _calculateDiff(pos.bottom, bounds.bottom, diffConfig.bottom)
-        else if (pos.top < bounds.top) // Goes outside on the top
+
+        // We also have to consider any diffY added if the menu moves outside the bottom,
+        // if not the diff added by the bottom diff may move the menu outside of the top
+        // of the browser window and cause the top of the menu to become unreachable,
+        // if the menu is large enough.
+        if ((pos.top + diffY) < bounds.top) // Goes outside on the top.
             diffY = _calculateDiff(pos.top, bounds.top, diffConfig.top)
 
 
@@ -70,9 +74,9 @@ var Positioning = new function(){
 
 
         // Reposition the menu
-        if(diffY !== null)
+        if(diffY !== 0)
            node.style.top = parseInt(node.style.top) + diffY + "px";
-        if(diffX !== null)
+        if(diffX !== 0)
            node.style.left = parseInt(node.style.left) + diffX + "px";
 
     }
