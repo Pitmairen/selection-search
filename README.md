@@ -9,6 +9,9 @@ https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichn
 
 ## Changelog
 
+*0.8.58*
+- Fix issue where the popup could be partially positioned outside the top of the browser window and become unreachable. Mostly an issue for very large popup menus with many search engines.
+
 *0.8.57*
 - Fix mycroft integration.
 - Add an additional source for serach engine icons that is used if the default source does not have an icon.
