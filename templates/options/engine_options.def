@@ -101,6 +101,13 @@
             </p>
 
             <hr>
+            <input class="open_in_popup" id="engine-opt-open-in-popup-{{=it.id}}" type="checkbox">
+            <label for="engine-opt-open-in-popup-{{= it.id }}">Use popup window</label>
+            <p class="separate-menus-msg">
+                The new window will be a small popup window. (Only have effects if "new window" or "incognito mode" is enabled)
+            </p>
+
+            <hr>
             <input class="negate_newtab_option" id="engine-opt-negate-newtab-option-{{=it.id}}" type="checkbox">
             <label for="engine-opt-negate-newtab-option-{{= it.id }}">Negate newtab option</label>
             <p class="separate-menus-msg">

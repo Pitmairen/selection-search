@@ -38,15 +38,34 @@ function openAllUrls(request, sendResponse, parent_tab){
         }
 
         if(urls[i].incognito){
-            chrome.windows.create({
-                'url' : urls[i].url,
-                'incognito' : true
-            });
+            if(urls[i].popupwindow){
+                chrome.windows.create({
+                    'url' : urls[i].url,
+                    'type': 'popup',
+                    'incognito' : true,
+                    'width': 600,
+                    'height': 600,
+                });
+            }else{
+                chrome.windows.create({
+                    'url' : urls[i].url,
+                    'incognito' : true
+                });
+            }
             continue;
         } else if(urls[i].newwindow){
-            chrome.windows.create({
-                'url' : urls[i].url,
-            });
+            if(urls[i].popupwindow){
+                chrome.windows.create({
+                    'url' : urls[i].url,
+                    'type': 'popup',
+                    'width': 600,
+                    'height': 600,
+                });
+            }else{
+                chrome.windows.create({
+                    'url' : urls[i].url,
+                });
+            }
             continue;
         }
 

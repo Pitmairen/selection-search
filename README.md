@@ -12,6 +12,9 @@ and
 
 ## Changelog
 
+*0.8.59*
+- Add option to open seaches in a small popup window
+
 *0.8.58*
 - Fix issue where the popup could be partially positioned outside the top of the browser window and become unreachable. Mostly an issue for very large popup menus with many search engines.
 
