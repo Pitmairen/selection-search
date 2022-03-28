@@ -139,6 +139,7 @@ function _addEngineOptions(en, el){
     opts.find('.hide_on_click').attr('checked', Boolean(en.hide_on_click));
     opts.find('.open_in_incognito').attr('checked', Boolean(en.open_in_incognito));
     opts.find('.open_in_window').attr('checked', Boolean(en.open_in_window));
+    opts.find('.open_in_popup').attr('checked', Boolean(en.open_in_popup));
 
 	if(en.background_tab === undefined){
 		opts.find('.background_global').attr('checked', true);
@@ -448,8 +449,13 @@ function initOptionsPage(){
 			if(!en.open_in_incognito)
 				delete en.open_in_incognito;
 
-			if(!en.open_in_window)
+			if(!en.open_in_window){
 				delete en.open_in_window;
+			}
+
+			if(!en.open_in_popup){
+				delete en.open_in_popup;
+			}
 
 			if(en.background_global !== undefined){
 				if(en.background_global)
