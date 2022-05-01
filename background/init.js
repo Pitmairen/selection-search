@@ -101,28 +101,32 @@ function initBackground(_previousVersion){
     });
 
 
-    chrome.storage.sync.get(null, function(items){
+    if (Storage.isSyncEnabled()){
 
-        if (BrowserSupport.hasLastError()) {
+        chrome.storage.sync.get(null, function(items){
 
-            chrome.notifications.create({
-                type: 'basic',
-                iconUrl: '/img/icon48.png',
-                title: 'Synchronization Error',
-                message: 'Failed to load synced settings ('+chrome.runtime.lastError['message']+')'
-            });
+            if (BrowserSupport.hasLastError()) {
+
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: '/img/icon48.png',
+                    title: 'Synchronization Error',
+                    message: 'Failed to load synced settings ('+chrome.runtime.lastError['message']+')'
+                });
+
+                _storageUpdated();
+                return;
+            }
+
+            Sync.loadStorage(Storage, items);
+
+            Storage.storage_upgrades(_previousVersion, false);
 
             _storageUpdated();
-            return;
-        }
 
-        Sync.loadStorage(Storage, items);
+        });
 
-        Storage.storage_upgrades(_previousVersion, false);
-
-        _storageUpdated();
-
-    });
+    }
 
 
 
