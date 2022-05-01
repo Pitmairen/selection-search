@@ -130,6 +130,12 @@ function DataStore(kwStore){
         return $.extend({}, _syncOptions, options);
     }
 
+    this.isSyncEnabled = function(){
+        var opts = _that.getSyncOptions()
+        return opts.sync_engines || opts.sync_settings || opts.sync_style;
+    }
+
+
     this.setVersion = function(version){
         return _setValue(_VERSION_KEY, version);
     }
