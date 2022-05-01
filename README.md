@@ -12,6 +12,9 @@ and
 
 ## Changelog
 
+*0.8.60*
+- Don't try to load settings from sync storage if sync is disabled in settings, this could fail in some special cases.
+
 *0.8.59*
 - Add option to open seaches in a small popup window
 
