@@ -3,8 +3,8 @@
 This is the code for the [Selection Search](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe) chrome extension.
 
 
-https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
-
+* https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
+* https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/
 
 
 ## Changelog
