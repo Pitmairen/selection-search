@@ -81,8 +81,8 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 			This is often the case for Asian and Russian sites.
 			</p>
 			<p>
-			If your search does not work correctly and the 
-			searched text ends up with weird/scrambled characters, you can try to append {SPECIALENCODING} to the 
+			If your search does not work correctly and the
+			searched text ends up with weird/scrambled characters, you can try to append {SPECIALENCODING} to the
 			end of the search url.<br>
 			http://example.com/search?q=%s{SPECIALENCODING}
 			</p>
@@ -102,16 +102,16 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
         <dt>{%s|lower} or {%+s|lower} or {%(CP1251)s|lower}</dt>
 		<dd>Using the <strong>lower</strong> converter will convert the selection to all lower case letters. (My Selection =&gt; my selection)</dd>
 	</dl>
-	
+
 	<p><strong>Advanced replacement converter:</strong></p>
 	<p>This converter uses regular expressions</a> to allow user defined replacements on the selection.
-	The regular expression syntax uses the standard javascript 
+	The regular expression syntax uses the standard javascript
 		<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">regular expression syntax</a>.
 	</p>
 	<p>Usage:</p>
 	<p>{%s|replace:/&lt;match&gt;/&lt;replacement&gt;/&lt;flags&gt;}</p>
 	<p><strong>match</strong> Regular expression to match something in the string</p>
-	<p><strong>replacement</strong> What to replace the match with. Can contain $1, $2,...,$n, values that are 
+	<p><strong>replacement</strong> What to replace the match with. Can contain $1, $2,...,$n, values that are
 	replaced with the corresponding regular expression match group.</p>
 	<p><strong>flags</strong> Optional, a list of regular expression flags.</p>
 	<p><strong>/</strong> is normally used as a separator in the expressions. If you need to use this character for
@@ -136,11 +136,11 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 		<dt>{%s|replace:/a/b}</dt>
 		<dd>Remove first a in the selection with a b.</dd>
 		<dt>{%s|replace:/([\d.]+)/$$$1/g}</dt>
-		<dd>Adds $ to the front of any number in the selection. A tripple $ must be used because the first two 
+		<dd>Adds $ to the front of any number in the selection. A tripple $ must be used because the first two
 			is needed to produce a literal $ in the replacement, and the last $1 is replaced with the matched number.
 		</dd>
 		<dt>{%s||replace:/apple|orange/fruit/gi}</dt>
-		<dd>Replace apple or orange with fruite, ignores case differences. Notice the use of "||" as the converter separator, because 
+		<dd>Replace apple or orange with fruite, ignores case differences. Notice the use of "||" as the converter separator, because
 			"|" is used in the replacement expression
 		</dd>
 	</dl>
@@ -449,6 +449,10 @@ www.example.com/test
 			<input id="opt-use-whitelist" type="checkbox" name="use-whitelist" />
 			<span class="separate-menus-msg">(When enabled the list will be used as a whitelist, i.e the popup will only load on matched sites. The list must be non-empty for this option to take effect.)</span>
 		</p>
+		<p class="section-option"><label for="opt-use-blacklist-for-hotkeys">Use for hotkeys</label>
+			<input id="opt-use-blacklist-for-hotkeys" type="checkbox" name="use-for-hotkeys" />
+			<span class="separate-menus-msg">(When enabled the blacklist/whitelist will also affect the search engine hotkeys)</span>
+		</p>
         <textarea id="blacklist-definitions" rows="8" placeholder="For example: www.example.com"></textarea>
 
 	</div>
@@ -547,8 +551,8 @@ www.example.com/test
 
 <p class="section-option"><label for="opt-sort-by-click">Sort engines by usage count</label><input id="opt-sort-by-click" type="checkbox" />(The engines will be sorted by usage count so that the most used search engines will be placed first in the menu.)</p>
 
-<p class="section-option"><label for="opt-selection-allow-newline">Allow newline / linebreak in selection</label><input id="opt-selection-allow-newline" type="checkbox" /> 
-		(Allow the inline popup and toolbar popup to open when the selection contains newline / linebreak characters. 
+<p class="section-option"><label for="opt-selection-allow-newline">Allow newline / linebreak in selection</label><input id="opt-selection-allow-newline" type="checkbox" />
+		(Allow the inline popup and toolbar popup to open when the selection contains newline / linebreak characters.
 		<i>May sometimes cause the popup to open when it is not supposed to.</i>
 		Only affects the inline popup / toolbar popup.)
 </p>

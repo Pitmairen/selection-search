@@ -52,6 +52,7 @@ function DataStore(kwStore){
         hide_on_scroll: false,
         selection_allow_newline: false,
         use_whitelist: false, // If enabled, the blacklist will be used as a whitelist
+        use_blacklist_for_hotkeys: true, // If enabled the blacklist will also affect the search engine hotkeys
     };
 
     var _blacklist = [];
@@ -66,7 +67,7 @@ function DataStore(kwStore){
 
     var _that = this;
 
-    // Directly update the internal kw store with the 
+    // Directly update the internal kw store with the
     // key => values provided in the data, without triggering
     // the listeners.
     this.setData = function(data){

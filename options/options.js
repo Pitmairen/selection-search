@@ -313,7 +313,7 @@ function initOptionsPage(){
 
 		$("#opt-use-whitelist").attr('checked', response.options.use_whitelist);
 		$("#blacklist-definitions").val(response.blacklist.join('\n'));
-
+		$("#opt-use-blacklist-for-hotkeys").attr('checked', response.options.use_blacklist_for_hotkeys);
 
         // set activator combo
         for(var i in response.options.activator_combo){
@@ -574,6 +574,7 @@ function initOptionsPage(){
 			auto_hide_delay: auto_hide_delay,
 			auto_open_delay: auto_open_delay,
 			hide_on_scroll: $('#opt-hide-on-scroll').is(':checked'),
+			use_blacklist_for_hotkeys: $('#opt-use-blacklist-for-hotkeys').is(':checked'),
 		});
 
 
