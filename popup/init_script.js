@@ -31,7 +31,7 @@
 
         var utils = new PopupActionUtils();
 
-        SearchEngineHotKeys(response.engines, response.options, utils);
+        let popupDisabled = false
 
         if(response.blacklist !== undefined){
 
@@ -40,12 +40,25 @@
             if(response.options.use_whitelist && !blacklistMatch){
                 // We use the blacklist as a whitelist and skip the popup
                 // if the blacklist does not match the current url
-                return;
+                popupDisabled = true
             }
             else if(!response.options.use_whitelist && blacklistMatch){
-                return; // Blacklist match, disable the popup
+                popupDisabled = true
             }
         }
+
+
+        if (popupDisabled){
+            if(!response.options.use_blacklist_for_hotkeys){
+                // The popup is disabled by the blacklist. Still enable the hotkeys if the
+                // hotkeys are not using the blacklist.
+                SearchEngineHotKeys(response.engines, response.options, utils);
+            }
+            return
+        }
+
+        SearchEngineHotKeys(response.engines, response.options, utils);
+
 
         if(!response.options.disable_formextractor){
             var engineEditor = new EngineEditor(shadowDOM);

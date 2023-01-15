@@ -1,5 +1,6 @@
 # Selection Search
 
+
 This is the code for the Selection Search extension for
 [Chrome](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe)
 and
@@ -11,6 +12,10 @@ and
 
 
 ## Changelog
+
+*0.8.61*
+- Added option to enable the search engine popup blacklist/whitelist to also affect the search engine hotkeys.
+  The options is located under Popup menu -> Advanced -> Blacklist/whitelist.
 
 *0.8.60*
 - Don't try to load settings from sync storage if sync is disabled in settings, this could fail in some special cases.
