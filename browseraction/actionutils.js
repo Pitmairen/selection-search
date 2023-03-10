@@ -48,6 +48,8 @@ function ToolbarMenuActionUtils(){
 
         var origin = urlParts.scheme + "://" + host;
 
+        _urlVariables.push([/%PAGE_ORIGIN_NO_ENCODING/g, origin]); // no urlencoding
+
         _urlVariables.push([/%PAGE_HOST/g, encodeURIComponent(host)]);
         _urlVariables.push([/%PAGE_URL/g, encodeURIComponent(pageUrl)]);
         _urlVariables.push([/%PAGE_ORIGIN/g, encodeURIComponent(origin)]);
