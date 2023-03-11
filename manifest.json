@@ -1,20 +1,15 @@
 {
     "name": "Selection Search",
-    "version": "0.8.61",
-    "manifest_version" : 2,
-
+    "version": "0.8.62",
+    "manifest_version": 2,
     "description": "Search for the selected text in search engines",
-
     "minimum_chrome_version": "35",
-
     "icons": {
         "16": "img/icon16.png",
         "48": "img/icon48.png",
         "128": "img/icon128.png"
     },
-
     "options_page": "options/options.html",
-
     "background": {
         "page" : "background/background.html",
         "persistent" : true
