@@ -12,7 +12,7 @@ and
 
 *0.8.62*
 
-- Added parameter %PAGE_ORIGIN_NO_ENCODING to allow whole origin without encoding
+- Added search-url variable %PAGE_ORIGIN_NO_ENCODING, same as %PAGE_ORIGIN, but without URL encoding
 
 *0.8.61*
 
