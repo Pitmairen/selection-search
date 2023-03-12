@@ -35,23 +35,29 @@ http://example.com/search/<strong>{POSTARGS}</strong>q=<strong>%s</strong>&amp;t
 <strong>Example url:</strong> https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe?key1=value1&key2=value2
 <dl>
 	<dt>%PAGE_HOST</dt>
-		<dd>The hostname and port of the current page. (chrome.google.com)</dd>
-<!--	<dt>%PAGE_HOSTNAME</dt>
-		<dd>The hostname of the current page. (chrome.google.com)</dd>-->
-<!--	<dt>%PAGE_DOMAIN</dt>
-		<dd>The domain of the current page. (google.com)</dd>-->
+	<dd>The hostname and port of the current page. (chrome.google.com)</dd>
+	<!--	<dt>%PAGE_HOSTNAME</dt>
+      <dd>The hostname of the current page. (chrome.google.com)</dd>-->
+	<!--	<dt>%PAGE_DOMAIN</dt>
+      <dd>The domain of the current page. (google.com)</dd>-->
 	<dt>%PAGE_URL</dt>
-		<dd>The entire URL of the current page. (https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>
-<!--	<dt>%PAGE_PATH</dt>
-		<dd>The path name of the current page. (/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>-->
+	<dd>The entire URL of the current page.
+		(https://chrome.google.com/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)
+	</dd>
+	<!--	<dt>%PAGE_PATH</dt>
+      <dd>The path name of the current page. (/webstore/detail/gipnlpdeieaidmmeaichnddnmjmcakoe)</dd>-->
 	<dt>%PAGE_ORIGIN</dt>
-		<dd>The protocol and hostname of the current page. (https://chrome.google.com)</dd>
+	<dd>The protocol and hostname of the current page. (https://chrome.google.com)</dd>
+	<dt>%PAGE_ORIGIN_NO_ENCODING</dt>
+	<dd>The protocol and hostname of the current page without URL encoding for raw usage in URL.
+		(https://chrome.google.com)
+	</dd>
 
 	<dt>%PAGE_QUERY_STRING</dt>
-		<dd>The query string of the current page (key1=value1&key2=value2)</dd>
+	<dd>The query string of the current page (key1=value1&key2=value2)</dd>
 
 	<dt>%PAGE_QS_VAR(name)</dt>
-		<dd>A query string variable from the current page (%PAGE_QS_VAR(key1) == value1)</dd>
+	<dd>A query string variable from the current page (%PAGE_QS_VAR(key1) == value1)</dd>
 </dl>
 
 <strong>For Icon url:</strong>

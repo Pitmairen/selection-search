@@ -1,48 +1,65 @@
 # Selection Search
 
-
 This is the code for the Selection Search extension for
 [Chrome](https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe)
 and
 [Firefox](https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/).
 
-
 * https://chrome.google.com/webstore/detail/selection-search/gipnlpdeieaidmmeaichnddnmjmcakoe
 * https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/
 
-
 ## Changelog
 
+*0.8.62*
+
+- Added search-url variable %PAGE_ORIGIN_NO_ENCODING, same as %PAGE_ORIGIN, but without URL encoding
+
 *0.8.61*
-- Added option to enable the search engine popup blacklist/whitelist to also affect the search engine hotkeys.
+
+- Added option to enable the search engine popup blacklist/whitelist to also affect the search
+  engine hotkeys.
   The options is located under Popup menu -> Advanced -> Blacklist/whitelist.
 
 *0.8.60*
-- Don't try to load settings from sync storage if sync is disabled in settings, this could fail in some special cases.
+
+- Don't try to load settings from sync storage if sync is disabled in settings, this could fail in
+  some special cases.
 
 *0.8.59*
+
 - Add option to open seaches in a small popup window
 
 *0.8.58*
-- Fix issue where the popup could be partially positioned outside the top of the browser window and become unreachable. Mostly an issue for very large popup menus with many search engines.
+
+- Fix issue where the popup could be partially positioned outside the top of the browser window and
+  become unreachable. Mostly an issue for very large popup menus with many search engines.
 
 *0.8.57*
+
 - Fix mycroft integration.
-- Add an additional source for serach engine icons that is used if the default source does not have an icon.
+- Add an additional source for serach engine icons that is used if the default source does not have
+  an icon.
 
 *0.8.56*
-- Added special search engine marker for sites requiring encodings other than UTF-8. Simply append {SPECIALENCODING} to the end
-  of the search engine url. This enables the feature and the browser should be able to auto detect the correct encoding.
+
+- Added special search engine marker for sites requiring encodings other than UTF-8. Simply append
+  {SPECIALENCODING} to the end
+  of the search engine url. This enables the feature and the browser should be able to auto detect
+  the correct encoding.
 
 *0.8.55*
+
 - Possible fix for freezing tabs for searches opened in new foreground tab
 
 *0.8.54*
+
 - Revert escape feature (\}) added in previous release. This broke some search placeholders.
 
 *0.8.53*
+
 - Added option to open search in new window
-- Make it possible to add search url to the submenu root item. If a search url is added it will open when clicking the submenu root item,
+- Make it possible to add search url to the submenu root item. If a search url is added it will open
+  when clicking the submenu root item,
   unless the openall on click option is checked.
 - Improved replacement of bracket placeholders ({%s}). If "}" must be used inside the placeholder it can now be escaped using "\}".
 - Improved regexp placeholder replace converter. The old "re:" converter still works for backwards compatibility. The new improved

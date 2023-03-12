@@ -50,7 +50,7 @@ function DefaultAction(popup, utils, options)
                 return;
             }
         }
-        
+
         if(engine.url.substr(0, 11) === "javascript:")
             return;
 
@@ -244,6 +244,7 @@ function PopupActionUtils(){
     BaseActionUtils.call(this);
 
     var _urlVariables = [
+        [/%PAGE_ORIGIN_NO_ENCODING/g, location.origin], // no urlencoding
         [/%PAGE_HOST/g, encodeURIComponent(location.host)],
         [/%PAGE_URL/g, encodeURIComponent(location.href)],
         [/%PAGE_ORIGIN/g, encodeURIComponent(location.origin)],
