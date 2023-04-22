@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.8.63*
+
+- Added new buttons to allow adding new search engines/separators/submenus at specific positions in the search engine list
+
+
 *0.8.62*
 
 - Added search-url variable %PAGE_ORIGIN_NO_ENCODING, same as %PAGE_ORIGIN, but without URL encoding
