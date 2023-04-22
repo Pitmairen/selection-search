@@ -58,6 +58,14 @@ p.buttons{
 
 	padding-bottom: 6em;
 }
+
+a.add-inline{
+	text-decoration: none;
+	color: #22aa2d;
+	font-size: 1.5rem;
+	line-height: 1rem;
+	font-weight: bold;
+}
 a.delete{
 	text-decoration: none;
 	color: #CA171A;
@@ -92,6 +100,10 @@ hr{
 }
 #engines th:nth-child(2), #engines td:nth-child(2){
 	width: 10em;
+}
+#engines th:nth-last-child(2), #engines tr td:nth-last-child(2){
+	width: 25px;
+	text-align: center;
 }
 #engines th:last-child, #engines tr td:last-child{
 	width: 25px;
@@ -136,16 +148,69 @@ hr{
 }
 
 .engine-options-popup{
+	width: 400px;
+}
+
+.add-inline-popup{
+	width: 280px;
+}
+
+.dropdown-popup {
 	position: absolute;
 	display: none;
 	padding: 0.5em;
 	text-align: left;
 	background: #fafafa;
-	width: 400px;
 
 	border: 1px solid #aaa;
 	box-shadow: 0 0 6px #aaa;
 	border-radius: 3px;
+	z-index: 2;
+}
+
+.add-inline-content{
+	display: flex;
+	font-size: 0.9rem;
+}
+
+.add-inline-content p {
+	flex: 1 auto;
+	display: flex;
+	gap: 3px;
+	margin: 0;
+	text-align: center;
+	flex-direction: column;
+	align-items: center;
+	border-right: 1px solid #aaa;
+}
+
+.add-inline-content p:last-child {
+	border: none;
+}
+
+.add-inline-content .add-before {
+	background: url("../img/arrow-up.png") no-repeat center center;
+	background-size: 12px;
+	padding-bottom: 1.5rem;
+	margin-bottom: 0.2rem;
+	width: 2rem;
+	border-radius: 5px 5px 0 0;
+	cursor: pointer;
+}
+.add-inline-content .add-after {
+	background: url("../img/arrow-down.png") no-repeat center center;
+	background-size: 12px;
+	padding-top: 1.5rem;
+	margin-top: 0.2rem;
+	width: 2rem;
+	border-radius: 0 0 5px 5px;
+	cursor: pointer;
+}
+.add-inline-content .add-inline-button {
+	border: 1px solid #aaa;
+}
+.add-inline-content .add-inline-button:hover {
+	background-color: #ddd;
 }
 
 .separate-menus-msg{
