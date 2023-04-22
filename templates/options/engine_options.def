@@ -2,7 +2,7 @@
 
     <a href="#" class="engine-opts-link">&nbsp;</a>
 
-    <div class="engine-options-popup">
+    <div class="engine-options-popup dropdown-popup">
         <a href="#" class="close-popup"></a>
         {{ if(!it.en.is_submenu && !it.en.is_separator) { }}
             <label for="engine-opt-post-{{= it.id }}">Use post method</label>
@@ -133,6 +133,30 @@
         </p>
         {{ } }}
     </div>
+</td>
+<td>
+    <a href="#" class="add-inline">+</a>
+
+    <div class="add-inline-popup dropdown-popup">
+        <div class="add-inline-content">
+            <p>
+                <button class="add-inline-button add-inline-engine add-before"></button>
+                <span>Search Engine</span>
+                <button class="add-inline-button add-inline-engine add-after"></button>
+            </p>
+            <p>
+                <button class="add-inline-button add-inline-submenu add-before"></button>
+                <span>Submenu</span>
+                <button class="add-inline-button add-inline-submenu add-after"></button>
+            </p>
+            <p>
+                <button class="add-inline-button add-inline-separator add-before"></button>
+                <span>Separator</span>
+                <button class="add-inline-button add-inline-separator add-after"></button>
+            </p>
+        </div>
+    </div>
+
 </td>
 <td>
     <a href="#" class="delete">X</a>
