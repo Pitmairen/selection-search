@@ -144,7 +144,7 @@ function initBackground(_previousVersion){
 
 (function(){
 
-    let CURRENT_VERSION = '0.8.62';
+    let CURRENT_VERSION = '0.8.63';
 
     storageLocalSyncInit(Storage).then(values => {
 
