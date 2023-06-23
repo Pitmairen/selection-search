@@ -10,9 +10,10 @@ and
 
 ## Changelog
 
-*0.8.63.1*
+*0.8.64*
 
-- Added option for PAGE_QS_VAR_NO_ENCODING
+- Added search-url variable PAGE_QS_VAR_NO_ENCODING to add query string variables without encoding (
+  e.g., session keys)
 
 *0.8.63*
 
