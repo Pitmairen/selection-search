@@ -231,28 +231,39 @@ function BaseActionUtils(){
     this.replaceQueryStringVars = function(url, qs){
 
 		var qs_map = {}
-		if(qs.length !== 0){
+        if (qs.length !== 0) {
             var qs_parts = qs.split('&');
-            for(var i in qs_parts){
-				var qs_var = qs_parts[i].split('=');
-				if (qs_var.length == 2){
-					qs_map[qs_var[0]] = qs_var[1];
-				}
-		    }
+            for (var i in qs_parts) {
+                var qs_var = qs_parts[i].split('=');
+                if (qs_var.length == 2) {
+                    qs_map[qs_var[0]] = qs_var[1];
+                }
+            }
         }
 
-		url = url.replace(/%PAGE_QS_VAR\((.+?)\)/g, function(m, qs_key){
-			if (qs_key in qs_map){
-				if(qs_map[qs_key].substr(0, 11) === 'javascript:')
-					return '';
-				return encodeURIComponent(qs_map[qs_key]);
-			}
-			return '';
-		});
+        url = url.replace(/%PAGE_QS_VAR_NO_ENCODING\((.+?)\)/g,
+            function (m, qs_key) {
+                if (qs_key in qs_map) {
+                    if (qs_map[qs_key].substr(0, 11) === 'javascript:') {
+                        return '';
+                    }
+                    return decodeURIComponent(qs_map[qs_key]);
+                }
+                return '';
+            });
 
-		return url;
-	}
+        url = url.replace(/%PAGE_QS_VAR\((.+?)\)/g, function (m, qs_key) {
+            if (qs_key in qs_map) {
+                if (qs_map[qs_key].substr(0, 11) === 'javascript:') {
+                    return '';
+                }
+                return encodeURIComponent(qs_map[qs_key]);
+            }
+            return '';
+        });
 
+        return url;
+    }
 
     this.isSubmenuWithUrl = function(engine){
         return engine.is_submenu && engine.url && engine.url !== 'Submenu';

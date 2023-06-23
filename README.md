@@ -10,6 +10,10 @@ and
 
 ## Changelog
 
+*0.8.63.1*
+
+- Added option for PAGE_QS_VAR_NO_ENCODING
+
 *0.8.63*
 
 - Added new buttons to allow adding new search engines/separators/submenus at specific positions in the search engine list
