@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.8.64*
+
+- Added search-url variable PAGE_QS_VAR_NO_ENCODING to add query string variables without encoding (
+  e.g., session keys)
+
 *0.8.63*
 
 - Added new buttons to allow adding new search engines/separators/submenus at specific positions in the search engine list
