@@ -263,7 +263,8 @@ function PopupActionUtils(){
             url = url.replace(_urlVariables[i][0], _urlVariables[i][1]);
         }
 
-        if(url.match(/%PAGE_QS_VAR\(.+?\)/)){
+        if (url.match(/%PAGE_QS_VAR\(.+?\)/) || url.match(
+            /%PAGE_QS_VAR_NO_ENCODING\(.+?\)/)) {
             url = _this.replaceQueryStringVars(url, location.search.substr(1));
         }
         return url;

@@ -28,7 +28,8 @@ function ToolbarMenuActionUtils(){
             url = url.replace(_urlVariables[i][0], _urlVariables[i][1]);
         }
 
-        if(_url !== undefined && url.match(/%PAGE_QS_VAR\(.+?\)/)){
+        if (_url !== undefined && (url.match(/%PAGE_QS_VAR\(.+?\)/)
+            || url.match(/%PAGE_QS_VAR_NO_ENCODING\(.+?\)/))) {
             url = _this.replaceQueryStringVars(url, _urlParts.query);
         }
 
