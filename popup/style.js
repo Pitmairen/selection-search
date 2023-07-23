@@ -34,12 +34,14 @@ function Style(shadowDOM){
     var _customStyleNode = document.createElement('style');
 
 
-    // FIREFOX-BUG?: In firefox, depending on a sites Content Security Policy header, the
-    // content must be set to empty strings, before appending to the dom, 
-    // or else firefox logs warnings about blocked inline content.
-    _defaultStyleNode.textContent = '';
-    _circularStyleNode.textContent = '';
-    _customStyleNode.textContent = '';
+    // FIREFOX-BUG?: In firefox, depending on a sites Content Security Policy header, some
+    // content must be set strings before appending to the dom,
+    // or else firefox logs warnings about blocked inline content. Tested on archlinux.org.
+    // Previously empty strings was used, but this crashed https://familylink.google.com/,
+    // but adding ";" instead of empty strings seems to fix this.
+    _defaultStyleNode.textContent = ';';
+    _circularStyleNode.textContent = ';';
+    _customStyleNode.textContent = ';';
 
     shadowDOM.appendChild(_defaultStyleNode);
     shadowDOM.appendChild(_circularStyleNode);
