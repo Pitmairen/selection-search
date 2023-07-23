@@ -49,20 +49,18 @@ function Style(shadowDOM){
 
 
     this.setDefaultStyle = function(style){
-        // FIREFOX-BUG?: Depending on a sites Content Security Policy, the old method 
+        // FIREFOX-BUG?: Depending on a sites Content Security Policy, the old method
         // of appending a text node is blocked, setting the textContent works.
         _defaultStyleNode.textContent = style;
     }
 
     this.setCustomStyle = function(style){
-        _resetCustomStyle();
         _customStyleNode.textContent = style;
         _styleConfig = {};
         _parseStyleOptions(style);
     }
 
     this.setCircularStyle = function(style){
-        _resetCircularStyle();
         _circularStyleNode.textContent = style;
     }
 
@@ -72,19 +70,6 @@ function Style(shadowDOM){
             return _styleConfig[key];
         else
             return _defaultStyleConfig[key];
-
-    }
-
-    function _resetCustomStyle(){
-        while (_customStyleNode.hasChildNodes()) {
-            _customStyleNode.removeChild(_customStyleNode.lastChild);
-        }
-    }
-
-    function _resetCircularStyle(){
-        while (_circularStyleNode.hasChildNodes()) {
-            _circularStyleNode.removeChild(_circularStyleNode.lastChild);
-        }
 
     }
 
