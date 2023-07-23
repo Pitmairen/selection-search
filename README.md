@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.8.64.1-ff*
+
+- Firefox only: Fix crash on familylink.google.com, #141
+
+
 *0.8.64*
 
 - Added search-url variable PAGE_QS_VAR_NO_ENCODING to add query string variables without encoding (
@@ -435,4 +440,3 @@ after the page lost focus because of certain keyboard shortcuts. (thanks to @bij
 
 *0.1.2:*
 - Changed how the custom css is added
-
