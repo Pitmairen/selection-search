@@ -1,5 +1,4 @@
 
-
 function saveEngine(request, sendResponse){
 
     var engines = Storage.getSearchEngines();
@@ -99,30 +98,72 @@ function openAllUrls(request, sendResponse, parent_tab){
 }
 
 
+function hasOffscreenDocument(url) {
+    if ('getContexts' in chrome.runtime) {
+      const offscreenUrl = chrome.runtime.getURL(url);
+      return chrome.runtime.getContexts({
+        contextTypes: ['OFFSCREEN_DOCUMENT'],
+        documentUrls: [offscreenUrl]
+      }).then(function(contexts){
+        return Boolean(contexts.length)
+      })
+    } else {
+      return clients.matchAll().then(function(matchedClients){
+        return matchedClients.some(client => {
+            return client.url.includes(chrome.runtime.id)
+            && client.url.includes(url) // TODO: test
+        })
+      })
+    }
+}
 
+// https://developer.chrome.com/docs/extensions/reference/api/offscreen
+let creatingOffscreenClipboardDocument = null; // A global promise to avoid concurrency issues
+
+function setupOffscreenDocument(path) {
+  // Check all windows controlled by the service worker to see if one
+  // of them is the offscreen document with the given path
+  //const offscreenUrl = chrome.runtime.getURL(path);
+
+  return hasOffscreenDocument(path).then(exists => {
+    if(exists) {
+        return
+    }
+    if(creatingOffscreenClipboardDocument){
+        return creatingOffscreenClipboardDocument
+    }
+    creatingOffscreenClipboardDocument = chrome.offscreen.createDocument({
+        url: path,
+        reasons: [chrome.offscreen.Reason.CLIPBOARD],
+        justification: "Copy selection to clipboard",
+    });
+
+    return creatingOffscreenClipboardDocument.then(result => {
+        creatingOffscreenClipboardDocument = null;
+        return result
+    })
+  })
+}
 
 
 function copyToClipboard(request, sendResponse) {
-
-    var copyDiv = document.createElement('div');
-    copyDiv.contentEditable = true;
-    document.body.appendChild(copyDiv);
-    copyDiv.innerText = request.text;
-    copyDiv.unselectable = "off";
-    copyDiv.focus();
-    document.execCommand('SelectAll');
-    document.execCommand("Copy", false, null);
-    document.body.removeChild(copyDiv);
-
-    sendResponse({});
+    setupOffscreenDocument("background/copy-to-clipboard.html").then(() => {
+        chrome.runtime.sendMessage({
+            type: 'copy-data-to-clipboard',
+            target: 'offscreen-doc',
+            data: request.text
+        }).then((result) => {
+            sendResponse({});
+        })
+    })
 }
 
 function getContentScriptData(sendResponse, clickCounter){
 
-    resp = {};
+    let resp = {};
 
 
-    resp.default_style = document.getElementById("default-style").innerText;
+    resp.default_style = defaultStyleCSS;
     resp.extra_style = Storage.getStyle('');
 
 
@@ -143,7 +184,7 @@ function getContentScriptData(sendResponse, clickCounter){
 
 function getIcons(iconCollection, sendResponse){
 
-    resp = {};
+    let resp = {};
 
 
     resp.icons = iconCollection.getAllIconURLs();
@@ -155,7 +196,7 @@ function getIcons(iconCollection, sendResponse){
 
 function getCurrentDomainIcon(iconCollection, sendResponse, tab){
 
-    resp = {};
+    let resp = {};
 
     resp.indexes = iconCollection.getCurrentDomainIndexes();
 
@@ -173,14 +214,14 @@ function getCurrentDomainIcon(iconCollection, sendResponse, tab){
 
 function getOptions(sendResponse){
 
-    resp = {};
+    let resp = {};
 
     resp.options = Storage.getOptions();
     resp.sync_options = Storage.getSyncOptions();
 
     resp.searchEngines = Storage.getSearchEngines();
 
-    resp.default_style = $('#default-style').text();
+    resp.default_style = defaultStyleCSS;
     resp.extra_style = Storage.getStyle('');
 
     resp.blacklist = Storage.getBlacklistDefinitions();
@@ -221,9 +262,9 @@ function _loadIcons(iconCollection, engines, skipCheck){
         else if(en.is_separator)
             continue;
         else if(en.is_submenu && (!en.url || en.url === "Submenu"))
-            iconCollection.addURL(chrome.extension.getURL('img/folder.png'));
+            iconCollection.addURL(chrome.runtime.getURL('img/folder.png'));
         else if(en.url == 'COPY')
-            iconCollection.addURL(chrome.extension.getURL('img/copy.png'));
+            iconCollection.addURL(chrome.runtime.getURL('img/copy.png'));
         else{
             var host = en.url.split('/').slice(0, 3).join('/');
             iconCollection.addHost(host);

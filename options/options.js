@@ -404,7 +404,7 @@ function initOptionsPage(){
 	});
 
 
-	$('#search-icon').append('<img src="'+chrome.extension.getURL('../img/icon16.png')+'" width="16px" height="16px" />');
+	$('#search-icon').append('<img src="'+chrome.runtime.getURL('../img/icon16.png')+'" width="16px" height="16px" />');
 
 	$('#new-engine').click(function(){
 		addNewEngine(emptyEngine(), 0);

@@ -19,6 +19,7 @@
  * the changed values to keep the memory storage object in sync
  * with chrome.storage.local.
  */
+
 function storageLocalSyncInit(storage){
 
     chrome.storage.onChanged.addListener(function(changes, type){

@@ -85,7 +85,7 @@
  * TODO: test netloc missing, but hostname present
  */
 
-var urlparse = {};
+const urlparse = {};
 
 // Unlike to be useful standalone
 //

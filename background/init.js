@@ -1,4 +1,5 @@
 
+
 function initBackground(_previousVersion){
 
     function _storageUpdated(is_click_count_update){
@@ -33,9 +34,9 @@ function initBackground(_previousVersion){
         Blacklist.setDefinitions(Storage.getBlacklistDefinitions());
 
         if(_options.toolbar_popup === 'enabled'){
-            chrome.browserAction.enable();
+            chrome.action.enable()
         }else{
-            chrome.browserAction.disable();
+            chrome.action.disable()
         }
 
     }
@@ -120,7 +121,7 @@ function initBackground(_previousVersion){
 
             Sync.loadStorage(Storage, items);
 
-            Storage.storage_upgrades(_previousVersion, false);
+            Storage.storage_upgrades(_previousVersion);
 
             _storageUpdated();
 
@@ -142,22 +143,16 @@ function initBackground(_previousVersion){
     });
 }
 
-(function(){
 
+function initServiceWorker(){
     let CURRENT_VERSION = '0.8.64';
 
     storageLocalSyncInit(Storage).then(values => {
 
         var _previousVersion = values.VERSION;
         var _do_localstorage_import = false;
-        if(values.VERSION === undefined){
-            _previousVersion = localStorage['VERSION'];
-            // If there was no VERSION value in the storage, we probably have to
-            // import from the old localStorage.
-            _do_localstorage_import = true;
-        }
 
-        Storage.storage_upgrades(_previousVersion, _do_localstorage_import);
+        Storage.storage_upgrades(_previousVersion);
 
         // The version value was added in version 0.1.4 (stored in localStorage)
         // Was moved to chrome.storage.local in version 0.8.48
@@ -166,5 +161,5 @@ function initBackground(_previousVersion){
         initBackground(_previousVersion);
 
     });
+}
 
-})();

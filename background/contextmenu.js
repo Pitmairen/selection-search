@@ -3,14 +3,17 @@
 function ContextMenu(options, _clickCounterCallback){
 
 
-    var _rootItem = null;
-    var _options = options;
+    let _rootItem = null;
+    let _options = options;
+    let _idCounter = 0
+    let _onClickCallbacks = {}
 
+    chrome.contextMenus.onClicked.addListener(_onClickItem)
 
     this.setSearchEngines = function(engines){
 
+        _onClickCallbacks = {}
         _createRootItem();
-
 
         _addEngines(engines, _rootItem);
 
@@ -55,21 +58,22 @@ function ContextMenu(options, _clickCounterCallback){
 
     function _addEngineItem(engine, parentItem){
 
-        var id = chrome.contextMenus.create({
+        let id = chrome.contextMenus.create({
+            'id': _nextItemId(),
             'title' :  engine.name,
             'contexts' : ['selection'],
             'parentId' : parentItem,
-
-            'onclick' : function(info, tab){
-                _onEngineClick(engine, info, tab);
-            }
         });
+        _registerOnClick(id, function(info, tab){
+            _onEngineClick(engine, info, tab);
+        })
 
     }
 
     function _addSeparatorItem(engine, parentItem){
 
         chrome.contextMenus.create({
+            'id': _nextItemId(),
             'type' : 'separator',
             'contexts' : ['selection'],
             'parentId' : parentItem,
@@ -82,18 +86,19 @@ function ContextMenu(options, _clickCounterCallback){
     function _addSubMenuItem(engine, parentItem){
 
         var menu = {
+            'id': _nextItemId(),
             'title' :  engine.name,
             'contexts' :  ['selection'],
             'parentId' : parentItem,
         };
 
-        if(engine.openall && engine.hidemenu){
-            menu.onclick = function(info, tab){
-                _onOpenAll(engine, info, tab);
-            }
-        }
+        let id = chrome.contextMenus.create(menu);
 
-        var id = chrome.contextMenus.create(menu);
+        if(engine.openall && engine.hidemenu){
+            _registerOnClick(id, function(info, tab){
+                _onOpenAll(engine, info, tab);
+            })
+        }
 
         if(engine.openall && engine.hidemenu){
             return;
@@ -120,16 +125,16 @@ function ContextMenu(options, _clickCounterCallback){
 
     function _addOpenAllItem(engine, parentItem){
 
-
-        chrome.contextMenus.create({
+        let id = chrome.contextMenus.create({
+            'id': _nextItemId(),
             'title' :  "Open all",
             'contexts' :  ['selection'],
             'parentId' : parentItem,
-
-            'onclick' : function(info, tab){
-                _onOpenAll(engine, info, tab);
-            }
         });
+
+        _registerOnClick(id, function(info, tab){
+                _onOpenAll(engine, info, tab);
+        })
 
         _addSeparatorItem(engine, parentItem);
 
@@ -140,6 +145,7 @@ function ContextMenu(options, _clickCounterCallback){
     function _removeRootItem(){
         if(_rootItem != null){
             chrome.contextMenus.remove(_rootItem);
+            _rootItem = null
         }
     }
 
@@ -148,12 +154,29 @@ function ContextMenu(options, _clickCounterCallback){
         _removeRootItem();
 
         _rootItem = chrome.contextMenus.create({
+            'id': 'ss-context-menu-root',
             'title' : 'Search',
             'contexts' : ['selection']
         })
 
+        _idCounter = 0;
+
     }
 
+    function _nextItemId(){
+        return `${_idCounter++}`;
+    }
+
+    function _onClickItem(info, tab){
+        let cb = _onClickCallbacks[info.menuItemId]
+        if(cb){
+            cb(info, tab)
+        }
+    }
+
+    function _registerOnClick(id, callback){
+        _onClickCallbacks[id] = callback
+    }
 }
 
 

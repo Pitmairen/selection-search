@@ -1,6 +1,6 @@
 
 
-var BrowserSupport = {
+const BrowserSupport = {
 
     createShadowDOM: function(element){
         if(element.attachShadow){
@@ -18,6 +18,8 @@ var BrowserSupport = {
 
 }
 
-if (window.NodeList && !NodeList.prototype.forEach) {
-    NodeList.prototype.forEach = Array.prototype.forEach;
+if (typeof window !== "undefined"){
+    if (window.NodeList && !NodeList.prototype.forEach) {
+        NodeList.prototype.forEach = Array.prototype.forEach;
+    }
 }

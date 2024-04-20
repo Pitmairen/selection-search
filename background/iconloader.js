@@ -29,147 +29,97 @@ function IconSourceManager(sources){
 
 }
 
-function IconLoader(sources, onload){
+function IconLoader(sources){
 
-    var _img = new Image();
-    _img.setAttribute('crossOrigin', 'anonymous'); 
+    let _isError = false;
+    let _iconSources = new IconSourceManager(sources)
+    let _blob = null;
+    let _dataUrl = null;
 
-    _img.addEventListener("error", _onError);
-
-    if(onload !== undefined){
-        _img.addEventListener("load", _onLoad);
-    }
-
-    var _iconSources = new IconSourceManager(sources)
-
-    _img.src = _iconSources.currentUrl();
-
-    var _this = this;
-
-    var _urlCache = null;
-    var _isError = false;
-
-    _img.addEventListener("load", function(){
-        _isError = false;
-    });
+    _loadImage()
 
     this.isComplete = function(){
-        return _img.complete || _isError;
+        return _dataUrl != null || _isError;
     }
 
     this.getDataURL = function(){
-        if(_urlCache !== null)
-            return _urlCache;
-
         if(_isError){
             _reloadImage();
             return IconLoader.getDefaultIcon();
         }
-
-        try{
-            var dataUrl = _loadIconUrl();
-
-            if(_iconSources.isEmptyResponse(dataUrl)){
-                _reloadImage()
-                return IconLoader.getDefaultIcon();
-            }
-
-            _urlCache = dataUrl;
-
-        }catch(err){
-            console.warn('Failed to load icon: ', _iconSources.currentUrl(), err.message)
-            _urlCache = IconLoader.getDefaultIcon();
-        }
-        return _urlCache;
-    }
-
-    this.getDataURL = function(){
-        if(_urlCache !== null)
-            return _urlCache;
-
-        if(_isError){
-            _reloadImage();
-            return IconLoader.getDefaultIcon();
-        }
-
-        try{
-            var dataUrl = _loadIconUrl();
-
-            if(_iconSources.isEmptyResponse(dataUrl)){
-                _reloadImage()
-                return IconLoader.getDefaultIcon();
-            }
-
-            _urlCache = dataUrl;
-
-        }catch(err){
-            console.warn('Failed to load icon: ', _iconSources.currentUrl(), err.message)
-            _urlCache = IconLoader.getDefaultIcon();
-        }
-        return _urlCache;
+        return _dataUrl
     }
 
     this.getDataUrlPromise = function(){
         return new Promise(function(resolve){
-            function resolveImage(imageUrl){
-                _img.removeEventListener('load', imageLoaded)
-                resolve(imageUrl);
-            }
             function imageLoaded(){
-                try{
-                    var dataUrl = _loadIconUrl();
-                    if(!_iconSources.isEmptyResponse(dataUrl)){
-                        resolveImage(dataUrl);
-                        return;
-                    }
-                }catch(err){
-                    console.warn('Failed to load icon: ', _iconSources.currentUrl(), err.message)
-                }
-                if(!_iconSources.hasTriedAll()){
-                    _reloadImage()
+                if(_dataUrl !== null){
+                    resolve(_dataUrl)
+                } else if(!_iconSources.hasTriedAll()){
+                    _reloadImage().then(imageLoaded)
                 }else{
-                    resolveImage(IconLoader.getDefaultIcon());
+                    resolve(IconLoader.getDefaultIcon());
                 }
             }
-            _img.addEventListener('load', imageLoaded)
+            _loadImage().then(imageLoaded)
         });
     }
 
-
-    function _onError(e){
-        _isError = true;
-    }
-
-    function _onLoad(e){
-        onload(_this);
-    }
-
     function _reloadImage(){
-        _img.src = _iconSources.nextUrl()
+        _iconSources.nextUrl()
+        return _loadImage()
     }
 
-    function _loadIconUrl(){
+    function _loadImage(){
+        return new Promise((resolve) => {
+            if(_dataUrl !== null){
+                resolve()
+            }
+            fetch(_iconSources.currentUrl()).then(async (resp) => {
+                if(resp.ok){
+                    _blob = await resp.blob()
+                    _isError = false
+                    _dataUrl = await _createDataUrl()
+                }else{
+                    _isError = true
+                }
+                resolve()
+            }).catch((err) => {
+                _isError = true
+                resolve()
+            })
+        })
+    }
+
+    async function _createDataUrl(){
 
         // Factor to scale the canvas by to support various display densities
-        var pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
+        // with manifest V3 we don't have access to the window, so just set it 
+        // to 1 for now. We may be able to get it through an offscree document.
+        // const pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
+        const pixelRatio = 1;
 
-        var canvas = document.createElement("canvas");
-        canvas.width = 16 * pixelRatio;
-        canvas.height = 16 * pixelRatio;
+        const canvas = new OffscreenCanvas(16 * pixelRatio, 16 * pixelRatio); 
 
+        let bitmap = await createImageBitmap(_blob)
 
-        var context = canvas.getContext("2d");
+        const context = canvas.getContext("2d");
         context.scale(pixelRatio, pixelRatio);
         context.clearRect(0, 0, 16, 16);
-        context.drawImage(_img, 0, 0, 16, 16);
+        context.drawImage(bitmap, 0, 0, 16, 16);
 
+        let blob = await canvas.convertToBlob() 
 
-        try{
-            return canvas.toDataURL("image/png");
-        }
-        finally{
-            canvas.remove();
-        }
+        return new Promise((resolve) => {
+            let reader = new FileReader()
+            reader.readAsDataURL(blob)
+            reader.onloadend = function(){
+                resolve(reader.result)
+            }
+            reader.onerror = function(){
+                resolve(IconLoader.getDefaultIcon())
+            }
+        })
     }
 }
 
@@ -201,7 +151,7 @@ IconLoader.loadCurrentDomainIcon = function(tab){
 }
 
 IconLoader.getDefaultIcon = function(){
-    return chrome.extension.getURL('img/default_favicon.png');
+    return chrome.runtime.getURL('img/default_favicon.png');
 }
 
 
@@ -223,7 +173,7 @@ function IconCollection(){
     // The url should be a absolute url to an image.
     this.addURL = function(url){
 
-        var img;
+        let img;
 
         if(url == "CURRENT_DOMAIN"){
             img = new IconLoader([new IconSourceUrl(IconLoader.getDefaultIcon())]);
