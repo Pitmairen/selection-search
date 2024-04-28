@@ -1,5 +1,6 @@
 
-function initBackground(_previousVersion){
+
+function Background(_previousVersion) {
 
     function _storageUpdated(is_click_count_update){
 
@@ -33,9 +34,9 @@ function initBackground(_previousVersion){
         Blacklist.setDefinitions(Storage.getBlacklistDefinitions());
 
         if(_options.toolbar_popup === 'enabled'){
-            chrome.browserAction.enable();
+            chrome.action.enable()
         }else{
-            chrome.browserAction.disable();
+            chrome.action.disable()
         }
 
     }
@@ -56,7 +57,7 @@ function initBackground(_previousVersion){
     _storageUpdated();
 
 
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+    this.onMessage = function(request, sender, sendResponse){
 
         switch(request.action){
 
@@ -90,16 +91,21 @@ function initBackground(_previousVersion){
                     _storageUpdated();
                     sendResponse({});
                 });
-                return true;
+                return;
             default:
                 sendResponse({});
                 return;
-
         }
+    }
 
+    this.onStorageChanged = function(changes, type){
+        if(type != 'sync')
+            return;
 
-    });
+        Sync.updateStorage(Storage, changes);
 
+        _storageUpdated();
+    }
 
     if (Storage.isSyncEnabled()){
 
@@ -120,7 +126,7 @@ function initBackground(_previousVersion){
 
             Sync.loadStorage(Storage, items);
 
-            Storage.storage_upgrades(_previousVersion, false);
+            Storage.storage_upgrades(_previousVersion);
 
             _storageUpdated();
 
@@ -128,43 +134,43 @@ function initBackground(_previousVersion){
 
     }
 
-
-
-    chrome.storage.onChanged.addListener(function(changes, type){
-
-        if(type != 'sync')
-            return;
-
-        Sync.updateStorage(Storage, changes);
-
-        _storageUpdated();
-
-    });
 }
 
-(function(){
+function initBackground(){
 
     let CURRENT_VERSION = '0.8.64';
 
-    storageLocalSyncInit(Storage).then(values => {
+    return storageLocalSyncInit(Storage).then(values => {
 
         var _previousVersion = values.VERSION;
         var _do_localstorage_import = false;
-        if(values.VERSION === undefined){
-            _previousVersion = localStorage['VERSION'];
-            // If there was no VERSION value in the storage, we probably have to
-            // import from the old localStorage.
-            _do_localstorage_import = true;
-        }
 
-        Storage.storage_upgrades(_previousVersion, _do_localstorage_import);
+        Storage.storage_upgrades(_previousVersion);
 
         // The version value was added in version 0.1.4 (stored in localStorage)
         // Was moved to chrome.storage.local in version 0.8.48
         Storage.setVersion(CURRENT_VERSION);
 
-        initBackground(_previousVersion);
+        return Promise.resolve(new Background(_previousVersion))
+    });
+}
 
+
+function initServiceWorker(){
+
+    let _background = initBackground()
+
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+        _background.then(bg => {
+            bg.onMessage(request, sender, sendResponse)
+        })
+        return true
     });
 
-})();
+    chrome.storage.onChanged.addListener(function(changes, type){
+        _background.then(bg => {
+            bg.onStorageChanged(changes, type)
+        })
+    });
+}
+

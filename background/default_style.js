@@ -1,27 +1,5 @@
-<html>
-<head>
-<script src="../common/browsersupport.js"></script>
-<script src="../common/jquery-3.6.4.min.js"></script>
-<script src="../common/urlparse.js"></script>
-<script src="../common/encoding.js"></script>
-<script src="../common/actionutils.js"></script>
-<script src="sync.js"></script>
-<script src="storage_local.js"></script>
-<script src="storage.js"></script>
-<script src="iconloader.js"></script>
-<script src="contextmenu.js"></script>
-<script src="actionutils.js"></script>
-<script src="background.js"></script>
-<script src="click-counter.js"></script>
-<script src="blacklist.js"></script>
-<script src="init.js"></script>
-<meta charset="utf-8" />
-</head>
-<body>
 
-
-
-<style id="default-style">
+const defaultStyleCSS = `
 .common li, .common span, .common a, .common input, .common img, .common h4,
 .popup, .engine-editor{
     direction: ltr;
@@ -207,10 +185,4 @@ z-index: 2147483647;
  margin: 3px 0;
  background: #AEAAA7;
 }
-</style>
-
-
-
-
-</body>
-</html>
+`

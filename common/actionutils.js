@@ -209,11 +209,11 @@ function BaseActionUtils(){
     }
 
     this.createPostUrl = function(url){
-        return chrome.extension.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
+        return chrome.runtime.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
     }
 
     this.createSpecialEncodingUrl = function(url){
-        return chrome.extension.getURL('old/encoding-search.html') + '?url='+encodeURIComponent(url);
+        return chrome.runtime.getURL('old/encoding-search.html') + '?url='+encodeURIComponent(url);
     }
 
 

@@ -1,9 +1,9 @@
 {
     "name": "Selection Search",
-    "version": "0.8.64",
-    "manifest_version": 2,
+    "version": "0.9.0",
+    "manifest_version": 3,
     "description": "Search for the selected text in search engines",
-    "minimum_chrome_version": "35",
+    "minimum_chrome_version": "88",
     "icons": {
         "16": "img/icon16.png",
         "48": "img/icon48.png",
@@ -11,11 +11,10 @@
     },
     "options_page": "options/options.html",
     "background": {
-        "page" : "background/background.html",
-        "persistent" : true
+        "service_worker" : "background/service_worker.js"
     },
 
-    "browser_action": {
+    "action": {
         "default_popup": "browseraction/popup.html"
     },
 
@@ -42,21 +41,22 @@
         "storage",
         "notifications",
         "clipboardWrite",
-        "tabs"
+        "tabs",
+        "offscreen"
     ],
+    "host_permissions": ["https://s2.googleusercontent.com/s2/favicons*"],
 
     "web_accessible_resources": [
-        "img/folder.png",
-        "img/icon16.png",
-        "img/icon48.png",
-        "img/close.png",
-        "img/ajax-loader.gif",
-        "img/copy.png",
-        "img/default_favicon.png",
-        "old/postsearch.html",
-        "old/encoding-search.html",
-        "old/postsearch.js"
+        {
+            "resources": ["old/postsearch.html", "old/postsearch.js", "old/encoding-search.html", "old/encoding-search.js"],
+            "matches": ["http://*/*", "https://*/*", "file://*/*"],
+            "use_dynamic_url": true
+        },
+        {
+            "resources": ["img/icon16.png", "img/close.png", "img/ajax-loader.gif", "img/default_favicon.png"],
+            "matches": ["http://*/*", "https://*/*", "file://*/*"],
+            "use_dynamic_url": true
+        }
     ]
-
 
 }
