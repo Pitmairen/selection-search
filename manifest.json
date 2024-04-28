@@ -48,7 +48,7 @@
 
     "web_accessible_resources": [
         {
-            "resources": ["old/postsearch.html"],
+            "resources": ["old/postsearch.html", "old/postsearch.js", "old/encoding-search.html", "old/encoding-search.js"],
             "matches": ["http://*/*", "https://*/*", "file://*/*"],
             "use_dynamic_url": true
         },
