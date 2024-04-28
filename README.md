@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.9.0*
+
+- Rewrite of internals to migrate the extension to manifest V3, as required by Chrome.
+- No new features or bug fixes in this realease.
+
 *0.8.64*
 
 - Added search-url variable PAGE_QS_VAR_NO_ENCODING to add query string variables without encoding (
