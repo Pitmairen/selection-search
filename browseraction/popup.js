@@ -315,7 +315,7 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
         if(e.code == 'Enter' && hasQuery()){
             if(!isSuggestionsActive() || !hasActiveSuggestion()){
                 openFirstSearch();
-                window.close();
+                setTimeout(window.close, 10)
                 return;
             }
         }else if(!isSuggestionsActive() || !response.options.toolbar_popup_suggestions){
