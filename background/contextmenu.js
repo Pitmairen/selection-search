@@ -13,10 +13,9 @@ function ContextMenu(options, _clickCounterCallback){
     this.setSearchEngines = function(engines){
 
         _onClickCallbacks = {}
-        _createRootItem();
-
-        _addEngines(engines, _rootItem);
-
+        _createRootItem().then(() => {
+            _addEngines(engines, _rootItem);
+        })
     }
 
 
@@ -143,24 +142,30 @@ function ContextMenu(options, _clickCounterCallback){
 
 
     function _removeRootItem(){
-        if(_rootItem != null){
-            chrome.contextMenus.remove(_rootItem);
-            _rootItem = null
-        }
+        return new Promise((resolve, reject) => {
+            if(_rootItem != null){
+                chrome.contextMenus.remove(_rootItem, () => {
+                    _rootItem = null
+                    _onClickCallbacks = {}
+                    resolve()
+                })
+            } else {
+                resolve()
+            }
+        })
     }
 
     function _createRootItem(){
-
-        _removeRootItem();
-
-        _rootItem = chrome.contextMenus.create({
-            'id': 'ss-context-menu-root',
-            'title' : 'Search',
-            'contexts' : ['selection']
+        return _removeRootItem().then(() => {
+            _rootItem = chrome.contextMenus.create({
+                'id': 'ss-context-menu-root',
+                'title' : 'Search',
+                'contexts' : ['selection']
+            }, () => {
+                _idCounter = 0;
+                return Promise.resolve()
+            })
         })
-
-        _idCounter = 0;
-
     }
 
     function _nextItemId(){
