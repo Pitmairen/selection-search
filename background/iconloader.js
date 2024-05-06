@@ -36,18 +36,23 @@ function IconLoader(sources){
     let _blob = null;
     let _dataUrl = null;
 
-    _loadImage()
+    // _loadImage()
 
     this.isComplete = function(){
-        return _dataUrl != null || _isError;
+        // Currently after manifest v3 we just use the icon urls directly,
+        // so we can just always return true
+        return true;
+        //return _dataUrl != null || _isError;
     }
 
     this.getDataURL = function(){
-        if(_isError){
-            _reloadImage();
-            return IconLoader.getDefaultIcon();
-        }
-        return _dataUrl
+        return _iconSources.currentUrl()
+        // if(_isError){
+        //     _reloadImage();
+        //     //return IconLoader.getDefaultIcon();
+        //     return _iconSources.currentUrl()
+        // }
+        // return _dataUrl
     }
 
     this.getDataUrlPromise = function(){
@@ -61,7 +66,8 @@ function IconLoader(sources){
                     resolve(IconLoader.getDefaultIcon());
                 }
             }
-            _loadImage().then(imageLoaded)
+            // _loadImage().then(imageLoaded)
+            resolve(_iconSources.currentUrl())
         });
     }
 
@@ -94,12 +100,12 @@ function IconLoader(sources){
     async function _createDataUrl(){
 
         // Factor to scale the canvas by to support various display densities
-        // with manifest V3 we don't have access to the window, so just set it 
+        // with manifest V3 we don't have access to the window, so just set it
         // to 1 for now. We may be able to get it through an offscree document.
         // const pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
         const pixelRatio = 1;
 
-        const canvas = new OffscreenCanvas(16 * pixelRatio, 16 * pixelRatio); 
+        const canvas = new OffscreenCanvas(16 * pixelRatio, 16 * pixelRatio);
 
         let bitmap = await createImageBitmap(_blob)
 
@@ -108,7 +114,7 @@ function IconLoader(sources){
         context.clearRect(0, 0, 16, 16);
         context.drawImage(bitmap, 0, 0, 16, 16);
 
-        let blob = await canvas.convertToBlob() 
+        let blob = await canvas.convertToBlob()
 
         return new Promise((resolve) => {
             let reader = new FileReader()
@@ -222,14 +228,14 @@ const EMPTY_ICON_RESPONSE_GOOGLE_S2 = "data:image/png;base64,iVBORw0KGgoAAAANSUh
 
 
 function IconSourceGoogleS2(hostname){
-    this.url = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + hostname;
+    this.url = "https://s2.googleusercontent.com/s2/favicons?sz=32&domain_url=" + hostname;
     this.isEmptyResponse = function(data){
         return data === EMPTY_ICON_RESPONSE_GOOGLE_S2
     }
 }
 
 function IconSourceFaviconKit(hostname){
-    this.url = "https://api.faviconkit.com/" + hostname
+    this.url = "https://api.faviconkit.com/" + hostname + "/32"
     this.isEmptyResponse = function(data){
         return false;
     }

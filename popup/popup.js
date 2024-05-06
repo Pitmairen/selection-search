@@ -161,6 +161,9 @@ function Popup(options, style){
         var img = document.createElement("img");
         img.className = "engine-img";
         img.src = url;
+        img.addEventListener("error", function(){
+            this.src = chrome.runtime.getURL('img/default_favicon.png');
+        })
         return img;
 
 

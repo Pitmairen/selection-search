@@ -53,7 +53,16 @@
             "use_dynamic_url": true
         },
         {
-            "resources": ["img/icon16.png", "img/close.png", "img/ajax-loader.gif", "img/default_favicon.png"],
+            "resources": [
+                "img/icon16.png",
+                "img/icon48.png",
+                "img/icon128.png",
+                "img/close.png",
+                "img/ajax-loader.gif",
+                "img/default_favicon.png",
+                "img/folder.png",
+                "img/copy.png"
+            ],
             "matches": ["http://*/*", "https://*/*", "file://*/*"],
             "use_dynamic_url": true
         }
