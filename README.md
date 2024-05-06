@@ -10,6 +10,15 @@ and
 
 ## Changelog
 
+*0.9.1*
+
+- Fix issue with context menu items requiring two clicks to work
+- Fix issue where the context menu items was not added properly
+- Changed icon loading to use the icon urls directly, instead of loading the
+  icons in the background, as the background loading does not work properly
+  with manifest v3. This will probably also fix some issues where custom
+  svg images would not load.
+
 *0.9.0*
 
 - Rewrite of internals to migrate the extension to manifest V3, as required by Chrome.
