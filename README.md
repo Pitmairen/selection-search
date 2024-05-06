@@ -14,6 +14,7 @@ and
 
 - Fix issue with context menu items requiring two clicks to work
 - Fix issue where the context menu items was not added properly
+- Fix issue where hitting enter in the toolbar search box would not open the first search engine
 - Changed icon loading to use the icon urls directly, instead of loading the
   icons in the background, as the background loading does not work properly
   with manifest v3. This will probably also fix some issues where custom
