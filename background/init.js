@@ -107,6 +107,10 @@ function Background(_previousVersion) {
         _storageUpdated();
     }
 
+    this.onContextMenuItemClicked = function(info, tab){
+        _contextMenu.onItemClicked(info, tab)
+    }
+
     if (Storage.isSyncEnabled()){
 
         chrome.storage.sync.get(null, function(items){
@@ -172,5 +176,11 @@ function initServiceWorker(){
             bg.onStorageChanged(changes, type)
         })
     });
+
+    chrome.contextMenus.onClicked.addListener(function(info, tab){
+        _background.then(bg => {
+            bg.onContextMenuItemClicked(info, tab)
+        })
+    })
 }
 

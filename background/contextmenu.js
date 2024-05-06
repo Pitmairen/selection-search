@@ -3,27 +3,67 @@
 function ContextMenu(options, _clickCounterCallback){
 
 
-    let _rootItem = null;
+    let _rootItem = 'ss-context-menu-root'
     let _options = options;
     let _idCounter = 0
     let _onClickCallbacks = {}
+    let _createMenuPromise = null;
+    let _currentPromise = Promise.resolve();
 
-    chrome.contextMenus.onClicked.addListener(_onClickItem)
+
+    this.onItemClicked = function(info, tab){
+        _currentPromise.then(() =>{
+            _onClickItem(info, tab)
+        })
+    }
+
+    function getCurrentPromise(){
+        if(_currentPromise !== null){
+            return _currentPromise.then(() => {
+                return Promise.resolve()
+            })
+        }
+        return Promise.resolve()
+    }
 
     this.setSearchEngines = function(engines){
+        _currentPromise = doSetEngines(engines, _currentPromise).then(() => {
+            _currentPromise = Promise.resolve()
+        })
+    }
 
-        _onClickCallbacks = {}
-        _createRootItem().then(() => {
-            _addEngines(engines, _rootItem);
+    function doSetEngines(engines, currentPromise){
+        return new Promise((resolve, reject) => {
+            currentPromise.then(() => {
+                _createRootItem().then(() => {
+                    _idCounter = 0;
+                    _onClickCallbacks = {}
+                    _addEngines(engines, _rootItem).then(() =>{
+                        resolve()
+                    })
+                })
+            })
         })
     }
 
 
     this.disable = function(){
-        _removeRootItem();
-
+        _currentPromise = doDisable(engines, _currentPromise).then(()=>{
+            _currentPromise = Promise.resolve();
+        })
     }
 
+    function doDisable(engines, currentPromise){
+        return new Promise((resolve, reject) => {
+            currentPromise.then(() => {
+                _removeRootItem().then(() => {
+                    _idCounter = 0;
+                    _onClickCallbacks = {}
+                    resolve()
+                })
+            })
+        })
+    }
 
     this.setOptions = function(options){
         _options = options;
@@ -32,81 +72,96 @@ function ContextMenu(options, _clickCounterCallback){
 
 
     function _addEngines(engines, parentItem){
-
-        for(var i in engines){
-            _addEngine(engines[i], parentItem);
-        }
-
+        return new Promise((resolve, reject) => {
+            let promises = []
+            for(var i in engines){
+                promises.push(_addEngine(engines[i], parentItem))
+            }
+            resolve(Promise.all(promises))
+        })
     }
 
 
     function _addEngine(engine, parentItem){
-
-        if(_options.separate_menus && engine.hide_in_ctx)
-            return;
-
-        if(engine.is_submenu)
-            _addSubMenuItem(engine, parentItem);
-        else if(engine.is_separator)
-            _addSeparatorItem(engine, parentItem);
-        else
-            _addEngineItem(engine, parentItem);
-
+        return new Promise((resolve, reject) => {
+            if(_options.separate_menus && engine.hide_in_ctx){
+                resolve()
+            }
+            else if(engine.is_submenu){
+                resolve(_addSubMenuItem(engine, parentItem))
+            }
+            else if(engine.is_separator){
+                resolve(_addSeparatorItem(engine, parentItem))
+            }
+            else{
+                resolve(_addEngineItem(engine, parentItem))
+            }
+        })
     }
 
 
     function _addEngineItem(engine, parentItem){
-
-        let id = chrome.contextMenus.create({
-            'id': _nextItemId(),
-            'title' :  engine.name,
-            'contexts' : ['selection'],
-            'parentId' : parentItem,
+        return new Promise((resolve, reject) => {
+            let id = _nextItemId()
+            chrome.contextMenus.create({
+                'id': id,
+                'title' :  engine.name,
+                'contexts' : ['selection'],
+                'parentId' : parentItem,
+            }, function(){
+                _registerOnClick(id, function(info, tab){
+                    _onEngineClick(engine, info, tab);
+                })
+                resolve()
+            })
         });
-        _registerOnClick(id, function(info, tab){
-            _onEngineClick(engine, info, tab);
-        })
-
     }
 
     function _addSeparatorItem(engine, parentItem){
-
-        chrome.contextMenus.create({
-            'id': _nextItemId(),
-            'type' : 'separator',
-            'contexts' : ['selection'],
-            'parentId' : parentItem,
-        });
-
+        return new Promise((resolve, reject) => {
+            chrome.contextMenus.create({
+                'id': _nextItemId(),
+                'type' : 'separator',
+                'contexts' : ['selection'],
+                'parentId' : parentItem,
+            }, function(){
+                resolve()
+            });
+        })
     }
 
 
 
     function _addSubMenuItem(engine, parentItem){
 
+        let id = _nextItemId()
         var menu = {
-            'id': _nextItemId(),
+            'id': id,
             'title' :  engine.name,
             'contexts' :  ['selection'],
             'parentId' : parentItem,
         };
 
-        let id = chrome.contextMenus.create(menu);
+        return new Promise((resolve, reject) => {
+            chrome.contextMenus.create(menu, function(){
+                if(engine.openall && engine.hidemenu){
+                    _registerOnClick(id, function(info, tab){
+                        _onOpenAll(engine, info, tab);
+                    })
+                }
 
-        if(engine.openall && engine.hidemenu){
-            _registerOnClick(id, function(info, tab){
-                _onOpenAll(engine, info, tab);
+                if(engine.openall && engine.hidemenu){
+                    resolve()
+                }
+                else if(engine.openall){
+                    _addOpenAllItem(engine, id).then(() => {
+                        resolve(_addEngines(engine.engines, id))
+                    })
+                }else{
+                    resolve(_addEngines(engine.engines, id))
+                }
             })
-        }
-
-        if(engine.openall && engine.hidemenu){
-            return;
-        }
-        else if(engine.openall){
-            _addOpenAllItem(engine, id);
-        }
-
-        _addEngines(engine.engines, id);
+        })
     }
 
     function _onEngineClick(engine, info, tab){
@@ -123,47 +178,44 @@ function ContextMenu(options, _clickCounterCallback){
 
 
     function _addOpenAllItem(engine, parentItem){
+        return new Promise((resolve, reject) => {
+            let id = _nextItemId()
+            chrome.contextMenus.create({
+                'id': id,
+                'title' :  "Open all",
+                'contexts' :  ['selection'],
+                'parentId' : parentItem,
+            }, function(){
+                _registerOnClick(id, function(info, tab){
+                    _onOpenAll(engine, info, tab);
+                })
+                resolve(
+                    _addSeparatorItem(engine, parentItem)
+                )
+            });
 
-        let id = chrome.contextMenus.create({
-            'id': _nextItemId(),
-            'title' :  "Open all",
-            'contexts' :  ['selection'],
-            'parentId' : parentItem,
-        });
-
-        _registerOnClick(id, function(info, tab){
-                _onOpenAll(engine, info, tab);
         })
-
-        _addSeparatorItem(engine, parentItem);
-
-
     }
 
 
     function _removeRootItem(){
         return new Promise((resolve, reject) => {
-            if(_rootItem != null){
-                chrome.contextMenus.remove(_rootItem, () => {
-                    _rootItem = null
-                    _onClickCallbacks = {}
-                    resolve()
-                })
-            } else {
+            chrome.contextMenus.removeAll(() => {
                 resolve()
-            }
+            })
         })
     }
 
     function _createRootItem(){
-        return _removeRootItem().then(() => {
-            _rootItem = chrome.contextMenus.create({
-                'id': 'ss-context-menu-root',
-                'title' : 'Search',
-                'contexts' : ['selection']
-            }, () => {
-                _idCounter = 0;
-                return Promise.resolve()
+        return new Promise((resolve, reject) => {
+            _removeRootItem().then(() => {
+                chrome.contextMenus.create({
+                    'id': _rootItem,
+                    'title' : 'Search',
+                    'contexts' : ['selection']
+                }, () => {
+                    resolve()
+                })
             })
         })
     }
