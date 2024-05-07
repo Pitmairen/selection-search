@@ -48,12 +48,12 @@ function ContextMenu(options, _clickCounterCallback){
 
 
     this.disable = function(){
-        _currentPromise = doDisable(engines, _currentPromise).then(()=>{
+        _currentPromise = doDisable(_currentPromise).then(()=>{
             _currentPromise = Promise.resolve();
         })
     }
 
-    function doDisable(engines, currentPromise){
+    function doDisable(currentPromise){
         return new Promise((resolve, reject) => {
             currentPromise.then(() => {
                 _removeRootItem().then(() => {
