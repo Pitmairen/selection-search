@@ -1,6 +1,6 @@
 {
     "name": "Selection Search",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "manifest_version": 3,
     "description": "Search for the selected text in search engines",
     "minimum_chrome_version": "88",
