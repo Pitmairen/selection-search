@@ -10,6 +10,23 @@ and
 
 ## Changelog
 
+*0.9.2*
+- Improvements to icon loading. The icons are now loaded in the background worker, similar to
+  how it was done in the 0.8.* versions of the extensions. This should make the icons load faster
+  and with less chance of icons failing to load.
+
+  Note: The icons are cached in the sessions store provided by the browser.
+        This storage has limited capacity.
+        If you have a lot of search engines or have many large custom icons, you can hit the limit.
+        This will cause some icons to fail to load. If this happens try to use smaller icons if you
+        have custom icons. If that does not help report the issue as it may be possible to make the
+        usage of the storage more efficient if necessary.
+
+        You can also hit the limit if you make a lot of changes to your search engines in one go,
+        but this should be fixable by just restarting the browser as this will cleanup old entries
+        in the storage.
+
+
 *0.9.1*
 
 - Fix issue with context menu items requiring two clicks to work
