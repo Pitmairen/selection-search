@@ -283,21 +283,25 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
             images[index].src = iconUrl
             images[index].addEventListener("error", fallbackImage)
         });
+
+        if (response.needsCurrentDomain){
+            chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
+                if(tabs.length == 1 && tabs[0].id != undefined){
+                    chrome.runtime.sendMessage({action: "getCurrentDomainIconToolbar", url: tabs[0].url}, function(response){
+                        if(response !== undefined && response.indexes.length > 0 && response.icon){
+                            var images = document.querySelectorAll(".engine .engine-img");
+                            response.indexes.forEach((iconIndex) => {
+                                images[iconIndex].src = response.icon;
+                            })
+
+                        }
+                    });
+                }
+            })
+        }
+
     });
 
-    chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
-        if(tabs.length == 1 && tabs[0].id != undefined){
-            chrome.runtime.sendMessage({action: "getCurrentDomainIconToolbar", url: tabs[0].url}, function(response){
-                if(response !== undefined && response.indexes.length > 0){
-                    var images = document.querySelectorAll(".engine .engine-img");
-                    response.indexes.forEach((iconIndex) => {
-                        images[iconIndex].src = response.icon;
-                    })
-
-                }
-            });
-        }
-    })
 
     hideSuggestions();
     // Show top level menu
