@@ -181,27 +181,45 @@ function getContentScriptData(sendResponse, clickCounter){
 
 }
 
-
-function getIcons(iconCollection, sendResponse){
-
-    let resp = {};
-
-
-    resp.icons = iconCollection.getAllIconURLs();
-    resp.needsCurrentDomain = iconCollection.needsCurrentDomain();
-
-    sendResponse(resp);
-
+function filterPopupEngines(engines, options){
+    return filterEngines(engines, en => {
+        return options.separate_menus && en.hide_in_popup
+    })
 }
 
-function getCurrentDomainIcon(iconCollection, sendResponse, tab){
+function filterToolbarEngines(engines, options){
+    return filterEngines(engines, en => {
+        return options.separate_menus && en.hide_in_toolbar
+    })
+}
 
+function filterEngines(engines, skipCheck){
+    return engines.filter(en => !skipCheck(en)).map((en) => {
+        if(en.is_submenu){
+            // Make sure we don't modify engines as this affect the actual stored data
+            return {
+                ...en, engines: filterEngines(en.engines, skipCheck)
+            }
+        }
+        return en
+    })
+}
+
+function getIcons(iconCollection, sendResponse, skipCheck){
     let resp = {};
+    iconCollection.getIconUrls().then(icons => {
+        resp.icons = icons
+        resp.needsCurrentDomain = iconCollection.needsCurrentDomain();
+        sendResponse(resp);
+    })
+    return true
+}
 
+function getCurrentDomainIcon(iconCollection, iconLoader, sendResponse, tab){
+    let resp = {};
     resp.indexes = iconCollection.getCurrentDomainIndexes();
-
     if(resp.indexes.length > 0){
-        IconLoader.loadCurrentDomainIcon(tab).then(function(iconUrl){
+        iconLoader.getCurrentDomainIcon(tab).then(function(iconUrl){
             resp.icon = iconUrl
             sendResponse(resp);
         })
@@ -228,52 +246,6 @@ function getOptions(sendResponse){
 
     sendResponse(resp);
 
-}
-
-
-function loadPopupIcons(iconCollection, engines, options){
-
-    if(options.remove_icons !== 'no')
-        return;
-
-    _loadIcons(iconCollection, engines, en => {
-        return options.separate_menus && en.hide_in_popup
-    })
-}
-
-function loadToolbarIcons(iconCollection, engines, options){
-    _loadIcons(iconCollection, engines, en => {
-        return options.separate_menus && en.hide_in_toolbar
-    })
-}
-
-function _loadIcons(iconCollection, engines, skipCheck){
-
-    for(var i=0; i < engines.length; i++){
-
-        var en = engines[i];
-
-        if(skipCheck(en)){
-            continue;
-        }
-
-        if(en.icon_url !== undefined)
-            iconCollection.addURL(en.icon_url);
-        else if(en.is_separator)
-            continue;
-        else if(en.is_submenu && (!en.url || en.url === "Submenu"))
-            iconCollection.addURL(chrome.runtime.getURL('img/folder.png'));
-        else if(en.url == 'COPY')
-            iconCollection.addURL(chrome.runtime.getURL('img/copy.png'));
-        else{
-            var host = en.url.split('/').slice(0, 3).join('/');
-            iconCollection.addHost(host);
-        }
-
-        if(en.is_submenu){
-            _loadIcons(iconCollection, en.engines, skipCheck);
-        }
-    }
 }
 
 

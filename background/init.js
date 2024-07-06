@@ -21,10 +21,13 @@ function Background(_previousVersion) {
 
         // Create a new icon collection object. And reload
         // all the icons.
-        _iconCollection = new IconCollection();
-        _toolbarIconCollection = new IconCollection();
-        loadPopupIcons(_iconCollection, engines, _options);
-        loadToolbarIcons(_toolbarIconCollection, engines, _options);
+
+        _iconLoader = new IconLoader();
+        _iconLoader.setSearchEngines(engines)
+        _iconCollectionPopup = new IconCollection(_iconLoader);
+        _iconCollectionPopup.setSearchEngines(filterPopupEngines(engines, _options))
+        _iconCollectionToolbar = new IconCollection(_iconLoader);
+        _iconCollectionToolbar.setSearchEngines(filterToolbarEngines(engines, _options))
 
 
         if(is_click_count_update == undefined || !is_click_count_update){
@@ -50,8 +53,9 @@ function Background(_previousVersion) {
 
     var _options = Storage.getOptions();
     var _contextMenu = new ContextMenu(_options, _updateClickCount);
-    var _iconCollection = new IconCollection();
-    var _toolbarIconCollection = new IconCollection();
+    var _iconLoader = new IconLoader();
+    var _iconCollectionPopup = new IconCollection(_iconLoader);
+    var _iconCollectionToolbar = new IconCollection(_iconLoader);
     var _clickCounter = new ClickCounter(Storage);
 
     _storageUpdated();
@@ -68,9 +72,9 @@ function Background(_previousVersion) {
                 sendResponse({});
                 return;
             case "getPopupIcons":
-                return getIcons(_iconCollection, sendResponse);
+                return getIcons(_iconCollectionPopup, sendResponse);
             case "getToolbarIcons":
-                return getIcons(_toolbarIconCollection, sendResponse);
+                return getIcons(_iconCollectionToolbar, sendResponse);
             case "getOptions":
                 return getOptions(sendResponse);
             case "copyToClipboard":
@@ -78,9 +82,9 @@ function Background(_previousVersion) {
             case "openAllUrls":
                 return openAllUrls(request, sendResponse, sender.tab);
             case "getCurrentDomainIcon":
-                return getCurrentDomainIcon(_iconCollection, sendResponse, sender.tab);
+                return getCurrentDomainIcon(_iconCollectionPopup, _iconLoader, sendResponse, sender.tab);
             case "getCurrentDomainIconToolbar":
-                return getCurrentDomainIcon(_toolbarIconCollection, sendResponse, {url: request.url});
+                return getCurrentDomainIcon(_iconCollectionToolbar, _iconLoader, sendResponse, {url: request.url});
             case "saveEngine":
                 saveEngine(request, sendResponse);
                 _storageUpdated();

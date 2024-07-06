@@ -1,270 +1,322 @@
 
-function IconSourceManager(sources){
 
-    let _currentIndex = 0;
+function IconCollection(iconLoader){
 
-    this.currentUrl = function(){
-        return _currentSource().url
-    }
-    this.nextUrl = function(){
-        this.nextSource()
-        return this.currentUrl()
-    }
+    let _currentDomainIndexes = []
+    let _activeEngines = []
 
-    this.isEmptyResponse = function(response){
-        return _currentSource().isEmptyResponse(response);
+    this.setSearchEngines = function(engines){
+        _activeEngines = engines
+        _currentDomainIndexes = _getDefinedIconUrls(engines)
+        _currentDomainIndexes = _currentDomainIndexes.map(
+            (it,i) => it == "CURRENT_DOMAIN" ? i : -1
+        ).filter(value => value !== -1)
     }
 
-    this.nextSource = function(){
-        _currentIndex += 1
+    this.getIconUrls = async function(){
+        return await iconLoader.getAllIconURLs(_activeEngines)
     }
-
-    this.hasTriedAll = function(){
-        return _currentIndex >= sources.length;
-    }
-
-    function _currentSource(){
-        return sources[_currentIndex % sources.length];
-    }
-
-}
-
-function IconLoader(sources){
-
-    let _isError = false;
-    let _iconSources = new IconSourceManager(sources)
-    let _blob = null;
-    let _dataUrl = null;
-
-    // _loadImage()
-
-    this.isComplete = function(){
-        // Currently after manifest v3 we just use the icon urls directly,
-        // so we can just always return true
-        return true;
-        //return _dataUrl != null || _isError;
-    }
-
-    this.getDataURL = function(){
-        return _iconSources.currentUrl()
-        // if(_isError){
-        //     _reloadImage();
-        //     //return IconLoader.getDefaultIcon();
-        //     return _iconSources.currentUrl()
-        // }
-        // return _dataUrl
-    }
-
-    this.getDataUrlPromise = function(){
-        return new Promise(function(resolve){
-            function imageLoaded(){
-                if(_dataUrl !== null){
-                    resolve(_dataUrl)
-                } else if(!_iconSources.hasTriedAll()){
-                    _reloadImage().then(imageLoaded)
-                }else{
-                    resolve(IconLoader.getDefaultIcon());
-                }
-            }
-            // _loadImage().then(imageLoaded)
-            resolve(_iconSources.currentUrl())
-        });
-    }
-
-    function _reloadImage(){
-        _iconSources.nextUrl()
-        return _loadImage()
-    }
-
-    function _loadImage(){
-        return new Promise((resolve) => {
-            if(_dataUrl !== null){
-                resolve()
-            }
-            fetch(_iconSources.currentUrl()).then(async (resp) => {
-                if(resp.ok){
-                    _blob = await resp.blob()
-                    _isError = false
-                    _dataUrl = await _createDataUrl()
-                }else{
-                    _isError = true
-                }
-                resolve()
-            }).catch((err) => {
-                _isError = true
-                resolve()
-            })
-        })
-    }
-
-    async function _createDataUrl(){
-
-        // Factor to scale the canvas by to support various display densities
-        // with manifest V3 we don't have access to the window, so just set it
-        // to 1 for now. We may be able to get it through an offscree document.
-        // const pixelRatio = Math.max(window.devicePixelRatio || 1, 1);
-        const pixelRatio = 1;
-
-        const canvas = new OffscreenCanvas(16 * pixelRatio, 16 * pixelRatio);
-
-        let bitmap = await createImageBitmap(_blob)
-
-        const context = canvas.getContext("2d");
-        context.scale(pixelRatio, pixelRatio);
-        context.clearRect(0, 0, 16, 16);
-        context.drawImage(bitmap, 0, 0, 16, 16);
-
-        let blob = await canvas.convertToBlob()
-
-        return new Promise((resolve) => {
-            let reader = new FileReader()
-            reader.readAsDataURL(blob)
-            reader.onloadend = function(){
-                resolve(reader.result)
-            }
-            reader.onerror = function(){
-                resolve(IconLoader.getDefaultIcon())
-            }
-        })
-    }
-}
-
-
-
-IconLoader.loadCurrentDomainIcon = function(tab){
-
-    if(tab === undefined || !tab.url){
-        return Promise.resolve(IconLoader.getDefaultIcon())
-    }
-
-    let urlParts = urlparse.urlsplit(tab.url);
-
-    if(!urlParts.hostname){
-        return Promise.resolve(IconLoader.getDefaultIcon())
-    }
-
-    let cached = iconLoaderCurrentDomainLruCache.get(urlParts.hostname)
-    if(cached){
-        return Promise.resolve(cached);
-    }
-
-    var sources = iconLoaderAutoSourcesHostname(urlParts.hostname)
-
-    return new IconLoader(sources).getDataUrlPromise().then(function(url){
-        iconLoaderCurrentDomainLruCache.set(urlParts.hostname, url)
-        return url
-    })
-}
-
-IconLoader.getDefaultIcon = function(){
-    return chrome.runtime.getURL('img/default_favicon.png');
-}
-
-
-function IconCollection(){
-
-    // All the images added to the loader.
-    var _images = [];
-    var _needsCurrentDomain = false;
-
-    var _this = this;
-
-
-    // The host shold be in the format: "http(s)://www.example.com"
-    this.addHost = function(host){
-        _images.push(new IconLoader(iconLoaderAutoSourcesUrl(host)))
-    }
-
-
-    // The url should be a absolute url to an image.
-    this.addURL = function(url){
-
-        let img;
-
-        if(url == "CURRENT_DOMAIN"){
-            img = new IconLoader([new IconSourceUrl(IconLoader.getDefaultIcon())]);
-            img._currentDomain = true;
-            _needsCurrentDomain = true;
-        }
-        else{
-            img = new IconLoader([new IconSourceUrl(url)]);
-        }
-
-        _images.push(img);
-    }
-
 
     this.needsCurrentDomain = function(){
-        return _needsCurrentDomain;
+        return _currentDomainIndexes.length > 0
     }
 
     this.getCurrentDomainIndexes = function(){
-        var ret = [];
-        for(var i in _images){
-            if(_images[i]._currentDomain === true)
-                ret.push(parseInt(i));
+        return _currentDomainIndexes
+    }
+
+    function _getDefinedIconUrls(engines){
+        return engines.flatMap((en) => {
+            if(en.is_separator){
+                return []
+            }
+            else if(en.is_submenu){
+                return [en.icon_url, ..._getDefinedIconUrls(en.engines)]
+            }
+            return en.icon_url
+        })
+    }
+
+}
+
+
+
+function IconLoader(){
+
+    let _currentDomainCache = new LRU(5)
+
+
+    this.getAllIconURLs = async function (engines){
+        return await getAllIconURLs(engines)
+    }
+
+    this.getCurrentDomainIcon = async function(tab){
+        if(!tab || !tab.url){
+            return null
         }
-        return ret;
-    }
 
+        let urlParts = urlparse.urlsplit(tab.url);
 
-    this.getAllIconURLs = function(tab){
-
-        var urls = [];
-        for(var i=0; i < _images.length; i++){
-            var img = _images[i];
-            if(img.isComplete())
-                urls.push(img.getDataURL());
-            else
-                urls.push(IconLoader.getDefaultIcon());
+        if(!urlParts.hostname){
+            return null
         }
-        return urls;
+
+        let cached = _currentDomainCache.get(urlParts.hostname)
+        if(cached){
+            return cached
+        }
+
+        let iconUrl = await (new AutoImageLoader(tab)).fetchIconUrl()
+        _currentDomainCache.set(urlParts.hostname, iconUrl)
+        return iconUrl
+    }
+
+    this.setSearchEngines = async function (engines){
+        await fetchAllIcons(engines)
+    }
+
+    function getIconLoader(en){
+        if(en.is_separator){
+            return
+        }
+        else if(en.icon_url !== undefined){
+            return new IconUrlLoader(en)
+        }
+        else if(en.is_submenu && (!en.url || en.url === "Submenu")){
+            return new StaticImageLoader(chrome.runtime.getURL('img/folder.svg'))
+        }
+        else if(en.url == 'COPY'){
+            return new StaticImageLoader(chrome.runtime.getURL('img/copy.svg'))
+        }
+        else{
+            return new AutoImageLoader(en)
+        }
+    }
+
+    function StaticImageLoader(imageUrl){
+
+        this.fetchIcon = async function(){
+            // We just return the url, so nothing to fetch
+            return this
+        }
+
+        this.getIconUrl = async function(){
+            return imageUrl
+        }
+
+    }
+
+    function IconUrlLoader(en){
+
+        let iconUrl = en.icon_url
+        let iconKey = `i-u-${iconUrl}`
+        let _isCurrentDomainUrl = iconUrl == "CURRENT_DOMAIN"
+
+        this.fetchIcon = async function(){
+
+            if(_isCurrentDomainUrl){
+                return this
+            }
+
+            if(await getIconFromStorage(iconKey)){
+                return this
+            }
+
+            let data = await fetchIconData(iconUrl)
+
+            if(data !== null){
+                await saveIconToStorage(iconKey, data)
+            }
+            return this
+        }
+
+        this.getIconUrl = async function(){
+
+            if(_isCurrentDomainUrl){
+                return await generateFallbackImage(getFallbackText(en))
+            }
+
+            return await getIconUrlFromStorageWithFallback(iconKey, en)
+        }
+
+    }
+
+    function AutoImageLoader(en){
+
+        const urlParts = urlparse.urlsplit(en.url);
+        const hostname = urlParts.hostname.trim()
+
+        let iconKey = `i-a-${hostname}`
+
+        this.fetchIconUrl = async function(){
+            let sources = [
+                `https://s2.googleusercontent.com/s2/favicons?sz=32&domain_url=${urlParts.scheme}://${hostname}`,
+                `https://icons.duckduckgo.com/ip3/${hostname}.ico`,
+                `https://api.faviconkit.com/${hostname}/32`,
+            ]
+            for(let i=0; i < sources.length; i++){
+
+                let sourceUrl = sources[i]
+                let data = await fetchIconData(sourceUrl)
+                if(data !== null){
+                    return data
+                }
+            }
+        }
+
+        this.fetchIcon = async function(){
+            if(hostname.length === 0){
+                return this
+            }
+
+            if(await getIconFromStorage(iconKey)){
+                return this
+            }
+
+            let data = await this.fetchIconUrl()
+
+            if(data !== null){
+                await saveIconToStorage(iconKey, data)
+            }
+            return this
+        }
+
+        this.getIconUrl = async function(){
+            return await getIconUrlFromStorageWithFallback(iconKey, en)
+        }
+    }
+
+    async function saveIconToStorage(iconKey, data){
+        try{
+            await chrome.storage.session.set({[iconKey]: data})
+        }catch(err){
+            console.warn("Failed to save icon", err)
+            if(err.message.indexOf("quota bytes exceeded") !== -1){
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: '/img/icon48.png',
+                    title: 'Failed to store search engine icon',
+                    message: 'Some search engine icons may not show properly. A restart of the browser may help to free up old data from memory. If not please report the issue.'
+                });
+            }
+        }
+    }
+
+    async function getIconFromStorage(iconKey){
+        let result = await chrome.storage.session.get(iconKey)
+        if(result[iconKey]){
+            return result[iconKey]
+        }
+    }
+
+    async function getIconUrlFromStorageWithFallback(iconKey, en){
+        let iconUrl = await getIconFromStorage(iconKey)
+        if(iconUrl){
+            return iconUrl
+        }
+
+        let fallbackText = getFallbackText(en)
+
+        return await generateFallbackImage(fallbackText)
+    }
+
+    function getFallbackText(en){
+        let fallbackText = "?"
+        if(en.name){
+            fallbackText = en.name.slice(0, 2)
+        } else {
+            let urlParts = urlparse.urlsplit(en.url)
+            if(urlParts.hostname){
+                if(urlParts.hostname.startsWith("www.")){
+                    fallbackText = urlParts.hostname.slice(4, 6)
+                } else{
+                    fallbackText = urlParts.hostname.slice(0, 2)
+                }
+            } else {
+                if(en.url.startsWith("www.")){
+                    fallbackText = en.url.slice(4, 6)
+                }else{
+                    fallbackText = en.url.slice(0, 2)
+                }
+
+            }
+        }
+        return fallbackText
+    }
+
+    async function getAllIconURLs(engines){
+        let icons = engines.flatMap(function(en){
+            let loader = getIconLoader(en)
+            if(!loader){
+                return []
+            }
+            if(!en.is_submenu){
+                return loader.getIconUrl()
+            }
+            return [loader.getIconUrl(), getAllIconURLs(en.engines)]
+        })
+        return (await Promise.all(icons)).flat(1)
+    }
+
+    async function fetchAllIcons(engines){
+        let loaders = engines.flatMap(function(en){
+            let loader = getIconLoader(en)
+            if(!loader){
+                return []
+            }
+            if(!en.is_submenu){
+                return loader.fetchIcon()
+            }
+            return [loader.fetchIcon(), fetchAllIcons(en.engines)]
+        })
+        return (await Promise.all(loaders)).flat(1)
+    }
+
+
+    async function fetchIconData(iconUrl){
+        try{
+            let resp = await fetch(iconUrl)
+
+            if(!resp.ok){
+                return null
+            }
+
+            let blob = await resp.blob()
+
+            return await convertBlobToBase64(blob)
+        }catch{
+            console.warn(`Failed to fetch icon ${iconUrl}`)
+        }
+    }
+
+    async function generateFallbackImage(text){
+
+        let svg = `<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <rect fill="lightgray" height="64" width="64" y="0" x="0"/>
+        <text text-anchor="middle" alignment-baseline="middle" font-family="Sans-serif"
+        font-size="40" font-weight="bold" y="50%" x="50%" fill="#333333">${text}</text>
+    </g>
+</svg>`
+
+        const blob = new Blob([svg], {type: 'image/svg+xml'});
+
+        return await convertBlobToBase64(blob)
+    }
+
+    function convertBlobToBase64(blob){
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader;
+            reader.onerror = reject;
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+        })
     }
 
 }
 
-
-const EMPTY_ICON_RESPONSE_GOOGLE_S2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAqdJREFUOE9jZKAQMML0h4au4nz567WItYmS6e9ff7Lff/hu8vHTDx6QPB8vxxdBAc4zbOwsU4+euXdanE30zerVYd9BcmADQJq//H4vpaImnvrl608/FUVhMTklIeFfv/8ysLEyMyjKCTPs3n3j7YNH71/x8bJtunPr9WweVsFnIEPABtj5T5XVV5fO/vb9T5SWjpisorwwAzcXG4ORrgzD12+/GOSl+Biev/7GcPnGM4Zly88+5uNmW3bx9vOphzZmPwYbUNm8PejZ848tqUmWmq/efAH7ihVoMwjoakiCDfj7j4Hh0Kn7YCfPX3TyurSUQE17rec6sAHFNZv38nCz6deWuQlv2n0NJVidbdQY+LhZGD59/cOw98gtBiU5IYY16y6+/fr918X+Vj9nsAFJOas+JiWY8+lqSIEVwQBMM4gPcsHNe28Ybt59xSAmwsMwZ96JTwumhfODDQiOW/i3o8mPSUVegGHX4TsMMpICYAyyGRnsP3Gf4cPH70BvSTGU12z8t25JAjPcgMk9IUySolxgp5449wAcgCICHBgGgAJVQ1mcoQxowHqYAYnZKz8mJ1rwWRvLwTUcPfsIzlaSE2EAGQ4Cbz78AHtj9tzjnxZOj4B4ARaIDRVuwjBdsECD8aWBXjLTkwJzKxq2v/3168/F/nZoIFY0bg98/uJja2qypSbMFegGgDT6uWoxnDj/iGHmnGPXgQZWd9R7rkdKSJLZn778igKmBVmYIXcefgAnHkh6kGJ4+eYTw8zZxx4L8LKjJiREUhZN/fj5p5+MJL+Yl5e28G9gUr736C3Dr19/GR7ff//28bMPrwR42DfduYOWlEE2wDKTlZGSyc9fv3Pev/9u8unzD57///+DM5OwENdpLg6WKafO3D/Lj56ZUOKKRA4AXks6IOHwHr4AAAAASUVORK5CYII="
-
-
-function IconSourceGoogleS2(hostname){
-    this.url = "https://s2.googleusercontent.com/s2/favicons?sz=32&domain_url=" + hostname;
-    this.isEmptyResponse = function(data){
-        return data === EMPTY_ICON_RESPONSE_GOOGLE_S2
-    }
-}
-
-function IconSourceFaviconKit(hostname){
-    this.url = "https://api.faviconkit.com/" + hostname + "/32"
-    this.isEmptyResponse = function(data){
-        return false;
-    }
-}
-
-function IconSourceUrl(url){
-    this.url = url;
-    this.isEmptyResponse = function(){
-        return false;
-    }
-}
-
-function iconLoaderAutoSourcesUrl(url){
-
-    var urlParts = urlparse.urlsplit(url);
-
-    if(urlParts.hostname.trim().length === 0){
-        return [new IconSourceUrl(IconLoader.getDefaultIcon())];
-    }
-
-    return iconLoaderAutoSourcesHostname(urlParts.hostname);
-}
-
-function iconLoaderAutoSourcesHostname(hostname){
-    return [
-        new IconSourceGoogleS2(hostname),
-        new IconSourceFaviconKit(hostname),
-    ]
-}
 
 
 // https://stackoverflow.com/a/46432113/183921
@@ -298,6 +350,3 @@ class LRU {
         return this.cache.keys().next().value;
     }
 }
-
-
-const iconLoaderCurrentDomainLruCache = new LRU(5)
