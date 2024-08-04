@@ -49,8 +49,7 @@
     "web_accessible_resources": [
         {
             "resources": ["old/postsearch.html", "old/postsearch.js", "old/encoding-search.html", "old/encoding-search.js"],
-            "matches": ["http://*/*", "https://*/*", "file://*/*"],
-            "use_dynamic_url": true
+            "matches": ["http://*/*", "https://*/*", "file://*/*"]
         },
         {
             "resources": [
@@ -63,8 +62,7 @@
                 "img/copy.svg",
                 "img/folder.svg"
             ],
-            "matches": ["http://*/*", "https://*/*", "file://*/*"],
-            "use_dynamic_url": true
+            "matches": ["http://*/*", "https://*/*", "file://*/*"]
         }
     ]
 
