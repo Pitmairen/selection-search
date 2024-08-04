@@ -10,6 +10,14 @@ and
 
 ## Changelog
 
+*0.9.3*
+- Fix issue where some icons failing to load could trigger a loop in the image loading, which could
+  cause high CPU usage and pages failing to load.
+  *This was caused by a use_dynamic_url feature in chrome which seems to not be fully implemented
+  causing some internal icons to not be accessible by the extension.
+  use_dynamic_url has been disabled until this is fixed in Chrome.*
+
+
 *0.9.2*
 - Improvements to icon loading. The icons are now loaded in the background worker, similar to
   how it was done in the 0.8.* versions of the extensions. This should make the icons load faster
@@ -25,7 +33,6 @@ and
   You can also hit the limit if you make a lot of changes to your search engines in one go,
   but this should be fixable by just restarting the browser as this will cleanup old entries
   in the storage.
-
 
 *0.9.1*
 
