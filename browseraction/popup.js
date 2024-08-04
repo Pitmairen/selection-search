@@ -260,10 +260,6 @@ function openFirstSearch(){
     document.querySelector('.engine a').click();
 }
 
-function fallbackImage(){
-    this.src = chrome.runtime.getURL('img/default_favicon.png');
-}
-
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
     if(response.options.toolbar_popup_style === 'icons-only'){
@@ -281,7 +277,6 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
         var images = document.querySelectorAll(".engine .engine-img");
         response.icons.forEach((iconUrl, index) => {
             images[index].src = iconUrl
-            images[index].addEventListener("error", fallbackImage)
         });
 
         if (response.needsCurrentDomain){

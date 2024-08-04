@@ -162,9 +162,6 @@ function Popup(options, style){
         img.className = "engine-img";
         img.referrerPolicy = "no-referrer"
         img.src = url;
-        img.addEventListener("error", function(){
-            this.src = chrome.runtime.getURL('img/default_favicon.png');
-        })
         return img;
 
 
