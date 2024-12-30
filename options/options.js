@@ -1108,6 +1108,7 @@ function initOptionsPage(){
 			} else {
 				$('.save-restore-buttons').removeClass('changed');
 			}
+			_update_save_button_state();
 		}
 
 		var _changeDetectTimeout = null;
