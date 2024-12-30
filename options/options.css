@@ -443,3 +443,10 @@ a{
     width: 100%;
 }
 
+.page-header{
+	display: flex;
+	align-items: center;
+}
+#main-heading{
+	flex: 1;
+}
