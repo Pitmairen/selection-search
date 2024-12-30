@@ -562,6 +562,8 @@ function initOptionsPage(){
 			else if($(this).hasClass('menu-separator')){
 				en.is_separator = true;
 
+				delete en.hotkey;
+
 				folder_stack[folder_stack.length-1].engines.push(en);
 			}
 			else if($(this).hasClass('menu-folder-end')){
