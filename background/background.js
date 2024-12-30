@@ -181,6 +181,15 @@ function getContentScriptData(sendResponse, clickCounter){
 
 }
 
+function getToolbarOptions(sendResponse, clickCounter){
+
+    let resp = {};
+
+    resp.extra_style = Storage.getToolbarStyle('');
+
+    sendResponse(resp);
+}
+
 function filterPopupEngines(engines, options){
     return filterEngines(engines, en => {
         return options.separate_menus && en.hide_in_popup
@@ -243,6 +252,8 @@ function getOptions(sendResponse){
     resp.extra_style = Storage.getStyle('');
 
     resp.blacklist = Storage.getBlacklistDefinitions();
+
+    resp.toolbar_style = Storage.getToolbarStyle('');
 
     sendResponse(resp);
 

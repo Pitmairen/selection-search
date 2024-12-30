@@ -260,6 +260,14 @@ function openFirstSearch(){
     document.querySelector('.engine a').click();
 }
 
+chrome.runtime.sendMessage({action:"getToolbarOptions"}, function(response){
+    if(response.extra_style){
+        let styleNode = document.createElement('style')
+        styleNode.appendChild(document.createTextNode(response.extra_style));
+        document.querySelector("head").appendChild(styleNode)
+    }
+})
+
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
     if(response.options.toolbar_popup_style === 'icons-only'){

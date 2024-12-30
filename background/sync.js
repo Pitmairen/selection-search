@@ -58,8 +58,10 @@ const Sync = new function(){
             data.settings = storage.getOptions();
             data.blacklist = storage.getBlacklistDefinitions();
         }
-        if(opts.sync_style)
+        if(opts.sync_style){
             data.style = storage.getStyle();
+            data.toolbarStyle = storage.getToolbarStyle();
+        }
 
         if(Object.keys(data).length === 0)
             return;
@@ -118,6 +120,11 @@ const Sync = new function(){
             storage.setStyle(items.style);
         }
 
+        if(items.hasOwnProperty('toolbarStyle') && opts.sync_style)
+        {
+            storage.setToolbarStyle(items.toolbarStyle);
+        }
+
 
     }
 
@@ -139,6 +146,11 @@ const Sync = new function(){
         if(changes.hasOwnProperty('style') && opts.sync_style)
         {
             storage.setStyle(_getNewValueOrDefault(changes.style, ''));
+        }
+
+        if(changes.hasOwnProperty('toolbarStyle') && opts.sync_style)
+        {
+            storage.setToolbarStyle(_getNewValueOrDefault(changes.toolbarStyle, ''));
         }
 
         if(opts.sync_engines){

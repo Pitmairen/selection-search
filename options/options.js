@@ -380,6 +380,8 @@ function initOptionsPage(){
 		$("#blacklist-definitions").val(response.blacklist.join('\n'));
 		$("#opt-use-blacklist-for-hotkeys").attr('checked', response.options.use_blacklist_for_hotkeys);
 
+		$("#toolbarStyle").val(response.toolbar_style);
+
         // set activator combo
         for(var i in response.options.activator_combo){
             var act = response.options.activator_combo[i];
@@ -584,6 +586,7 @@ function initOptionsPage(){
 		dataStore.setSearchEngines(new_engines);
 
 		dataStore.setStyle(jQuery.trim($('#style').val()));
+		dataStore.setToolbarStyle(jQuery.trim($('#toolbarStyle').val()));
 
 
         var act_combo = $('input[name=activator_combo]:checked').map(function() {
@@ -847,8 +850,10 @@ function initOptionsPage(){
 
 		if($('#export-search-engines').is(':checked'))
 			to_export.searchEngines = Storage.getSearchEngines();
-		if($('#export-style').is(':checked'))
+		if($('#export-style').is(':checked')){
 			to_export.styleSheet =  Storage.getStyle();
+			to_export.toolbarStyleSheet =  Storage.getToolbarStyle();
+		}
 		if($('#export-options').is(':checked'))
 			to_export.options =  Storage.getOptions();
 
@@ -944,11 +949,16 @@ function initOptionsPage(){
 
 		if($('#import-style').is(':checked')){
 
-			if(!to_import.hasOwnProperty('styleSheet'))
+			if(!to_import.hasOwnProperty('styleSheet') && !to_import.hasOwnProperty("toolbarStyleSheet"))
 				msg.push('Styling: not available');
 			else{
 				msg.push('Styling: OK');
-				Storage.setStyle(to_import.styleSheet);
+				if(to_import.hasOwnProperty('styleSheet')){
+					Storage.setStyle(to_import.styleSheet);
+				}
+				if(to_import.hasOwnProperty('toolbarStyleSheet')){
+					Storage.setToolbarStyle(to_import.toolbarStyleSheet);
+				}
 			}
 
 		}
@@ -1074,6 +1084,12 @@ function initOptionsPage(){
 	$('#show-advanced-popup-opts').click(function(){
 
 		$('#popup-advanced-options').slideToggle();
+		return false;
+	});
+
+	$('#show-advanced-toolbar-opts').click(function(){
+
+		$('#toolbar-advanced-options').slideToggle();
 		return false;
 	});
 
