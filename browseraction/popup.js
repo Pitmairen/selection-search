@@ -28,16 +28,16 @@ function EngineNode(engine, node, children){
 // Hide all the items in the menu
 function clearMenu(){
     searchEngines.querySelectorAll('.node').forEach(node => {
-        node.style.display = 'none'
+        hideElement(node);
     })
 }
 
 function showElement(el){
-    el.style.display = 'block';
+    el.classList.remove("is-hidden")
 }
 
 function hideElement(el){
-    el.style.display = 'none';
+    el.classList.add("is-hidden")
 }
 function showItem(selector){
     showElement(document.querySelector(selector));
@@ -95,6 +95,13 @@ function createEngineNode(label){
     return node
 }
 
+function createSeparatorNode(){
+    let node = createEngineListNode("")
+    node.classList.add('separator')
+    node.querySelector(".engine-link").remove()
+    return node
+}
+
 function createBackNode(label){
     let node = createEngineListNode(label)
     node.classList.add('back-link')
@@ -148,12 +155,21 @@ function createEngineNodes(engines, options, in_submenu){
 
     engines.forEach(en => {
 
-        if(en.is_separator || (options.separate_menus && en.hide_in_toolbar)){
+        if(options.separate_menus && en.hide_in_toolbar){
             return;
         }
 
+        if(en.is_separator){
+            let node = createSeparatorNode()
+            node.classList.add("separator")
+            engineNodes.push(
+                new EngineNode(en, node, [])
+            )
+            return
+        }
 
         let node = createEngineNode(en.name)
+
         let a = node.querySelector('.engine-link')
 
         a.addEventListener('mouseenter', () => {
@@ -166,6 +182,7 @@ function createEngineNodes(engines, options, in_submenu){
 
         if(en.is_submenu){
             let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true))
+            node.classList.add('sub-menu')
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -259,6 +276,14 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
 function openFirstSearch(){
     document.querySelector('.engine a').click();
 }
+
+chrome.runtime.sendMessage({action:"getToolbarOptions"}, function(response){
+    if(response.extra_style){
+        let styleNode = document.createElement('style')
+        styleNode.appendChild(document.createTextNode(response.extra_style));
+        document.querySelector("head").appendChild(styleNode)
+    }
+})
 
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 

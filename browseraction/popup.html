@@ -33,6 +33,7 @@
     text-decoration: none;
     color: #115f93;
     border-radius: 2px;
+    align-items: center;
 }
 
 .search-engines a:focus {
@@ -44,7 +45,7 @@
 .search-engines a:hover{
     background: #ddd;
 }
-.search-engines .node {
+.search-engines .node.is-hidden {
     display: none;
 }
 .search-engines img {
@@ -60,6 +61,9 @@
     text-overflow: ellipsis;
 }
 
+.search-engines .separator{
+    display: none;
+}
 
 .search-engines.icons-only .engine-name{
     display: none;

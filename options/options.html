@@ -518,6 +518,20 @@ www.example.com/test
 	<p class="section-option"><label for="opt-toolbar-popup-hotkeys">Hotkeys enabled</label> <input id="opt-toolbar-popup-hotkeys" type="checkbox" name="toolbar_hotkeys" /> <span class="separate-menus-msg">(Whether the hotkeys works while the input box has focus depends on the "Show in inputs and textareas" setting in the advanced settings under "Popup Menu" section.)</span></p>
 
 	<p class="section-option"><label for="opt-toolbar-popup-suggestions">Suggestions enabled</label> <input id="opt-toolbar-popup-suggestions" type="checkbox" name="toolbar_suggestions" /> <span class="separate-menus-msg">(Show search suggestions when typing in the search input)</span></p>
+
+	<div class="advanced-toolbar-opts-toggle">
+		<a href="#" id="show-advanced-toolbar-opts">Advanced Settings</a>
+	</div>
+
+	<div id="toolbar-advanced-options">
+		<h4 class="subsection-heading">Styling</h4>
+		<p class="info" id="style-info">
+			Here you can customize the look of the toolbar popup using <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.
+			Right click on the toolbar icon and select "inspect" to see and experiment with the html of the popup.
+			After adding some css rules and saving the changes the css should be applied the next time you open the toolbar popup.
+		</p>
+		<textarea id="toolbarStyle"></textarea>
+	</div>
 </div>
 
 </div>

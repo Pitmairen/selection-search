@@ -7,6 +7,7 @@ function DataStore(kwStore){
 
     var _SEARCH_ENGINES_KEY = 'searchEngines';
     var _STYLE_KEY = 'styleSheet';
+    var _TOOLBAR_STYLE_KEY = 'styleSheetTB';
     var _BUTTON_KEY = 'button'; // Used in previous versions
     var _OPTIONS_KEY = 'options';
     var _BLACKLIST_KEY = 'blacklist';
@@ -105,6 +106,13 @@ function DataStore(kwStore){
         return _getValue(_STYLE_KEY, default_value);
     }
 
+    this.getToolbarStyle = function(default_value){
+        if(default_value === undefined){
+            default_value = ''
+        }
+        return _getValue(_TOOLBAR_STYLE_KEY, default_value);
+    }
+
     this.getButton = function(){
         return _getValue(_BUTTON_KEY, 0);
     }
@@ -154,6 +162,10 @@ function DataStore(kwStore){
 
     }
 
+    this.setToolbarStyle = function(style){
+        _setValue(_TOOLBAR_STYLE_KEY, style);
+    }
+
     this.setOptions = function(options){
 
         if(kwStore[_BUTTON_KEY] != undefined)
@@ -177,6 +189,7 @@ function DataStore(kwStore){
     this.clear = function(style){
 
         _that.clearStyle();
+        _that.clearToolbarStyle();
         _that.clearSearchEngines();
         _that.clearButton();
         _that.clearOptions();
@@ -186,6 +199,10 @@ function DataStore(kwStore){
 
     this.clearStyle = function(){
         _removeValue(_STYLE_KEY);
+    }
+
+    this.clearToolbarStyle = function(){
+        _removeValue(_TOOLBAR_STYLE_KEY);
     }
 
     this.clearSearchEngines = function(){
@@ -223,6 +240,8 @@ function DataStore(kwStore){
             return true;
         } else if(!_eq(this.getStyle(''), other.getStyle(''))){
             return true;
+        } else if(!_eq(this.getToolbarStyle(''), other.getToolbarStyle(''))){
+            return true;
         } else if(!_eq(this.getSearchEngines(), other.getSearchEngines())){
             return true;
         } else if(!_eq(this.getBlacklistDefinitions(), other.getBlacklistDefinitions())){
@@ -238,6 +257,7 @@ function DataStore(kwStore){
     this.copyInto = function(other){
         other.setOptions(this.getOptions());
         other.setStyle(this.getStyle(''));
+        other.setToolbarStyle(this.getToolbarStyle(''));
         other.setSearchEngines(this.getSearchEngines());
         other.setBlacklistDefinitions(this.getBlacklistDefinitions());
         other.setSyncOptions(this.getSyncOptions());
