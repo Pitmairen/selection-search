@@ -95,6 +95,13 @@ function createEngineNode(label){
     return node
 }
 
+function createSeparatorNode(){
+    let node = createEngineListNode("")
+    node.classList.add('separator')
+    node.querySelector(".engine-link").remove()
+    return node
+}
+
 function createBackNode(label){
     let node = createEngineListNode(label)
     node.classList.add('back-link')
@@ -148,12 +155,21 @@ function createEngineNodes(engines, options, in_submenu){
 
     engines.forEach(en => {
 
-        if(en.is_separator || (options.separate_menus && en.hide_in_toolbar)){
+        if(options.separate_menus && en.hide_in_toolbar){
             return;
         }
 
+        if(en.is_separator){
+            let node = createSeparatorNode()
+            node.classList.add("separator")
+            engineNodes.push(
+                new EngineNode(en, node, [])
+            )
+            return
+        }
 
         let node = createEngineNode(en.name)
+
         let a = node.querySelector('.engine-link')
 
         a.addEventListener('mouseenter', () => {
