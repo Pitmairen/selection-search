@@ -28,16 +28,16 @@ function EngineNode(engine, node, children){
 // Hide all the items in the menu
 function clearMenu(){
     searchEngines.querySelectorAll('.node').forEach(node => {
-        node.style.display = 'none'
+        hideElement(node);
     })
 }
 
 function showElement(el){
-    el.style.display = 'block';
+    el.classList.remove("is-hidden")
 }
 
 function hideElement(el){
-    el.style.display = 'none';
+    el.classList.add("is-hidden")
 }
 function showItem(selector){
     showElement(document.querySelector(selector));
@@ -166,6 +166,7 @@ function createEngineNodes(engines, options, in_submenu){
 
         if(en.is_submenu){
             let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true))
+            node.classList.add('sub-menu')
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
