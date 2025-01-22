@@ -292,7 +292,7 @@ function BaseActionUtils(){
             var engine = engines[i];
             if(engine.is_submenu)
                 urls = _getAllUrlsWithOptions(engine.engines, selection, urls);
-            else
+            else if(!engine.is_separator)
                 urls.push(_this.createSearchUrlWithOptions(engine, selection));
         }
         return urls;
