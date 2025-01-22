@@ -16,9 +16,9 @@ function DataStore(kwStore){
     var _VERSION_KEY = 'VERSION';
 
     var _defaultEngines = [
-        {name: 'Google', url: 'http://google.com/search?q=%s'},
-        {name: 'Youtube', url: 'http://www.youtube.com/results?search_query=%s'},
-        {name: 'Stackoverflow', url: 'http://stackoverflow.com/search?q=%s'}
+        {name: 'Google', url: 'https://google.com/search?q=%s'},
+        {name: 'Youtube', url: 'https://www.youtube.com/results?search_query=%s'},
+        {name: 'Stackoverflow', url: 'https://stackoverflow.com/search?q=%s'}
     ];
 
     var _defaultOptions = {
