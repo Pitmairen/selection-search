@@ -11,6 +11,10 @@ function PopupAction()
 
     }
 
+    this.onAuxClick = function(evt, engine, anchorElement){
+        this.onClick(evt, engine, anchorElement);
+    }
+
 
 }
 
@@ -41,7 +45,9 @@ function DefaultAction(popup, utils, options)
             if(engine.openall){
                 evt.preventDefault();
                 evt.stopPropagation();
-                _clickSubmenu(engine);
+                if(!engine.openall_aux){
+                    _clickSubmenu(engine);
+                }
                 return;
             }
             else if(!utils.isSubmenuWithUrl(engine)){
@@ -77,6 +83,16 @@ function DefaultAction(popup, utils, options)
 
     }
 
+    this.onAuxClick = function(evt, engine, anchorElement){
+        if(engine.is_submenu){
+            evt.preventDefault();
+            evt.stopPropagation();
+            if(engine.openall){
+                _clickSubmenu(engine);
+                return;
+            }
+        }
+    }
 
     function _clickSubmenu(engine){
         utils.openAllInSubmenu(engine, popup.getSelection());
@@ -158,6 +174,10 @@ function DomainAction(popup, utils, options)
         }
     }
 
+    this.onAuxClick = function(evt, engine, anchorElement){
+        // Keep default behavior on middle click
+    }
+
     function _openUrl(engine, url){
         utils.openAllUrlsWithOptions(engine, [utils.createUrlWithOptions(engine, url)], popup.getSelection());
     }
@@ -224,6 +244,11 @@ function ActionCollection(){
     this.onClick = function(evt, engine, a){
         var act = _this.getAction(engine.url);
         return act.onClick(evt, engine, a);
+    }
+
+    this.onAuxClick = function(evt, engine, a){
+        var act = _this.getAction(engine.url);
+        return act.onAuxClick(evt, engine, a);
     }
 
     this.onEnter = function(evt, engine, a){

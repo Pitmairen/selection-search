@@ -191,6 +191,7 @@ function _addEngineOptions(en, el){
         opts.find('.hide_menu_wrap').toggle($(this).is(':checked'));
     }).attr('checked', Boolean(en.openall)).change();
 
+    opts.find('.openall_aux').attr('checked', Boolean(en.openall_aux));
 
     opts.find('.background_global').click(function(){
         opts.find('.background_tab').attr('disabled', $(this).is(":checked"));
@@ -547,6 +548,7 @@ function initOptionsPage(){
 					delete en.openall;
 					delete en.hidemenu;
 					delete en.hide_on_click;
+					delete en.openall_aux;
 				}
 				else if(!en.hidemenu){
 					delete en.hidemenu;

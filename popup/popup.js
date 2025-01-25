@@ -322,9 +322,11 @@ function Popup(options, style){
         });
 
         a.addEventListener("click", function(e){
-
             _onClickAction(e, engine, a);
+        });
 
+        a.addEventListener("auxclick", function(e){
+            _onAuxClickAction(e, engine, a);
         });
     }
 
@@ -333,6 +335,14 @@ function Popup(options, style){
 
         for(var i in _listeners){
             _listeners[i].onClick(evt, engine, a);
+        }
+
+    }
+
+    function _onAuxClickAction(evt, engine, a){
+
+        for(var i in _listeners){
+            _listeners[i].onAuxClick(evt, engine, a);
         }
 
     }
@@ -353,6 +363,10 @@ function Popup(options, style){
 
             _onClickAction(e, engine, a);
 
+        });
+
+        a.addEventListener("auxclick", function(e){
+            _onAuxClickAction(e, engine, a);
         });
 
         if(engine.hidemenu) // The submenu shold not be shown

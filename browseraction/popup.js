@@ -186,7 +186,7 @@ function createEngineNodes(engines, options, in_submenu){
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
-                if(en.openall && hasQuery()){
+                if(en.openall && hasQuery() && !en.openall_aux){
                     utils.openAllInSubmenu(en, getQuery());
                     if(en.hide_on_click){
                         window.close();
@@ -220,6 +220,15 @@ function createEngineNodes(engines, options, in_submenu){
                 highlightQueryBox();
             }else if(isSpecialSearchEngine(en)){
                 e.preventDefault()
+            }else if(en.is_submenu){
+                e.stopPropagation()
+                e.preventDefault()
+                if(en.openall){
+                    utils.openAllInSubmenu(en, getQuery());
+                    if(en.hide_on_click){
+                        window.close();
+                    }
+                }
             }
         })
 
