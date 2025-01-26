@@ -52,13 +52,6 @@ function showEngines(engineNodes, show_back_button, add_back_focus){
 
     clearMenu()
 
-    if(show_back_button){
-        showItem('.back-link')
-    }else{
-        hideItem('.back-link')
-    }
-
-
     engineNodes.forEach((engineNode) => {
         showElement(engineNode.node);
     });
@@ -66,7 +59,7 @@ function showEngines(engineNodes, show_back_button, add_back_focus){
     if(show_back_button){
         // We only want back button focus if sub menu was activated by keyboard enter key
         if(add_back_focus){
-            document.querySelector('.back-link a').focus();
+            document.querySelector('.back-link:not(.is-hidden) a').focus();
         }
     }else{
         document.querySelector('.search-input').focus();
@@ -138,18 +131,28 @@ function replaceDomainSelection(query){
     return query;
 }
 
-function createEngineNodes(engines, options, in_submenu){
+function isTriggeredByKeyboard(event){
+    // if click is activated by enter key e.x = e.y = 0 seems to be true
+    return event.x === 0 && event.y === 0;
+}
+
+function createEngineNodes(engines, options, in_submenu, backCallback){
 
     let engineNodes = []
 
 
-    // Only create a single back button when we create the engines for the top level menu
-    if(!in_submenu){
+    if(in_submenu){
         let backNode = createBackNode('Back')
         let a = backNode.querySelector('.engine-link')
-        a.addEventListener('click', () => {
-            showEngines(engineNodes, in_submenu);
+        a.addEventListener('click', (e) => {
+            if(isTriggeredByKeyboard(e)){
+                backTriggeredByKeyboard = true;
+            }
+            backCallback()
         });
+        engineNodes.push(
+            new EngineNode(null, backNode, [])
+        )
     }
 
 
@@ -181,8 +184,10 @@ function createEngineNodes(engines, options, in_submenu){
         })
 
         if(en.is_submenu){
-            let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true))
-            node.classList.add('sub-menu')
+            let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true, function(){
+                showEngines(engineNodes, in_submenu, in_submenu);
+            }))
+
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -192,7 +197,7 @@ function createEngineNodes(engines, options, in_submenu){
                         window.close();
                     }
                 }else{
-                    showEngines(engineNode.children, true, e.x === 0 && e.y === 0); // if click is activated by enter key e.x = e.y = 0 seems to be true
+                    showEngines(engineNode.children, true, isTriggeredByKeyboard(e));
                 }
             });
             engineNodes.push(engineNode)
@@ -258,6 +263,11 @@ let suggestionTemplate = document.getElementById('suggestion-template')
 let searchEngines = document.querySelector('.search-engines')
 let suggestions = document.querySelector('.suggestions')
 let utils = new ToolbarMenuActionUtils()
+
+// Keep track of if the back button was triggered using the keyboard.
+// Used to prevent triggering the search input when the keyup event
+// fires, after the click on the back button back to the root menu.
+let backTriggeredByKeyboard = false;
 
 
 
@@ -348,6 +358,15 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
     })
 
     document.querySelector('.search-input').addEventListener('keyup', e => {
+
+        if(backTriggeredByKeyboard){
+            // When clicking the last back button that opens the root menu using the keyboard,
+            // the search input gets focus before the enter button gets released. In this case
+            // we don't want to open the first search engine, as that is probably not what
+            // the user expects.
+            backTriggeredByKeyboard = false;
+            return
+        }
 
         if(e.code == 'Enter' && hasQuery()){
             if(!isSuggestionsActive() || !hasActiveSuggestion()){
