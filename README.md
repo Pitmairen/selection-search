@@ -10,6 +10,12 @@ and
 
 ## Changelog
 
+*0.9.5*
+- Add option to trigger "open all" feature on submenues with middle click only.
+- Make back button in toolbar button go back only one level at the time
+- Fix issue where "open all" on submenues could crash if the submenu contained separators
+- Change default search engines on new installs to use https
+
 *0.9.4*
 - Add ability to customize the toolbar popup with css
 - Include separators in the toolbar popup. Hidden by default, but can be made visible with custom css.
