@@ -41,11 +41,11 @@ function EngineEditor(_shadowDOM){
 	var _titleBar = $('<h4></h4>')
 		.css({
 			paddingLeft: '20px',
-			background: 'url(\''+chrome.extension.getURL('img/icon16.png')+'\') no-repeat left top'
+			background: 'url(\''+chrome.runtime.getURL('img/icon16.png')+'\') no-repeat left top'
 		})
 		.append(
 			$('<input class="close" type="button" value="" />')
-			.css({background: 'url(\''+chrome.extension.getURL('img/close.png')+'\') no-repeat center center'})
+			.css({background: 'url(\''+chrome.runtime.getURL('img/close.png')+'\') no-repeat center center'})
 		)
 		.append($('<span class="title">Add search engine</span>'));
 

@@ -60,7 +60,7 @@ $("a[href^='/install.html']").each(function(){
 
 	$(this).before(
 		$('<a href="#"></a>').append(
-			$('<img class="icon" alt="Add to Firefox Selection Search" title="Add to Firefox Selection Search" />').attr('src', chrome.extension.getURL('img/icon16.png')).css({
+			$('<img class="icon" alt="Add to Firefox Selection Search" title="Add to Firefox Selection Search" />').attr('src', chrome.runtime.getURL('img/icon16.png')).css({
 				'margin' : '0 8px 0 3px',
 				'width' : '16px', 'height' : '16px',
 			})
@@ -79,7 +79,7 @@ $("a[href^='/install.html']").each(function(){
 
 if(foundOpenSearchEngines){
 	$('table.altrowgw:last tr:first-child').after(
-		$('<tr><td><img class="icon" title="Firefox Selection Search" width="16px" height="16px" src="'+chrome.extension.getURL('img/icon16.png')+'" />'+
+		$('<tr><td><img class="icon" title="Firefox Selection Search" width="16px" height="16px" src="'+chrome.runtime.getURL('img/icon16.png')+'" />'+
 		' Add search engine to the Firefox <a href="https://addons.mozilla.org/en-US/firefox/addon/selection-search-ff/">Selection Search</a> extension.</td></tr>')
 	);
 }
