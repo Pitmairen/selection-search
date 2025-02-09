@@ -1,5 +1,5 @@
 
-var Blacklist = new function(){
+const Blacklist = new function(){
 
     var _blacklistDefinition = [];
     var _blacklist = undefined;

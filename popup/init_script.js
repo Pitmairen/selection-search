@@ -121,9 +121,9 @@
             if(response.needsCurrentDomain){
 
                 chrome.runtime.sendMessage({action:"getCurrentDomainIcon"}, function(response){
-
-                    popup.setIconForIndexes(response.icon, response.indexes);
-
+                    if(response.icon){
+                        popup.setIconForIndexes(response.icon, response.indexes);
+                    }
                 });
             }
 

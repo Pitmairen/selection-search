@@ -1,9 +1,9 @@
 
 function EngineEditor(_shadowDOM){
 
-	// FIREFOX-BUG?: Depending on the sites Content Security Policy, the 
+	// FIREFOX-BUG?: Depending on the sites Content Security Policy, the
 	// styles that was previously set using inline style attributes when
-	// creating the element would sometimes be blocked. 
+	// creating the element would sometimes be blocked.
 	// Setting the style with javascript after the element has been
 	// created seems to work.
 
@@ -56,7 +56,7 @@ function EngineEditor(_shadowDOM){
 	_editorContainer.append(_saveButton).append(_cancelButton);
 
 	_loading.css({
-		'background' : 'url("'+chrome.extension.getURL('img/ajax-loader.gif')+'") no-repeat center center',
+		'background' : 'url("'+chrome.runtime.getURL('img/ajax-loader.gif')+'") no-repeat center center',
 		'height' : '50px', 'width' : '100%',
 	});
 

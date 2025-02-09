@@ -17,8 +17,8 @@ function loadOpenSearch(engineEditor, url){
 }
 
 
-var shadowElement = document.createElement("div");
-var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
+let shadowElement = document.createElement("div");
+let shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
 document.documentElement.appendChild(shadowElement);
 

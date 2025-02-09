@@ -28,16 +28,16 @@ function EngineNode(engine, node, children){
 // Hide all the items in the menu
 function clearMenu(){
     searchEngines.querySelectorAll('.node').forEach(node => {
-        node.style.display = 'none'
+        hideElement(node);
     })
 }
 
 function showElement(el){
-    el.style.display = 'block';
+    el.classList.remove("is-hidden")
 }
 
 function hideElement(el){
-    el.style.display = 'none';
+    el.classList.add("is-hidden")
 }
 function showItem(selector){
     showElement(document.querySelector(selector));
@@ -52,13 +52,6 @@ function showEngines(engineNodes, show_back_button, add_back_focus){
 
     clearMenu()
 
-    if(show_back_button){
-        showItem('.back-link')
-    }else{
-        hideItem('.back-link')
-    }
-
-
     engineNodes.forEach((engineNode) => {
         showElement(engineNode.node);
     });
@@ -66,7 +59,7 @@ function showEngines(engineNodes, show_back_button, add_back_focus){
     if(show_back_button){
         // We only want back button focus if sub menu was activated by keyboard enter key
         if(add_back_focus){
-            document.querySelector('.back-link a').focus();
+            document.querySelector('.back-link:not(.is-hidden) a').focus();
         }
     }else{
         document.querySelector('.search-input').focus();
@@ -92,6 +85,13 @@ function createEngineListNode(label){
 function createEngineNode(label){
     let node = createEngineListNode(label)
     node.classList.add('engine')
+    return node
+}
+
+function createSeparatorNode(){
+    let node = createEngineListNode("")
+    node.classList.add('separator')
+    node.querySelector(".engine-link").remove()
     return node
 }
 
@@ -131,29 +131,48 @@ function replaceDomainSelection(query){
     return query;
 }
 
-function createEngineNodes(engines, options, in_submenu){
+function isTriggeredByKeyboard(event){
+    // if click is activated by enter key e.x = e.y = 0 seems to be true
+    return event.x === 0 && event.y === 0;
+}
+
+function createEngineNodes(engines, options, in_submenu, backCallback){
 
     let engineNodes = []
 
 
-    // Only create a single back button when we create the engines for the top level menu
-    if(!in_submenu){
+    if(in_submenu){
         let backNode = createBackNode('Back')
         let a = backNode.querySelector('.engine-link')
-        a.addEventListener('click', () => {
-            showEngines(engineNodes, in_submenu);
+        a.addEventListener('click', (e) => {
+            if(isTriggeredByKeyboard(e)){
+                backTriggeredByKeyboard = true;
+            }
+            backCallback()
         });
+        engineNodes.push(
+            new EngineNode(null, backNode, [])
+        )
     }
 
 
     engines.forEach(en => {
 
-        if(en.is_separator || (options.separate_menus && en.hide_in_toolbar)){
+        if(options.separate_menus && en.hide_in_toolbar){
             return;
         }
 
+        if(en.is_separator){
+            let node = createSeparatorNode()
+            node.classList.add("separator")
+            engineNodes.push(
+                new EngineNode(en, node, [])
+            )
+            return
+        }
 
         let node = createEngineNode(en.name)
+
         let a = node.querySelector('.engine-link')
 
         a.addEventListener('mouseenter', () => {
@@ -165,17 +184,20 @@ function createEngineNodes(engines, options, in_submenu){
         })
 
         if(en.is_submenu){
-            let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true))
+            let engineNode = new EngineNode(en, node, createEngineNodes(en.engines, options, true, function(){
+                showEngines(engineNodes, in_submenu, in_submenu);
+            }))
+
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
-                if(en.openall && hasQuery()){
+                if(en.openall && hasQuery() && !en.openall_aux){
                     utils.openAllInSubmenu(en, getQuery());
                     if(en.hide_on_click){
                         window.close();
                     }
                 }else{
-                    showEngines(engineNode.children, true, e.x === 0 && e.y === 0); // if click is activated by enter key e.x = e.y = 0 seems to be true
+                    showEngines(engineNode.children, true, isTriggeredByKeyboard(e));
                 }
             });
             engineNodes.push(engineNode)
@@ -203,6 +225,15 @@ function createEngineNodes(engines, options, in_submenu){
                 highlightQueryBox();
             }else if(isSpecialSearchEngine(en)){
                 e.preventDefault()
+            }else if(en.is_submenu){
+                e.stopPropagation()
+                e.preventDefault()
+                if(en.openall){
+                    utils.openAllInSubmenu(en, getQuery());
+                    if(en.hide_on_click){
+                        window.close();
+                    }
+                }
             }
         })
 
@@ -233,6 +264,11 @@ let searchEngines = document.querySelector('.search-engines')
 let suggestions = document.querySelector('.suggestions')
 let utils = new ToolbarMenuActionUtils()
 
+// Keep track of if the back button was triggered using the keyboard.
+// Used to prevent triggering the search input when the keyup event
+// fires, after the click on the back button back to the root menu.
+let backTriggeredByKeyboard = false;
+
 
 
 // Load the selected text, if any, from the current active tab and place
@@ -243,6 +279,11 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
         utils.addVariables(tabs[0].url);
 
         chrome.tabs.sendMessage(tabs[0].id, {action: "getSelection"}, {frameId: 0}, function(response){
+
+            if(BrowserSupport.hasLastError()){
+                return
+            }
+
             if(response !== undefined && response.selection !== undefined){
                 setQuery(response.selection);
             }
@@ -255,6 +296,13 @@ function openFirstSearch(){
     document.querySelector('.engine a').click();
 }
 
+chrome.runtime.sendMessage({action:"getToolbarOptions"}, function(response){
+    if(response.extra_style){
+        let styleNode = document.createElement('style')
+        styleNode.appendChild(document.createTextNode(response.extra_style));
+        document.querySelector("head").appendChild(styleNode)
+    }
+})
 
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
@@ -274,21 +322,25 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
         response.icons.forEach((iconUrl, index) => {
             images[index].src = iconUrl
         });
+
+        if (response.needsCurrentDomain){
+            chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
+                if(tabs.length == 1 && tabs[0].id != undefined){
+                    chrome.runtime.sendMessage({action: "getCurrentDomainIconToolbar", url: tabs[0].url}, function(response){
+                        if(response !== undefined && response.indexes.length > 0 && response.icon){
+                            var images = document.querySelectorAll(".engine .engine-img");
+                            response.indexes.forEach((iconIndex) => {
+                                images[iconIndex].src = response.icon;
+                            })
+
+                        }
+                    });
+                }
+            })
+        }
+
     });
 
-    chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
-        if(tabs.length == 1 && tabs[0].id != undefined){
-            chrome.runtime.sendMessage({action: "getCurrentDomainIconToolbar", url: tabs[0].url}, function(response){
-                if(response !== undefined && response.indexes.length > 0){
-                    var images = document.querySelectorAll(".engine .engine-img");
-                    response.indexes.forEach((iconIndex) => {
-                        images[iconIndex].src = response.icon;
-                    })
-
-                }
-            });
-        }
-    })
 
     hideSuggestions();
     // Show top level menu
@@ -307,10 +359,19 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
     document.querySelector('.search-input').addEventListener('keyup', e => {
 
+        if(backTriggeredByKeyboard){
+            // When clicking the last back button that opens the root menu using the keyboard,
+            // the search input gets focus before the enter button gets released. In this case
+            // we don't want to open the first search engine, as that is probably not what
+            // the user expects.
+            backTriggeredByKeyboard = false;
+            return
+        }
+
         if(e.code == 'Enter' && hasQuery()){
             if(!isSuggestionsActive() || !hasActiveSuggestion()){
                 openFirstSearch();
-                window.close();
+                setTimeout(window.close, 10)
                 return;
             }
         }else if(!isSuggestionsActive() || !response.options.toolbar_popup_suggestions){

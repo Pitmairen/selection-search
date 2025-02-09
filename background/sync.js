@@ -1,6 +1,6 @@
 
 
-var Sync = new function(){
+const Sync = new function(){
 
 
     function _getEnginesToSave(storage)
@@ -42,26 +42,28 @@ var Sync = new function(){
 
     this.saveStorage = function(storage){
 
-        var opts = storage.getSyncOptions();
+        let opts = storage.getSyncOptions();
 
-        var data = {}
+        let data = {}
 
         if(opts.sync_engines){
             var engines = _getEnginesToSave(storage);
 
             var chunks = _splitSearchEnginesIntoChunks(engines);
 
-            jQuery.extend(data, chunks);
+            data = {...data, ...chunks};
 
         }
         if(opts.sync_settings){
             data.settings = storage.getOptions();
             data.blacklist = storage.getBlacklistDefinitions();
         }
-        if(opts.sync_style)
+        if(opts.sync_style){
             data.style = storage.getStyle();
+            data.toolbarStyle = storage.getToolbarStyle();
+        }
 
-        if($.isEmptyObject(data))
+        if(Object.keys(data).length === 0)
             return;
 
 
@@ -118,6 +120,11 @@ var Sync = new function(){
             storage.setStyle(items.style);
         }
 
+        if(items.hasOwnProperty('toolbarStyle') && opts.sync_style)
+        {
+            storage.setToolbarStyle(items.toolbarStyle);
+        }
+
 
     }
 
@@ -141,6 +148,11 @@ var Sync = new function(){
             storage.setStyle(_getNewValueOrDefault(changes.style, ''));
         }
 
+        if(changes.hasOwnProperty('toolbarStyle') && opts.sync_style)
+        {
+            storage.setToolbarStyle(_getNewValueOrDefault(changes.toolbarStyle, ''));
+        }
+
         if(opts.sync_engines){
 
             if(changes.hasOwnProperty('engines')){
@@ -148,7 +160,7 @@ var Sync = new function(){
             }
             else{
 
-                var chunks = $.grep(Object.keys(changes), function(value,index){
+                var chunks = Object.keys(changes).filter(function(value,index){
                     return value.startsWith('engines_chunk_');
                 });
 
@@ -237,7 +249,7 @@ var Sync = new function(){
 
             // try to remove some old values if they are present.
             chrome.storage.sync.remove(
-                $.map([0,1,2,3,4,5,6,7,8,9], function(i){return 'engines_chunk_'+i})
+                [0,1,2,3,4,5,6,7,8,9].map(function(i){return 'engines_chunk_'+i})
             );
 
             return {'engines' : original_engines, 'engines_chunk_count' : 0}

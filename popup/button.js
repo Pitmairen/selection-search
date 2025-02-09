@@ -66,7 +66,7 @@ function Button(_popup, style){
         var node = document.createElement("div");
         node.className = "button common";
         node.style.display = "none";
-        node.style.backgroundImage = 'url("' + chrome.extension.getURL('img/icon16.png') + '")';
+        node.style.backgroundImage = 'url("' + chrome.runtime.getURL('img/icon16.png') + '")';
 
         _addButtonEvents(node);
 

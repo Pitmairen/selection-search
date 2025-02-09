@@ -256,6 +256,10 @@ hr{
 	width: 100%;
 	height: 15em;
 }
+#toolbarStyle{
+	width: 100%;
+	height: 15em;
+}
 #save-buttons{
 	padding: 1em;
 }
@@ -423,6 +427,14 @@ a{
 	display: none;
 }
 
+#toolbar-advanced-options{
+	display: none;
+}
+
+.advanced-toolbar-opts-toggle{
+	margin-bottom: 1em;
+}
+
 .blacklist-info{
     display: none;
     margin-bottom: 1em;
@@ -431,3 +443,10 @@ a{
     width: 100%;
 }
 
+.page-header{
+	display: flex;
+	align-items: center;
+}
+#main-heading{
+	flex: 1;
+}

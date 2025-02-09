@@ -22,7 +22,12 @@
 
 <div id="content">
 
-<h1 id="main-heading">Selection Search Options</h1>
+<div class="page-header">
+	<h1 id="main-heading">Selection Search Options</h1>
+	<div class="buy-me-a-coffee">
+		<script type="text/javascript" src="buy-coffee-button-1.0.0.prod.min.js" data-name="bmc-button" data-slug="pitmairen" data-color="#1364bb" data-emoji="☕"  data-font="Comic" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
+	</div>
+</div>
 
 
 <h2 class="section-heading">Search engines</h2>
@@ -516,6 +521,20 @@ www.example.com/test
 	<p class="section-option"><label for="opt-toolbar-popup-hotkeys">Hotkeys enabled</label> <input id="opt-toolbar-popup-hotkeys" type="checkbox" name="toolbar_hotkeys" /> <span class="separate-menus-msg">(Whether the hotkeys works while the input box has focus depends on the "Show in inputs and textareas" setting in the advanced settings under "Popup Menu" section.)</span></p>
 
 	<p class="section-option"><label for="opt-toolbar-popup-suggestions">Suggestions enabled</label> <input id="opt-toolbar-popup-suggestions" type="checkbox" name="toolbar_suggestions" /> <span class="separate-menus-msg">(Show search suggestions when typing in the search input)</span></p>
+
+	<div class="advanced-toolbar-opts-toggle">
+		<a href="#" id="show-advanced-toolbar-opts">Advanced Settings</a>
+	</div>
+
+	<div id="toolbar-advanced-options">
+		<h4 class="subsection-heading">Styling</h4>
+		<p class="info" id="style-info">
+			Here you can customize the look of the toolbar popup using <a href="http://www.w3schools.com/css/default.asp">Cascading Style Sheets</a>.
+			Right click on the toolbar icon and select "inspect" to see and experiment with the html of the popup.
+			After adding some css rules and saving the changes the css should be applied the next time you open the toolbar popup.
+		</p>
+		<textarea id="toolbarStyle"></textarea>
+	</div>
 </div>
 
 </div>

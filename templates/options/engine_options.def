@@ -50,11 +50,19 @@
                 <input class="hidemenu" id="engine-opt-hidemenu-{{=it.id}}" type="checkbox" />
                 <label for="engine-opt-hidemenu-{{=it.id}}">Don't show menu</label>
                 <p class="separate-menus-msg">When this is checked the submenu will not
-                open on mouse over. It will just open all searches inside on click.</p>
+                open on mouse over. It will just open all searches inside on click.
+                (Has no effect in the toolbar popup)
+                </p>
+
                 <input style="margin-top: 0.8em;" class="hide_on_click" id="engine-opt-hide-on-click-{{=it.id}}" type="checkbox" />
                 <label for="engine-opt-hide-on-click-{{=it.id}}">Hide menu on click</label>
-
                 <p class="separate-menus-msg">The menu will be hidden after clicking this submenu</p>
+
+                <input style="margin-top: 0.8em;" class="openall_aux" id="engine-opt-open-all-aux-{{=it.id}}" type="checkbox" />
+                <label for="engine-opt-open-all-aux-{{=it.id}}">Only on middle click</label>
+                <p class="separate-menus-msg">When checked, all engines will only open when the submenu is clicked with the middle
+                mouse button. (This option has no effect in the right click context menu)</p>
+
             </div>
 
 

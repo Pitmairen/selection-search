@@ -209,11 +209,11 @@ function BaseActionUtils(){
     }
 
     this.createPostUrl = function(url){
-        return chrome.extension.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
+        return chrome.runtime.getURL('old/postsearch.html') + '?url='+encodeURIComponent(url);
     }
 
     this.createSpecialEncodingUrl = function(url){
-        return chrome.extension.getURL('old/encoding-search.html') + '?url='+encodeURIComponent(url);
+        return chrome.runtime.getURL('old/encoding-search.html') + '?url='+encodeURIComponent(url);
     }
 
 
@@ -292,7 +292,7 @@ function BaseActionUtils(){
             var engine = engines[i];
             if(engine.is_submenu)
                 urls = _getAllUrlsWithOptions(engine.engines, selection, urls);
-            else
+            else if(!engine.is_separator)
                 urls.push(_this.createSearchUrlWithOptions(engine, selection));
         }
         return urls;

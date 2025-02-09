@@ -1,9 +1,9 @@
 {
     "name": "Selection Search",
-    "version": "0.8.64.1",
-    "manifest_version": 2,
+    "version": "0.9.5",
+    "manifest_version": 3,
     "description": "Search for the selected text in search engines",
-    "minimum_chrome_version": "35",
+    "minimum_chrome_version": "102",
 
     "applications": {
         "gecko": {
@@ -33,7 +33,6 @@
         "128": "img/icon128.png"
     },
 
-
     "options_ui": {
       "page" : "options/options.html",
       "browser_style": false,
@@ -42,17 +41,16 @@
     },
 
     "background": {
-        "page" : "background/background.html"
+        "service_worker" : "background/service_worker.js"
     },
 
-    "browser_action": {
+    "action": {
         "default_popup": "browseraction/popup.html",
         "default_icon": {
             "16": "img/icon16.png",
             "48": "img/icon48.png",
             "128": "img/icon128.png"
         }
-
     },
 
     "content_scripts": [
@@ -79,21 +77,29 @@
         "notifications",
         "clipboardWrite",
         "tabs",
-        "<all_urls>"
+        "<all_urls>",
+        "offscreen"
     ],
+    "host_permissions": ["https://s2.googleusercontent.com/s2/favicons*"],
 
     "web_accessible_resources": [
-        "img/folder.png",
-        "img/icon16.png",
-        "img/icon48.png",
-        "img/close.png",
-        "img/ajax-loader.gif",
-        "img/copy.png",
-        "img/default_favicon.png",
-        "old/postsearch.html",
-        "old/encoding-search.html",
-        "old/postsearch.js"
+        {
+            "resources": ["old/postsearch.html", "old/postsearch.js", "old/encoding-search.html", "old/encoding-search.js"],
+            "matches": ["http://*/*", "https://*/*", "file://*/*"]
+        },
+        {
+            "resources": [
+                "img/icon16.png",
+                "img/icon48.png",
+                "img/icon128.png",
+                "img/close.png",
+                "img/ajax-loader.gif",
+                "img/default_favicon.png",
+                "img/copy.svg",
+                "img/folder.svg"
+            ],
+            "matches": ["http://*/*", "https://*/*", "file://*/*"]
+        }
     ]
-
 
 }

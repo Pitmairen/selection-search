@@ -5,8 +5,10 @@ function unicodeToWin1251_UrlEncoded(s) {
     var L = []
     for (var i=0; i<s.length; i++) {
         var ord = s.charCodeAt(i)
-        if (!(ord in DMap))
+        if (!(ord in DMap)){
             console.log("Character "+s.charAt(i)+" isn't supported by win1251!");
+            continue
+        }
         L.push('%'+DMap[ord].toString(16));
     }
     return L.join('').toUpperCase();

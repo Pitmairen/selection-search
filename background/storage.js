@@ -1,11 +1,13 @@
 
 // Global main storage object used to store user settings
-var Storage = new DataStore(new MemoryKWStore());
+const Storage = new DataStore(new MemoryKWStore());
+
 
 function DataStore(kwStore){
 
     var _SEARCH_ENGINES_KEY = 'searchEngines';
     var _STYLE_KEY = 'styleSheet';
+    var _TOOLBAR_STYLE_KEY = 'styleSheetTB';
     var _BUTTON_KEY = 'button'; // Used in previous versions
     var _OPTIONS_KEY = 'options';
     var _BLACKLIST_KEY = 'blacklist';
@@ -13,10 +15,10 @@ function DataStore(kwStore){
     var _CLICK_COUNT_KEY = 'click-count';
     var _VERSION_KEY = 'VERSION';
 
-    var _defaultEngines = searchEngines = [
-        {name: 'Google', url: 'http://google.com/search?q=%s'},
-        {name: 'Youtube', url: 'http://www.youtube.com/results?search_query=%s'},
-        {name: 'Stackoverflow', url: 'http://stackoverflow.com/search?q=%s'}
+    var _defaultEngines = [
+        {name: 'Google', url: 'https://google.com/search?q=%s'},
+        {name: 'Youtube', url: 'https://www.youtube.com/results?search_query=%s'},
+        {name: 'Stackoverflow', url: 'https://stackoverflow.com/search?q=%s'}
     ];
 
     var _defaultOptions = {
@@ -104,6 +106,13 @@ function DataStore(kwStore){
         return _getValue(_STYLE_KEY, default_value);
     }
 
+    this.getToolbarStyle = function(default_value){
+        if(default_value === undefined){
+            default_value = ''
+        }
+        return _getValue(_TOOLBAR_STYLE_KEY, default_value);
+    }
+
     this.getButton = function(){
         return _getValue(_BUTTON_KEY, 0);
     }
@@ -116,7 +125,7 @@ function DataStore(kwStore){
         if(kwStore[_BUTTON_KEY] != undefined)
             options.button = _that.getButton();
 
-        return $.extend({}, _defaultOptions, options);
+        return {..._defaultOptions, ...options}
 
     }
 
@@ -128,7 +137,7 @@ function DataStore(kwStore){
 
         var options  = _getValue(_SYNC_KEY, {});
 
-        return $.extend({}, _syncOptions, options);
+        return {..._syncOptions, ...options};
     }
 
     this.isSyncEnabled = function(){
@@ -151,6 +160,10 @@ function DataStore(kwStore){
 
         _setValue(_STYLE_KEY, style);
 
+    }
+
+    this.setToolbarStyle = function(style){
+        _setValue(_TOOLBAR_STYLE_KEY, style);
     }
 
     this.setOptions = function(options){
@@ -176,6 +189,7 @@ function DataStore(kwStore){
     this.clear = function(style){
 
         _that.clearStyle();
+        _that.clearToolbarStyle();
         _that.clearSearchEngines();
         _that.clearButton();
         _that.clearOptions();
@@ -185,6 +199,10 @@ function DataStore(kwStore){
 
     this.clearStyle = function(){
         _removeValue(_STYLE_KEY);
+    }
+
+    this.clearToolbarStyle = function(){
+        _removeValue(_TOOLBAR_STYLE_KEY);
     }
 
     this.clearSearchEngines = function(){
@@ -222,6 +240,8 @@ function DataStore(kwStore){
             return true;
         } else if(!_eq(this.getStyle(''), other.getStyle(''))){
             return true;
+        } else if(!_eq(this.getToolbarStyle(''), other.getToolbarStyle(''))){
+            return true;
         } else if(!_eq(this.getSearchEngines(), other.getSearchEngines())){
             return true;
         } else if(!_eq(this.getBlacklistDefinitions(), other.getBlacklistDefinitions())){
@@ -237,6 +257,7 @@ function DataStore(kwStore){
     this.copyInto = function(other){
         other.setOptions(this.getOptions());
         other.setStyle(this.getStyle(''));
+        other.setToolbarStyle(this.getToolbarStyle(''));
         other.setSearchEngines(this.getSearchEngines());
         other.setBlacklistDefinitions(this.getBlacklistDefinitions());
         other.setSyncOptions(this.getSyncOptions());
@@ -289,13 +310,9 @@ function DataStore(kwStore){
 
 
 
-    this.storage_upgrades = function(prev_version, import_from_localstorage){
+    this.storage_upgrades = function(prev_version){
 
         _prevVersion = prev_version;
-
-        if(import_from_localstorage === undefined || import_from_localstorage){
-            v0_8_48_load_from_localstorage();
-        }
 
         var opts = _that.getOptions();
 
@@ -318,45 +335,6 @@ function DataStore(kwStore){
         css = css.replace(/#engine-editor/g, ".engine-editor");
 
         return css;
-
-    }
-
-    function v0_8_48_load_from_localstorage(){
-        if(!_versionIsNewer('0.8.48')){
-            return;
-        }
-        else if(localStorage['IMPORTED'] === '1'){
-            // If we have already imported the data, we skip
-            return;
-        }
-
-
-        // When setting the values, the storage local syncer listern should store
-        // the values in the chrome.storage.local.
-        _setValue(_OPTIONS_KEY, JSON.parse(_getFromOldLocalStorage(_OPTIONS_KEY, '{}')));
-        _setValue(_STYLE_KEY, _getFromOldLocalStorage(_STYLE_KEY, ''));
-        _setValue(_SYNC_KEY, JSON.parse(_getFromOldLocalStorage(_SYNC_KEY, '{}')));
-
-        var engines =  _getFromOldLocalStorage(_SEARCH_ENGINES_KEY);
-
-        if(engines !== undefined){
-            engines = JSON.parse(engines);
-        }
-
-        _setValue(_SEARCH_ENGINES_KEY, engines);
-        _setValue(_BLACKLIST_KEY, JSON.parse(_getFromOldLocalStorage(_BLACKLIST_KEY, '[]')));
-        _setValue(_CLICK_COUNT_KEY, JSON.parse(_getFromOldLocalStorage(_CLICK_COUNT_KEY, '{}')));
-        _setValue(_VERSION_KEY, localStorage[_VERSION_KEY]);
-
-        localStorage['IMPORTED'] = '1';
-        localStorage['NO-LONGER-USED'] = 'These settings in localStorage are no longer used. They were used for older versions of the extension, and can be safely removed when using selection search version 0.8.48 or higher.';
-    }
-
-    function _getFromOldLocalStorage(key, default_value){
-        var value = localStorage[key];
-        if(value == undefined)
-            return default_value;
-        return value;
 
     }
 
