@@ -147,14 +147,8 @@ function setupOffscreenDocument(path) {
 
 
 function copyToClipboard(request, sendResponse) {
-    setupOffscreenDocument("background/copy-to-clipboard.html").then(() => {
-        chrome.runtime.sendMessage({
-            type: 'copy-data-to-clipboard',
-            target: 'offscreen-doc',
-            data: request.text
-        }).then((result) => {
-            sendResponse({});
-        })
+    doCopyToClipboard(request.text).then((result) => {
+        sendResponse({});
     })
 }
 
