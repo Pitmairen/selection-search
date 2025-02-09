@@ -8,7 +8,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "selection-search@myr1.net",
-            "strict_min_version": "109.0"
+            "strict_min_version": "115.0"
         }
     },
 
