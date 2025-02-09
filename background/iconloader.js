@@ -294,7 +294,8 @@ function IconLoader(){
         let svg = `<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
     <g>
         <rect fill="lightgray" height="64" width="64" y="0" x="0"/>
-        <text text-anchor="middle" alignment-baseline="middle" font-family="Sans-serif"
+        <text text-anchor="middle" alignment-baseline="middle"
+        dominant-baseline="middle" font-family="Sans-serif"
         font-size="40" font-weight="bold" y="50%" x="50%" fill="#333333">${text}</text>
     </g>
 </svg>`
