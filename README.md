@@ -10,6 +10,10 @@ and
 
 ## Changelog
 
+*0.9.6*
+- Fix issue where icons in some cases could fail to load because the fallback icon loading did
+  not work. This may improve the icon loading for some users.
+
 *0.9.5*
 - Add option to trigger "open all" feature on submenues with middle click only.
 - Make back button in toolbar button go back only one level at the time
