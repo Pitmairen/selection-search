@@ -162,6 +162,7 @@ function IconLoader(){
                     return data
                 }
             }
+            return null;
         }
 
         this.fetchIcon = async function(){
@@ -275,7 +276,14 @@ function IconLoader(){
 
     async function fetchIconData(iconUrl){
         try{
-            let resp = await fetch(iconUrl)
+
+            let options = {}
+
+            if(typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout !== "undefined"){
+                options.signal = AbortSignal.timeout(6000)
+            }
+
+            let resp = await fetch(iconUrl, options)
 
             if(!resp.ok){
                 return null
@@ -284,8 +292,9 @@ function IconLoader(){
             let blob = await resp.blob()
 
             return await convertBlobToBase64(blob)
-        }catch{
-            console.warn(`Failed to fetch icon ${iconUrl}`)
+        }catch (err){
+            console.warn(`Failed to fetch icon ${iconUrl}: ${err}`)
+            return null
         }
     }
 
