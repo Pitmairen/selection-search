@@ -10,6 +10,9 @@ and
 
 ## Changelog
 
+*0.9.6.1-ff*
+- Firefox only: Use correct command key for suggested action shortcut
+
 *0.9.6*
 - Fix issue where icons in some cases could fail to load because the fallback icon loading did
   not work. This may improve the icon loading for some users.
