@@ -197,8 +197,7 @@ function Popup(options, style){
     function _createPopupNode(){
 
         var node = document.createElement("ul");
-        node.className = "popup common";
-        node.style.display = "none";
+        node.className = "popup common hidden";
 
         node.addEventListener("mousedown", function(e){
 
@@ -453,7 +452,7 @@ function Popup(options, style){
      */
     function _hidePopupNode(node){
 
-        node.style.display = "none";
+        node.classList.add("hidden");
     }
 
     /*
@@ -468,7 +467,7 @@ function Popup(options, style){
         // style config settings
         Positioning.checkPosition(node, style);
 
-        node.style.display = "block";
+        node.classList.remove("hidden");
 
     }
 

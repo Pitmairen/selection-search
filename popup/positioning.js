@@ -123,14 +123,27 @@ var Positioning = new function(){
         // store old values so we can reset later
         var old_visibility = el.style.visibility;
         var old_display = el.style.display;
+        // The popup is now using the hidden class to show/hide instead of the display property,
+        // but the button and other things still use the display property.
+        let hasHiddenClass = el.classList.contains("hidden");
+
         el.style.visibility = "hidden";
-        el.style.display = 'block';
+
+        if (hasHiddenClass){
+            el.classList.remove("hidden");
+        } else {
+            el.style.display = "block";
+        }
 
         return new function(){
 
             this.restore = function(){
                 el.style.visibility = old_visibility;
-                el.style.display = old_display;
+                if(hasHiddenClass){
+                    el.classList.add("hidden")
+                }else{
+                    el.style.display = old_display;
+                }
             }
 
         }
