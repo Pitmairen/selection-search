@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.9.7*
+- Improve support for IME input in toolbar popup (See issue #173)
+- Change to use a html class to shown/hidden the popup menu to make it easier to override
+  the display property of the popup with custom CSS.
+
 *0.9.6.1-ff*
 - Firefox only: Use correct command key for suggested action shortcut
 

@@ -185,4 +185,7 @@ z-index: 2147483647;
  margin: 3px 0;
  background: #AEAAA7;
 }
+.popup.hidden{
+	display: none;
+}
 `

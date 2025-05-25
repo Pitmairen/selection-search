@@ -357,6 +357,12 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
         }
     })
 
+    let isIMEConfirm = false;
+
+    document.querySelector('.search-input').addEventListener("compositionend", () => {
+        isIMEConfirm = true;
+    });
+
     document.querySelector('.search-input').addEventListener('keyup', e => {
 
         if(backTriggeredByKeyboard){
@@ -366,6 +372,11 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
             // the user expects.
             backTriggeredByKeyboard = false;
             return
+        }
+
+        if(isIMEConfirm){
+            isIMEConfirm = false;
+            return;
         }
 
         if(e.code == 'Enter' && hasQuery()){
