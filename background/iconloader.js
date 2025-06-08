@@ -152,7 +152,6 @@ function IconLoader(){
             let sources = [
                 `https://s2.googleusercontent.com/s2/favicons?sz=32&domain_url=${urlParts.scheme}://${hostname}`,
                 `https://icons.duckduckgo.com/ip3/${hostname}.ico`,
-                `https://api.faviconkit.com/${hostname}/32`,
             ]
             for(let i=0; i < sources.length; i++){
 
