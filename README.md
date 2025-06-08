@@ -10,6 +10,10 @@ and
 
 ## Changelog
 
+*0.9.8*
+- Remove search engine icon source that no longer works (faviconkit). This could in some cases cause
+  a blank icon to get loaded.
+
 *0.9.7*
 - Improve support for IME input in toolbar popup (See issue #173)
 - Change to use a html class to shown/hidden the popup menu to make it easier to override
