@@ -43,6 +43,7 @@
             "background/iconloader.js",
             "background/contextmenu.js",
             "background/actionutils.js",
+            "background/locking.js",
             "background/background.js",
             "background/click-counter.js",
             "background/blacklist.js",

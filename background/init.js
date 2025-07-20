@@ -2,6 +2,8 @@
 
 function Background(_previousVersion) {
 
+    const contextMenuLock = createLock()
+
     function _storageUpdated(is_click_count_update){
 
         _options = Storage.getOptions();
@@ -14,20 +16,31 @@ function Background(_previousVersion) {
             engines = _clickCounter.sortEngines(engines);
         }
 
-        if(_options.context_menu === "enabled")
-            _contextMenu.setSearchEngines(engines);
-        else
-            _contextMenu.disable();
 
         // Create a new icon collection object. And reload
         // all the icons.
-
         _iconLoader = new IconLoader();
-        _iconLoader.setSearchEngines(engines)
+
+        const iconLoading = _iconLoader.setSearchEngines(engines);
+
         _iconCollectionPopup = new IconCollection(_iconLoader);
         _iconCollectionPopup.setSearchEngines(filterPopupEngines(engines, _options))
         _iconCollectionToolbar = new IconCollection(_iconLoader);
         _iconCollectionToolbar.setSearchEngines(filterToolbarEngines(engines, _options))
+        _iconCollectionContextMenu = new IconCollection(_iconLoader);
+        _iconCollectionContextMenu.setSearchEngines(filterContextMenuEngines(engines, _options))
+
+        contextMenuLock(async () => {
+            if(_options.context_menu === "enabled"){
+                await _contextMenu.setSearchEngines(engines);
+                await iconLoading;
+                let icons = await _iconCollectionContextMenu.getIconUrls()
+                await _contextMenu.setIcons(icons);
+            }
+            else{
+                _contextMenu.disable();
+            }
+        })
 
 
         if(is_click_count_update == undefined || !is_click_count_update){
@@ -56,6 +69,7 @@ function Background(_previousVersion) {
     var _iconLoader = new IconLoader();
     var _iconCollectionPopup = new IconCollection(_iconLoader);
     var _iconCollectionToolbar = new IconCollection(_iconLoader);
+    var _iconCollectionContextMenu = new IconCollection(_iconLoader);
     var _clickCounter = new ClickCounter(Storage);
 
     _storageUpdated();

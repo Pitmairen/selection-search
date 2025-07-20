@@ -196,6 +196,12 @@ function filterToolbarEngines(engines, options){
     })
 }
 
+function filterContextMenuEngines(engines, options){
+    return filterEngines(engines, en => {
+        return options.separate_menus && en.hide_in_ctx
+    })
+}
+
 function filterEngines(engines, skipCheck){
     return engines.filter(en => !skipCheck(en)).map((en) => {
         if(en.is_submenu){

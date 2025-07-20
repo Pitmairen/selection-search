@@ -7,7 +7,7 @@ function ContextMenu(options, _clickCounterCallback){
     let _options = options;
     let _idCounter = 0
     let _onClickCallbacks = {}
-    let _createMenuPromise = null;
+    let _iconMenuIds = []
     let _currentPromise = Promise.resolve();
 
 
@@ -17,30 +17,34 @@ function ContextMenu(options, _clickCounterCallback){
         })
     }
 
-    function getCurrentPromise(){
-        if(_currentPromise !== null){
-            return _currentPromise.then(() => {
-                return Promise.resolve()
-            })
-        }
-        return Promise.resolve()
+    this.setSearchEngines = async function(engines){
+        _currentPromise = doSetEngines(engines)
+        await _currentPromise
     }
 
-    this.setSearchEngines = function(engines){
-        _currentPromise = doSetEngines(engines, _currentPromise).then(() => {
-            _currentPromise = Promise.resolve()
+    this.setIcons = async function(icons){
+        _iconMenuIds.forEach(async (id, index) => {
+            let icon = icons[index]
+            if(icon){
+                try{
+                    await browser.contextMenus.update(id, {
+                        icons: { 16: icon }
+                    })
+                }catch(err){
+                    console.warn("Failed to update context menu icon", err)
+                }
+            }
         })
     }
 
-    function doSetEngines(engines, currentPromise){
+    function doSetEngines(engines){
         return new Promise((resolve, reject) => {
-            currentPromise.then(() => {
-                _createRootItem().then(() => {
-                    _idCounter = 0;
-                    _onClickCallbacks = {}
-                    _addEngines(engines, _rootItem).then(() =>{
-                        resolve()
-                    })
+            _createRootItem().then(() => {
+                _idCounter = 0;
+                _onClickCallbacks = {}
+                _iconMenuIds = []
+                _addEngines(engines, _rootItem).then(() =>{
+                    resolve()
                 })
             })
         })
@@ -59,6 +63,7 @@ function ContextMenu(options, _clickCounterCallback){
                 _removeRootItem().then(() => {
                     _idCounter = 0;
                     _onClickCallbacks = {}
+                    _iconMenuIds = []
                     resolve()
                 })
             })
@@ -72,12 +77,13 @@ function ContextMenu(options, _clickCounterCallback){
 
 
     function _addEngines(engines, parentItem){
-        return new Promise((resolve, reject) => {
-            let promises = []
+        return new Promise(async (resolve, reject) => {
             for(var i in engines){
-                promises.push(_addEngine(engines[i], parentItem))
+                // Await to make sure that the engines are added in order. This is used to match
+                // the engine index with the icon index.
+                await _addEngine(engines[i], parentItem)
             }
-            resolve(Promise.all(promises))
+            resolve()
         })
     }
 
@@ -109,6 +115,7 @@ function ContextMenu(options, _clickCounterCallback){
                 'contexts' : ['selection'],
                 'parentId' : parentItem,
             }, function(){
+                _registerIconItem(id, engine);
                 _registerOnClick(id, function(info, tab){
                     _onEngineClick(engine, info, tab);
                 })
@@ -144,6 +151,7 @@ function ContextMenu(options, _clickCounterCallback){
 
         return new Promise((resolve, reject) => {
             chrome.contextMenus.create(menu, function(){
+                _registerIconItem(id, engine);
                 if(engine.openall && engine.hidemenu){
                     _registerOnClick(id, function(info, tab){
                         _onOpenAll(engine, info, tab);
@@ -233,6 +241,10 @@ function ContextMenu(options, _clickCounterCallback){
 
     function _registerOnClick(id, callback){
         _onClickCallbacks[id] = callback
+    }
+
+    function _registerIconItem(id, engine){
+        _iconMenuIds.push(id);
     }
 }
 

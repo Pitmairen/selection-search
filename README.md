@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.9.8.1-ff*
+- Firefox only: Add support for icons in the right click context menu
+- Firefox only: Fix issue where the items and the order of items in the right click context
+  menu could get messesed up in some cases after updating the settings.
+
 *0.9.8*
 - Remove search engine icon source that no longer works (faviconkit). This could in some cases cause
   a blank icon to get loaded.
