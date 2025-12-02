@@ -1,7 +1,7 @@
 
 function EngineEditor(_shadowDOM){
 
-	var _editorContainer = $('<div style="display: none; position: absolute;"></div>')
+	var _editorContainer = $('<engine-editor-element style="display: none; position: absolute;"></engine-editor-element>')
 		.attr('class', 'engine-editor common');
 
 	var _editor = $('<div style="display: none;"></div>');

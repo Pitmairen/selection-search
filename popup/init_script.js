@@ -3,7 +3,8 @@
 (function(){
 
 
-    var shadowElement = document.createElement("div");
+    var shadowElement = document.createElement("selection-search-popup");
+    shadowElement.id = "selection-search-popup";
     var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
     document.documentElement.appendChild(shadowElement);
