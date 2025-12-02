@@ -7,7 +7,23 @@
     shadowElement.id = "selection-search-popup";
     var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
-    document.documentElement.appendChild(shadowElement);
+    let injectionCheckCounter = 0;
+    function injectShadowDOM(){
+        injectionCheckCounter += 1;
+
+        let el = document.getElementById("selection-search-popup")
+        if (!el) {
+            document.documentElement.appendChild(shadowElement);
+        }
+
+        // Some sites may remove the injected element, e.g if they replace the page content
+        // after load using js, so we check a few times to make sure the element is still there.
+        if(injectionCheckCounter <= 10){
+            setTimeout(injectShadowDOM, 250)
+        }
+    }
+
+    injectShadowDOM();
 
     var style = new Style(shadowDOM);
 
