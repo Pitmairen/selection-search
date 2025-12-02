@@ -7,6 +7,16 @@
     shadowElement.id = "selection-search-popup";
     var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
+    const printStyle = document.createElement("style");
+    printStyle.textContent = `
+    @media print {
+        selection-search-popup#selection-search-popup {
+            display: none !important;
+        }
+    }
+    `;
+    document.head.appendChild(printStyle);
+
     let injectionCheckCounter = 0;
     function injectShadowDOM(){
         injectionCheckCounter += 1;
