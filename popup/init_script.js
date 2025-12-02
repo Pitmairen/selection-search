@@ -18,14 +18,15 @@
     document.head.appendChild(printStyle);
 
 
-    let injectRoot = document.documentElement;
-
-    // Special case for Google Docs to prevent issues with an extra blank page at the
-    // end in the print preview.
-    if (window.location.host === "docs.google.com"){
-        injectRoot = document.body;
+    function getInjectionParent(){
+        // Special case for Google Docs to prevent issues with an extra blank page at the
+        // end in the print preview.
+        if (window.location.host === "docs.google.com"){
+            injectRoot = document.body;
+            return document.body;
+        }
+        return document.documentElement;
     }
-
 
     let injectionCheckCounter = 0;
     function injectShadowDOM(){
@@ -33,7 +34,7 @@
 
         let el = document.getElementById("selection-search-popup")
         if (!el) {
-            injectRoot.appendChild(shadowElement);
+            getInjectionParent().appendChild(shadowElement);
         }
 
         // Some sites may remove the injected element, e.g if they replace the page content
