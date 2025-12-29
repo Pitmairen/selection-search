@@ -48,5 +48,5 @@ function EnableAutoHideOnScroll(popupObject){
         if(popupObject.isActive()){
             popupObject.hide();
         }
-    });
+    }, true);
 }
