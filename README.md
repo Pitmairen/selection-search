@@ -10,6 +10,11 @@ and
 
 ## Changelog
 
+*0.9.11*
+- Preserve tab group when opening a search result from the toolbar popup. When the active tab
+  belongs to a Chrome tab group, newly opened tabs are automatically added to the same group.
+  Requires the new `tabGroups` permission.
+
 *0.9.10*
 - Fix toolbar popup search engine links not opening new tabs on macOS with Chrome 157+.
   On macOS, Chrome dismisses the extension popup on mousedown rather than after click,
