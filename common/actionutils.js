@@ -165,6 +165,7 @@ function BaseActionUtils(){
         chrome.runtime.sendMessage({
             action:'openAllUrls', urls: urls, "selection" : selection,
             "in_background_tab" : engine.background_tab,
+            "opener_tab_id": _this.getTabId ? _this.getTabId() : undefined,
         });
 
     }
@@ -174,6 +175,7 @@ function BaseActionUtils(){
         chrome.runtime.sendMessage({
             action:'openAllUrls', urlsWithOptions: urlsWithOptions, "selection" : selection,
             "in_background_tab" : engine.background_tab,
+            "opener_tab_id": _this.getTabId ? _this.getTabId() : undefined,
         });
 
     }
