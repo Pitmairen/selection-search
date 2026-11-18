@@ -10,6 +10,18 @@ and
 
 ## Changelog
 
+*0.9.11*
+- Preserve tab group when opening a search result from the toolbar popup. When the active tab
+  belongs to a Chrome tab group, newly opened tabs are automatically added to the same group.
+  Requires the new `tabGroups` permission.
+
+*0.9.10*
+- Fix toolbar popup search engine links not opening new tabs on macOS with Chrome 157+.
+  On macOS, Chrome dismisses the extension popup on mousedown rather than after click,
+  causing the click and auxclick handlers to never fire. The fix moves all search actions
+  (left click, middle click) to mousedown handlers so the request is sent before the popup
+  is dismissed. Keyboard navigation (Enter key) continues to work via the click handler as before.
+
 *0.9.9*
 - Add optional "Allow engines without selection" feature. When enabled, the popup can be activated
   without text selection, allowing the extension to be used as a link collection tool for quick

@@ -9,7 +9,16 @@ function ToolbarMenuActionUtils(){
 
     var _url = undefined;
     var _urlParts = {};
+    var _tabId = undefined;
     var _this = this;
+
+    this.setTabId = function(tabId){
+        _tabId = tabId;
+    }
+
+    this.getTabId = function(){
+        return _tabId;
+    }
 
 
 

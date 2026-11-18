@@ -195,20 +195,57 @@ function createEngineNodes(engines, options, in_submenu, backCallback){
                 e.stopPropagation()
                 e.preventDefault()
                 if(en.openall && hasQuery() && !en.openall_aux){
+                    // Keyboard-triggered clicks (Enter key) handled here; mouse clicks via mousedown
+                    if(isTriggeredByKeyboard(e)){
+                        utils.openAllInSubmenu(en, getQuery());
+                        if(en.hide_on_click){
+                            window.close();
+                        }
+                    }
+                }else{
+                    // Submenu navigation: always handle in click (mousedown must not interfere)
+                    showEngines(engineNode.children, true, isTriggeredByKeyboard(e));
+                }
+            });
+
+            // On macOS/Chrome, the popup can close before a click event fires on mouse press.
+            // Handle mouse-initiated openall here so the message is sent before popup dismissal.
+            // Only intercepts openall — submenu navigation is still handled in the click handler.
+            a.addEventListener('mousedown', (e) => {
+                if(e.button !== 0) return;
+                e.preventDefault();
+                if(en.openall && hasQuery() && !en.openall_aux){
                     utils.openAllInSubmenu(en, getQuery());
                     if(en.hide_on_click){
                         window.close();
                     }
-                }else{
-                    showEngines(engineNode.children, true, isTriggeredByKeyboard(e));
                 }
             });
+
             engineNodes.push(engineNode)
         }else{
             engineNodes.push(new EngineNode(en, node, []))
             a.addEventListener('click', (e) => {
                 e.stopPropagation()
                 e.preventDefault()
+                // Keyboard-triggered clicks (Enter key) are handled here; mouse clicks via mousedown
+                if(isTriggeredByKeyboard(e)){
+                    if(hasQuery()){
+                        utils.openEngine(en, getQuery());
+                        if(en.hide_on_click){
+                            window.close();
+                        }
+                    }else{
+                        highlightQueryBox();
+                    }
+                }
+            })
+
+            // On macOS/Chrome, the popup can close before a click event fires on mouse press.
+            // Handle the search here so the message is sent before popup dismissal.
+            a.addEventListener('mousedown', (e) => {
+                if(e.button !== 0) return;
+                e.preventDefault();
                 if(hasQuery()){
                     utils.openEngine(en, getQuery());
                     if(en.hide_on_click){
@@ -220,17 +257,16 @@ function createEngineNodes(engines, options, in_submenu, backCallback){
             })
         }
 
-        // Middle click
-        a.addEventListener('auxclick', (e) => {
-            e.stopPropagation()
+        // Middle click — handled on mousedown for the same reason as left click:
+        // on macOS/Chrome the popup can close before auxclick fires.
+        a.addEventListener('mousedown', (e) => {
+            if(e.button !== 1) return;
+            e.preventDefault();
             if(!hasQuery()){
-                e.preventDefault()
                 highlightQueryBox();
             }else if(isSpecialSearchEngine(en)){
-                e.preventDefault()
+                // no action
             }else if(en.is_submenu){
-                e.stopPropagation()
-                e.preventDefault()
                 if(en.openall){
                     utils.openAllInSubmenu(en, getQuery());
                     if(en.hide_on_click){
@@ -238,6 +274,12 @@ function createEngineNodes(engines, options, in_submenu, backCallback){
                     }
                 }
             }
+        })
+
+        // auxclick kept only to suppress default browser behaviour (e.g. auto-scroll on middle click)
+        a.addEventListener('auxclick', (e) => {
+            e.stopPropagation()
+            e.preventDefault()
         })
 
     });
@@ -280,6 +322,7 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
     if(tabs.length == 1 && tabs[0].id != undefined){
 
         utils.addVariables(tabs[0].url);
+        utils.setTabId(tabs[0].id);
 
         chrome.tabs.sendMessage(tabs[0].id, {action: "getSelection"}, {frameId: 0}, function(response){
 
