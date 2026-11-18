@@ -18,6 +18,21 @@ function openAllUrls(request, sendResponse, parent_tab){
 
     var opt = Storage.getOptions();
 
+    if(parent_tab == undefined && request.opener_tab_id != undefined){
+        chrome.tabs.get(request.opener_tab_id).then(function(tab){
+            openAllUrls_withTab(request, sendResponse, opt, tab);
+        }).catch(function(){
+            openAllUrls_withTab(request, sendResponse, opt, undefined);
+        });
+        return true;
+    }
+
+    openAllUrls_withTab(request, sendResponse, opt, parent_tab);
+}
+
+
+function openAllUrls_withTab(request, sendResponse, opt, parent_tab){
+
     var urls;
 
     if (request.urlsWithOptions !== undefined){
@@ -89,7 +104,14 @@ function openAllUrls(request, sendResponse, parent_tab){
             }
         }
 
-        chrome.tabs.create(tab_opts);
+        (function(url_opts){
+            chrome.tabs.create(url_opts).then(function(newTab){
+                if(parent_tab == undefined || !chrome.tabs.group) return;
+                if(parent_tab.groupId != undefined && parent_tab.groupId >= 0){
+                    chrome.tabs.group({ groupId: parent_tab.groupId, tabIds: newTab.id });
+                }
+            });
+        })(tab_opts);
     }
 
 
