@@ -1079,15 +1079,13 @@ function initOptionsPage(){
 
 	// Import from link
 
-	var _IMPORT_LINK_KEY = 'importLink';
-
 	function _set_import_link_status(text, is_error){
 		$('#import-link-grant-row').hide();
 		$('#import-link-status').text(text).toggleClass('error', Boolean(is_error));
 	}
 
 	function _show_last_import_link(){
-		var saved = Storage.getValue(_IMPORT_LINK_KEY);
+		var saved = Storage.getImportLink();
 		if(!saved || !saved.url)
 			return;
 		$('#import-link-url').val(saved.url);
@@ -1227,11 +1225,11 @@ function initOptionsPage(){
 			return;
 		}
 
-		var previous = Storage.getValue(_IMPORT_LINK_KEY);
+		var previous = Storage.getImportLink();
 		if(previous && previous.url)
 			_remove_link_access(previous.url, resolved.origins);
 
-		Storage.setValue(_IMPORT_LINK_KEY, {
+		Storage.setImportLink({
 			url: link,
 			lastImported: Date.now(),
 			engines: $('#import-search-engines').is(':checked'),
@@ -1263,7 +1261,7 @@ function initOptionsPage(){
 	});
 
 	// Open the link tab directly if a link has been saved.
-	if(Storage.getValue(_IMPORT_LINK_KEY))
+	if(Storage.getImportLink())
 		_select_settings_tab($('.settings-tab[data-panel="import-link-panel"]'));
 
 	$('#export-copy').click(async function(){
@@ -1341,9 +1339,9 @@ function initOptionsPage(){
 
 		// Forget the saved link (and remove the site access) when the field is emptied.
 		if(value.length == 0){
-			var saved = Storage.getValue(_IMPORT_LINK_KEY);
+			var saved = Storage.getImportLink();
 			if(saved !== undefined){
-				Storage.removeValue(_IMPORT_LINK_KEY);
+				Storage.clearImportLink();
 				_set_import_link_status('');
 				if(saved.url)
 					_remove_link_access(saved.url);
