@@ -14,6 +14,7 @@ function DataStore(kwStore){
     var _SYNC_KEY = 'sync';
     var _CLICK_COUNT_KEY = 'click-count';
     var _VERSION_KEY = 'VERSION';
+    var _IMPORT_LINK_KEY = 'importLink'; // The saved "Import from link" link and import selection
 
     var _defaultEngines = [
         {name: 'Google', url: 'https://google.com/search?q=%s'},
@@ -185,6 +186,20 @@ function DataStore(kwStore){
 
     this.setClickCount = function(clickCount){
         return _setValue(_CLICK_COUNT_KEY, clickCount);
+    }
+
+    // The saved "Import from link" link: {url, lastImported, engines, style, options}
+    // or undefined if no link is saved.
+    this.getImportLink = function(){
+        return _getValue(_IMPORT_LINK_KEY);
+    }
+
+    this.setImportLink = function(link){
+        _setValue(_IMPORT_LINK_KEY, link);
+    }
+
+    this.clearImportLink = function(){
+        _removeValue(_IMPORT_LINK_KEY);
     }
 
     this.clear = function(style){

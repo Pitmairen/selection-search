@@ -607,7 +607,7 @@ www.example.com/test
 
 <div id="export-settings">
 
-	<p class="info">Copy the data from the textarea below and store it somewhere, it can later be imported to restore your settings. <br />
+	<p class="info">Save a backup of your settings that can later be imported to restore them, or to copy them to another browser.<br />
 		You need to save your settings before you export. Any changes that has not been saved will not be exported.</p>
 
 	<ul>
@@ -618,16 +618,29 @@ www.example.com/test
 			<li><input type="checkbox" id="export-options" checked /><label for="export-options">Other settings</label></li>
 			</ul>
 		</li>
-<!-- 		<li><label for="encode-output"><strong>Encode output</strong></label> <input id="encode-output" type="checkbox"></li> -->
 	</ul>
-	<textarea rows="8"></textarea>
+
+	<div class="settings-tabs">
+		<a href="#" class="settings-tab selected" data-panel="export-file-panel">To a file</a>
+		<a href="#" class="settings-tab" data-panel="export-text-panel">As text</a>
+	</div>
+
+	<div class="settings-panel" id="export-file-panel">
+		<p><input type="button" id="export-download" value="Download as file" /></p>
+		<p class="info">Saves the settings as a file (selection-search-settings.json) that can be imported with "From a file" or shared with a link.</p>
+	</div>
+
+	<div class="settings-panel" id="export-text-panel">
+		<p class="info">Copy the text below and store it somewhere. It can be imported with "From exported data".</p>
+		<textarea rows="8"></textarea>
+		<p><input type="button" id="export-copy" value="Copy to clipboard" /> <span id="export-copy-status"></span></p>
+	</div>
 
 </div>
 
 <div id="import-settings">
 
-	<p class="info">Paste the data you have previously exported into the textarea below and select the options you want to import and click the import button.</p>
-	</p>
+	<p class="info">Select what you want to import, then import from a file, a link or previously exported data.</p>
 
 	<ul>
 		<li><strong>Import:</strong>
@@ -639,12 +652,46 @@ www.example.com/test
 			</li>
 			<li><input type="checkbox" id="import-style" /><label for="import-style">Styling</label></li>
 			<li><input type="checkbox" id="import-options" /><label for="import-options">Other settings</label></li>
-			<li><input type="button" id="import-submit" value="Import" /></li>
 			</ul>
 		</li>
-<!-- 		<li><label for="encode-output"><strong>Encode output</strong></label> <input id="encode-output" type="checkbox"></li> -->
 	</ul>
-	<textarea rows="8"></textarea>
+
+	<div class="settings-tabs">
+		<a href="#" class="settings-tab selected" data-panel="import-file-panel">From a file</a>
+		<a href="#" class="settings-tab" data-panel="import-link-panel">From a link</a>
+		<a href="#" class="settings-tab" data-panel="import-text-panel">From exported data</a>
+	</div>
+
+	<div class="settings-panel" id="import-file-panel">
+		<p class="info">Choose a settings file saved with "Download as file". It is imported as soon as you select it.</p>
+		<p><input type="file" id="import-file-input" accept=".json,application/json,text/plain" /></p>
+	</div>
+
+	<div class="settings-panel" id="import-link-panel">
+		<p id="import-link-row">
+			<input type="url" id="import-link-url" placeholder="https://drive.google.com/file/d/..." />
+			<input type="button" id="import-link-submit" value="Import from link" />
+		</p>
+		<p id="import-link-status"></p>
+		<p id="import-link-grant-row">
+			<input type="button" id="import-link-grant" value="Grant access" />
+		</p>
+		<ul class="info import-help">
+			<li>Import a settings file shared online, for example a file saved with "Download as file" and shared from
+				Google Drive or Dropbox, or the raw link to a GitHub Gist.</li>
+			<li>The file must be publicly readable without signing in. For Google Drive and Dropbox, share it with
+				"Anyone with the link". Anyone who has the link can see the file.</li>
+			<li>Search engines from the link replace your current search engines, except the ones where "Synchronize" is unchecked.</li>
+			<li>The link is remembered, so you can click the button again later to get the latest version.</li>
+			<li>To update a file in Google Drive without changing its link, use "Manage versions" &rarr; "Upload new version".</li>
+		</ul>
+	</div>
+
+	<div class="settings-panel" id="import-text-panel">
+		<p class="info">Paste the data you have previously exported below and click Import.</p>
+		<textarea rows="8"></textarea>
+		<p><input type="button" id="import-submit" value="Import" /></p>
+	</div>
 </div>
 
 <!-- <h2 class="section-heading">Save</h2> -->

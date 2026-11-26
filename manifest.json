@@ -45,6 +45,7 @@
         "offscreen"
     ],
     "host_permissions": ["https://s2.googleusercontent.com/s2/favicons*"],
+    "optional_host_permissions": ["https://*/*"],
 
     "web_accessible_resources": [
         {

@@ -415,6 +415,83 @@ a{
 }
 
 
+.settings-tabs{
+	display: flex;
+	gap: 0.25em;
+	border-bottom: 1px solid #b5c7de;
+	margin-top: 1em;
+	padding-left: 0.5em;
+}
+
+.settings-tab{
+	padding: 0.4em 1em;
+	border: 1px solid transparent;
+	border-bottom: none;
+	border-radius: 5px 5px 0 0;
+	margin-bottom: -1px;
+	color: #444;
+	text-decoration: none;
+}
+
+.settings-tab:hover{
+	background: #f3f5fb;
+}
+
+.settings-tab.selected{
+	background: #ebeff9;
+	border-color: #b5c7de;
+	border-bottom: 1px solid #ebeff9;
+	color: #000;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.settings-panel{
+	padding: 1em 0.5em 0;
+}
+
+#import-link-panel, #import-text-panel, #export-text-panel{
+	display: none;
+}
+
+#import-settings ul.import-help{
+	list-style-type: disc;
+	padding-left: 2em;
+	margin-top: 1em;
+}
+
+#export-download{
+	font-size: 1.1em;
+	padding: 0.4em 1.5em;
+}
+
+#export-copy-status{
+	color: #2a7a2a;
+	font-size: 9pt;
+}
+
+#import-link-status:empty{
+	display: none;
+}
+
+#import-link-row{
+	display: flex;
+	gap: 0.5em;
+}
+
+#import-link-url{
+	flex: 1;
+	min-width: 0;
+}
+
+#import-link-grant-row{
+	display: none;
+}
+
+#import-link-status.error{
+	color: #c00;
+}
+
 #import-replace-engines-opt{
 	display: none;
 }
