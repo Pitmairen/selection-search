@@ -849,8 +849,8 @@ function initOptionsPage(){
 		$('#opt-dblclick-in-inputs').attr('disabled', !$(this).is(':checked'));
 	})
 
-	function _load_export(){
-
+	// Returns the settings selected in the export section, or null if nothing is selected.
+	function _get_export_data(){
 
 		var to_export = {}
 
@@ -863,15 +863,22 @@ function initOptionsPage(){
 		if($('#export-options').is(':checked'))
 			to_export.options =  Storage.getOptions();
 
-		if(!jQuery.isEmptyObject(to_export)){
+		if(jQuery.isEmptyObject(to_export))
+			return null;
 
-			if(Storage.getVersion() !== undefined){
-				to_export.VERSION = Storage.getVersion();
-			}
+		if(Storage.getVersion() !== undefined){
+			to_export.VERSION = Storage.getVersion();
+		}
+		return to_export;
+	}
+
+	function _load_export(){
+
+		var to_export = _get_export_data();
+
+		if(to_export){
 
 			to_export = JSON.stringify(to_export);
-
-// 			if($('#encode-output').is(':checked'))
 
 			try{
 				to_export = btoa(to_export);
@@ -886,65 +893,123 @@ function initOptionsPage(){
 
 	}
 
+	$('#export-download').click(function(){
+
+		var to_export = _get_export_data();
+
+		if(!to_export){
+			alert('Select what to include in the export first.');
+			return;
+		}
+
+		// Escape all non-ASCII characters (e.g. "å" -> "å") so the file reads
+		// the same whatever encoding it is later re-saved with (UTF-8, ANSI, etc.).
+		var json = JSON.stringify(to_export, null, 2).replace(/[\u007f-￿]/g, function(c){
+			return '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0');
+		});
+
+		var blob = new Blob([json], {type: 'application/json'});
+		var url = URL.createObjectURL(blob);
+		var a = document.createElement('a');
+		a.href = url;
+		a.download = 'selection-search-settings.json';
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+	});
+
 	var _import_decoders = {
 		'1e' : function(v){return JSON.parse(decodeURI(atob(v)))},
 		'1' : function(v){return JSON.parse(atob(v))}
 	}
 
+	// Decodes exported settings. Accepts both the encoded format from the
+	// export textarea and plain JSON (from "Download as file").
+	// Returns null if the data can't be decoded.
+	function _decode_import(text){
 
-	function _do_import(){
+		text = text.trim();
 
+		if(text.length == 0)
+			return null;
 
-		var to_import = $('#import-settings textarea').val();
-
-		if(to_import.length == 0){
-			alert('No data to import');
-			return;
-		}
+		var data;
 
 		try{
 
-			var parts = to_import.split(':');
+			if(text[0] == '{'){
+				data = JSON.parse(text);
+			}
+			else {
 
-			var decoder = '1';
+				var parts = text.split(':');
 
-			if(parts.length == 2){
-				to_import = parts[1];
-				decoder = parts[0];
+				var decoder = '1';
+
+				if(parts.length == 2){
+					text = parts[1];
+					decoder = parts[0];
+				}
+
+				if(decoder in _import_decoders)
+					data = _import_decoders[decoder](text);
+				else
+					data = null;
 			}
 
-			if(decoder in _import_decoders)
-				to_import = _import_decoders[decoder](to_import);
-			else
-				to_import = null;
-
 		}catch(err){
-			to_import = null;
-		}
-		if(!to_import || jQuery.isEmptyObject(to_import)){
-			alert('Failed to import data');
-			return;
+			data = null;
 		}
 
+		if(!data || typeof data !== 'object' || jQuery.isEmptyObject(data))
+			return null;
 
-		if( !$('#import-search-engines').is(':checked') &&
+		return data;
+	}
+
+	function _import_selection_empty(){
+		return !$('#import-search-engines').is(':checked') &&
 			!$('#import-style').is(':checked') &&
-			!$('#import-options').is(':checked')){
-			alert('No data imported');
-			return;
-		}
+			!$('#import-options').is(':checked');
+	}
+
+	// Replace the current engines with the new engines, but keep the current
+	// engines that are not synchronized (nosync) at their current positions, and
+	// skip the new engines that are not synchronized (the publisher's private engines).
+	function _replace_keeping_local_only_engines(current, incoming){
+
+		var result = incoming.filter(function(en){ return !en.nosync; });
+
+		current.forEach(function(en, i){
+			if(en.nosync)
+				result.splice(Math.min(i, result.length), 0, en);
+		});
+
+		return result;
+	}
+
+	// Applies the imported data according to the selected import options.
+	//
+	// If from_link is true, search engines always replace the existing engines,
+	// except the ones that are not synchronized.
+	function _apply_import(to_import, from_link){
 
 		var msg = [];
 
 		if($('#import-search-engines').is(':checked')){
 
-			if(!to_import.hasOwnProperty('searchEngines'))
+			if(!Array.isArray(to_import.searchEngines))
 				msg.push('Search Engines: not available');
 			else{
 
 				msg.push('Search Engines: OK');
 
-				if($('#import-replace-engines').is(':checked')){
+				if(from_link){
+					Storage.setSearchEngines(_replace_keeping_local_only_engines(
+						Storage.getSearchEngines(), to_import.searchEngines));
+				}
+				else if($('#import-replace-engines').is(':checked')){
 					Storage.setSearchEngines(to_import.searchEngines);
 				}else{
 					var prev_engines = Storage.getSearchEngines();
@@ -979,13 +1044,319 @@ function initOptionsPage(){
 			}
 		}
 
-		alert('Settings has been imported.\n\n' + msg.join('\n'));
+		alert('Settings have been imported.\n\n' + msg.join('\n'));
 
 		chrome.runtime.sendMessage({action:"storageUpdated"});
 
 		location.reload();
 
 	}
+
+	function _do_import(){
+
+		var text = $('#import-settings textarea').val();
+
+		if(text.trim().length == 0){
+			alert('No data to import');
+			return;
+		}
+
+		var to_import = _decode_import(text);
+
+		if(!to_import){
+			alert('Failed to import data');
+			return;
+		}
+
+		if(_import_selection_empty()){
+			alert('No data imported');
+			return;
+		}
+
+		_apply_import(to_import, false);
+	}
+
+
+	// Import from link
+
+	var _IMPORT_LINK_KEY = 'importLink';
+
+	function _set_import_link_status(text, is_error){
+		$('#import-link-grant-row').hide();
+		$('#import-link-status').text(text).toggleClass('error', Boolean(is_error));
+	}
+
+	function _show_last_import_link(){
+		var saved = Storage.getValue(_IMPORT_LINK_KEY);
+		if(!saved || !saved.url)
+			return;
+		$('#import-link-url').val(saved.url);
+
+		// Restore the import selection used with the link. (Older saved
+		// links don't have it, then the checkboxes are left as they are.)
+		if(saved.hasOwnProperty('engines')){
+			$('#import-search-engines').prop('checked', Boolean(saved.engines));
+			$('#import-style').prop('checked', Boolean(saved.style));
+			$('#import-options').prop('checked', Boolean(saved.options));
+			if(saved.engines)
+				$('#import-replace-engines-opt').show();
+		}
+		if(saved.lastImported)
+			_set_import_link_status('Last imported: ' + new Date(saved.lastImported).toLocaleString());
+	}
+
+	// Converts a share link to a direct download link, and returns the
+	// host permissions needed to download it.
+	function _resolve_import_link(link){
+
+		var url = new URL(link); // Throws if invalid
+
+		if(url.protocol !== 'https:')
+			throw new Error('The link must start with https://');
+
+		var host = url.hostname;
+
+		if(host === 'drive.google.com'){
+			// https://drive.google.com/file/d/<id>/view?usp=sharing
+			// https://drive.google.com/open?id=<id>
+			// https://drive.google.com/uc?id=<id>&export=download
+			var m = url.pathname.match(/\/file\/d\/([^/]+)/);
+			var id = m ? m[1] : url.searchParams.get('id');
+			if(!id)
+				throw new Error('Could not find the file id in the Google Drive link');
+			return {
+				url: 'https://drive.usercontent.google.com/download?export=download&id=' + encodeURIComponent(id),
+				origins: ['https://drive.usercontent.google.com/*']
+			};
+		}
+
+		if(host === 'www.dropbox.com' || host === 'dropbox.com'){
+			// Share links end with dl=0 (preview page), dl=1 downloads the file.
+			// The download redirects to *.dropboxusercontent.com
+			url.searchParams.set('dl', '1');
+			return {
+				url: url.href,
+				origins: ['https://' + host + '/*', 'https://*.dropboxusercontent.com/*']
+			};
+		}
+
+		return {url: url.href, origins: [url.origin + '/*']};
+	}
+
+	async function _import_from_link(){
+
+		var link = $('#import-link-url').val().trim();
+
+		if(link.length == 0){
+			alert('Enter the link to the settings file first.');
+			return;
+		}
+
+		if(_import_selection_empty()){
+			alert('Select what to import first.');
+			return;
+		}
+
+		var resolved;
+		try{
+			resolved = _resolve_import_link(link);
+		}catch(e){
+			_set_import_link_status('Invalid link: ' + e.message, true);
+			return;
+		}
+
+		_set_import_link_status('Downloading...');
+
+		// First try without any host permission. This works for sites that
+		// allow cross origin requests (CORS), e.g. raw GitHub Gist links.
+		// Only ask for access to the site if that fails.
+		var has_access = await chrome.permissions.contains({origins: resolved.origins});
+
+		var text;
+		try{
+			var response = await fetch(resolved.url, {cache: 'no-store', credentials: 'omit'});
+			if(!response.ok)
+				throw new Error('the server responded with ' + response.status + ' ' + response.statusText);
+			text = await response.text();
+		}catch(e){
+			// A TypeError means a network error, which is what a blocked
+			// cross origin request looks like.
+			if(!has_access && e instanceof TypeError){
+				_pending_link = link;
+				_pending_link_origins = resolved.origins;
+				var hosts = resolved.origins.map(function(o){
+					return o.replace(/^https:\/\//, '').replace(/\/\*$/, '');
+				});
+				_set_import_link_status('To download the file, the extension needs access to ' + hosts.join(' and ') +
+					'. Chrome will describe this as "read and change" your data on the site, but the extension' +
+					' only uses it to download the settings file.');
+				$('#import-link-grant-row').show();
+				return;
+			}
+			_set_import_link_status('Failed to download the file: ' + e.message, true);
+			return;
+		}
+
+		var to_import = _decode_import(text);
+
+		if(!to_import){
+			_set_import_link_status('The link did not return a valid settings file. ' +
+				'If it is a Google Drive or Dropbox link, make sure the file is shared with "Anyone with the link".', true);
+			return;
+		}
+
+		var msg = [];
+
+		if($('#import-search-engines').is(':checked') && Array.isArray(to_import.searchEngines)){
+			var count = to_import.searchEngines.filter(function(en){ return !en.nosync; }).length;
+			msg.push('Your search engines will be replaced with the ' + count +
+				' search engines from the link (search engines where "Synchronize" is unchecked are kept).');
+		}
+		if($('#import-style').is(':checked'))
+			msg.push('Your styling will be overwritten.');
+		if($('#import-options').is(':checked'))
+			msg.push('Your other settings will be overwritten.');
+
+		if(_has_unsaved_changes())
+			msg.push('\n' + _UNSAVED_CHANGES_WARNING);
+
+		msg.push('\nAre you sure you want to continue?');
+
+		if(!confirm(msg.join('\n'))){
+			_set_import_link_status('');
+			return;
+		}
+
+		var previous = Storage.getValue(_IMPORT_LINK_KEY);
+		if(previous && previous.url)
+			_remove_link_access(previous.url, resolved.origins);
+
+		Storage.setValue(_IMPORT_LINK_KEY, {
+			url: link,
+			lastImported: Date.now(),
+			engines: $('#import-search-engines').is(':checked'),
+			style: $('#import-style').is(':checked'),
+			options: $('#import-options').is(':checked')
+		});
+
+		_apply_import(to_import, true);
+	}
+
+	// Tabs in the export and import sections.
+	function _select_settings_tab(tab){
+		var section = tab.closest('#export-settings, #import-settings');
+		section.find('.settings-tab').removeClass('selected');
+		tab.addClass('selected');
+		section.find('.settings-panel').hide();
+		$('#' + tab.data('panel')).show();
+
+		if(section.is('#import-settings')){
+			// The replace option is only used when importing from a file or exported data,
+			// importing from a link always replaces the search engines.
+			$('#import-replace-engines-opt li').toggle(tab.data('panel') !== 'import-link-panel');
+		}
+	}
+
+	$('.settings-tab').click(function(){
+		_select_settings_tab($(this));
+		return false;
+	});
+
+	// Open the link tab directly if a link has been saved.
+	if(Storage.getValue(_IMPORT_LINK_KEY))
+		_select_settings_tab($('.settings-tab[data-panel="import-link-panel"]'));
+
+	$('#export-copy').click(async function(){
+		var text = $('#export-settings textarea').val();
+		if(!text){
+			alert('Select what to include in the export first.');
+			return;
+		}
+		try{
+			await navigator.clipboard.writeText(text);
+			$('#export-copy-status').text('Copied');
+		}catch(e){
+			$('#export-copy-status').text('');
+			alert('Failed to copy: ' + e.message);
+			return;
+		}
+		setTimeout(function(){ $('#export-copy-status').text(''); }, 2000);
+	});
+
+	var _pending_link = null;
+	var _pending_link_origins = null;
+
+	$('#import-link-grant').click(async function(){
+
+		if(!_pending_link_origins)
+			return;
+
+		// Must be the first async call in the click handler (requires a user gesture).
+		var granted;
+		try{
+			granted = await chrome.permissions.request({origins: _pending_link_origins});
+		}catch(e){
+			_set_import_link_status('Could not request access to the site: ' + e.message, true);
+			return;
+		}
+
+		if(!granted){
+			_set_import_link_status('Access to the site was not allowed, so the file could not be downloaded.', true);
+			return;
+		}
+
+		_import_from_link();
+	});
+
+	$('#import-link-submit').click(function(){
+		_import_from_link();
+	});
+
+	// Removes the site access granted for a link (if any), except the
+	// origins in keep_origins (used by the new link).
+	function _remove_link_access(link, keep_origins){
+		var origins;
+		try{
+			origins = _resolve_import_link(link).origins;
+		}catch(e){
+			return;
+		}
+		origins = origins.filter(function(o){ return (keep_origins || []).indexOf(o) == -1; });
+		if(origins.length == 0)
+			return;
+		chrome.permissions.remove({origins: origins}).catch(function(){});
+	}
+
+	$('#import-link-url').on('input', function(){
+
+		var value = $(this).val().trim();
+
+		// The "Grant access" button is for the link that was entered when it was
+		// shown, so hide it if the link is changed.
+		if(_pending_link !== null && value !== _pending_link){
+			_pending_link = null;
+			_pending_link_origins = null;
+			_set_import_link_status('');
+		}
+
+		// Forget the saved link (and remove the site access) when the field is emptied.
+		if(value.length == 0){
+			var saved = Storage.getValue(_IMPORT_LINK_KEY);
+			if(saved !== undefined){
+				Storage.removeValue(_IMPORT_LINK_KEY);
+				_set_import_link_status('');
+				if(saved.url)
+					_remove_link_access(saved.url);
+			}
+		}
+	});
+
+	$('#import-link-url').keydown(function(e){
+		if(e.key === 'Enter')
+			_import_from_link();
+	});
+
+	_show_last_import_link();
 
 
 	$('#export-settings-link').click(function(){
@@ -1055,19 +1426,86 @@ function initOptionsPage(){
 	});
 
 
-	$('#import-submit').click(function(){
+	// True if the settings on the page have changes that are not saved.
+	function _has_unsaved_changes(){
+		try{
+			var tmpStore = newTempStorageDuplicate();
+			saveCurrentSettingsToStore(tmpStore);
+			return tmpStore.hasChanges(Storage);
+		}catch(e){
+			return false;
+		}
+	}
 
-		var msg = ['This will overwrite you existing settings'];
+	var _UNSAVED_CHANGES_WARNING = 'You have unsaved changes on this page, they will be lost.';
+
+	function _confirm_import(){
+
+		var msg = ['This will overwrite your existing settings'];
 
 		if($('#import-replace-engines').is(':checked'))
 			msg.push('\nand your search engines');
 
-		msg.push('.\n\nAre you sure you want to continue?');
+		msg.push('.');
 
-		if(confirm(msg.join('')))
+		if(_has_unsaved_changes())
+			msg.push('\n\n' + _UNSAVED_CHANGES_WARNING);
+
+		msg.push('\n\nAre you sure you want to continue?');
+
+		return confirm(msg.join(''));
+	}
+
+	$('#import-submit').click(function(){
+
+		if(_confirm_import())
 			_do_import();
 
 	});
+
+	$('#import-file-input').change(async function(){
+
+		var input = this;
+		var file = input.files[0];
+
+		// Reset the input so that selecting the same file again triggers a new import.
+		function reset(){ input.value = ''; }
+
+		if(!file)
+			return;
+
+		if(_import_selection_empty()){
+			alert('Select what to import first.');
+			reset();
+			return;
+		}
+
+		var text;
+		try{
+			// Always decoded as UTF-8 (a UTF-8 BOM is removed).
+			text = await file.text();
+		}catch(e){
+			alert('Failed to read the file: ' + e.message);
+			reset();
+			return;
+		}
+
+		var to_import = _decode_import(text);
+
+		if(!to_import){
+			alert('The file is not a valid settings file.');
+			reset();
+			return;
+		}
+
+		if(!_confirm_import()){
+			reset();
+			return;
+		}
+
+		_apply_import(to_import, false);
+	});
+
 
 
 

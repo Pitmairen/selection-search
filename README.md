@@ -15,6 +15,10 @@ and
   without text selection, allowing the extension to be used as a link collection tool for quick
   navigation to frequently used URLs. The feature is disabled by default to maintain backward
   compatibility. Context menu also appears on page context (right-click anywhere) when enabled.
+- Settings can be exported to a file with "Download as file", and imported from a file or from a
+  link to a file shared online (e.g. Google Drive, Dropbox or a GitHub Gist). The link is remembered,
+  so a group of people can share the same search engines by importing from the same link and
+  clicking the button again to get the latest version.
 
 *0.9.8*
 - Remove search engine icon source that no longer works (faviconkit). This could in some cases cause
