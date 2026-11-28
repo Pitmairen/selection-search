@@ -10,6 +10,16 @@ and
 
 ## Changelog
 
+*0.9.9*
+- Add optional "Allow engines without selection" feature. When enabled, the popup can be activated
+  without text selection, allowing the extension to be used as a link collection tool for quick
+  navigation to frequently used URLs. The feature is disabled by default to maintain backward
+  compatibility. Context menu also appears on page context (right-click anywhere) when enabled.
+- Settings can be exported to a file with "Download as file", and imported from a file or from a
+  link to a file shared online (e.g. Google Drive, Dropbox or a GitHub Gist). The link is remembered,
+  so a group of people can share the same search engines by importing from the same link and
+  clicking the button again to get the latest version.
+
 *0.9.8.1-ff*
 - Firefox only: Add support for icons in the right click context menu
 - Firefox only: Fix issue where the items and the order of items in the right click context

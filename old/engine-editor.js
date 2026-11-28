@@ -7,7 +7,7 @@ function EngineEditor(_shadowDOM){
 	// Setting the style with javascript after the element has been
 	// created seems to work.
 
-	var _editorContainer = $('<div></div>')
+	var _editorContainer = $('<engine-editor-element></engine-editor-element>')
 		.attr('class', 'engine-editor common')
 		.css({display: 'none', position: 'absolute'});
 

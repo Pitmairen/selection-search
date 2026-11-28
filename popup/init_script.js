@@ -3,10 +3,48 @@
 (function(){
 
 
-    var shadowElement = document.createElement("div");
+    var shadowElement = document.createElement("selection-search-popup");
+    shadowElement.id = "selection-search-popup";
     var shadowDOM = BrowserSupport.createShadowDOM(shadowElement);
 
-    document.documentElement.appendChild(shadowElement);
+    const printStyle = document.createElement("style");
+    printStyle.textContent = `
+    @media print {
+        selection-search-popup#selection-search-popup {
+            display: none !important;
+        }
+    }
+    `;
+    document.head.appendChild(printStyle);
+
+
+    function getInjectionParent(){
+        // Special case for Google Docs to prevent issues with an extra blank page at the
+        // end in the print preview.
+        if (window.location.host === "docs.google.com"){
+            injectRoot = document.body;
+            return document.body;
+        }
+        return document.documentElement;
+    }
+
+    let injectionCheckCounter = 0;
+    function injectShadowDOM(){
+        injectionCheckCounter += 1;
+
+        let el = document.getElementById("selection-search-popup")
+        if (!el) {
+            getInjectionParent().appendChild(shadowElement);
+        }
+
+        // Some sites may remove the injected element, e.g if they replace the page content
+        // after load using js, so we check a few times to make sure the element is still there.
+        if(injectionCheckCounter <= 10){
+            setTimeout(injectShadowDOM, 250)
+        }
+    }
+
+    injectShadowDOM();
 
     var style = new Style(shadowDOM);
 

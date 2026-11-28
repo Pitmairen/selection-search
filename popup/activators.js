@@ -38,7 +38,7 @@ function Activator(_options, _popup){
     // Returns true if the popup should be opened.
     // "e" is the event that created the request to open the popup.
     this.popupShouldOpen = function(e){
-        return _this.hasSelection();
+        return _this.hasSelection() || _options.allow_engines_without_selection === true;
     }
 
 
@@ -81,7 +81,8 @@ function ClickActivator(_popup, _options){
 
     // Returns true if the popup should be opened.
     this.popupShouldOpen = function(e){
-        return _this.hasSelection() && e.button == _options.button;
+        if (e.button != _options.button) return false;
+        return _this.hasSelection() || _options.allow_engines_without_selection === true;
     }
 
 
@@ -106,7 +107,7 @@ function ClickActivator(_popup, _options){
             }
 
 
-            if (!_this.hasSelection() || e.button != _options.button)
+            if (!_this.popupShouldOpen(e))
                 return;
 
 
@@ -115,7 +116,7 @@ function ClickActivator(_popup, _options){
                 return;
 
 
-            if(in_input || _this.isPointOnSelection(e.pageX, e.pageY)){
+            if(in_input || _this.isPointOnSelection(e.pageX, e.pageY) || _options.allow_engines_without_selection){
 
                 _this.updatePopupSelection();
 
@@ -174,7 +175,7 @@ function DoubleClickActivator(_popup, _options){
 
                 _doubleTimer = null;
 
-                if (!_this.hasSelection())
+                if (!_this.popupShouldOpen(e))
                     return;
 
                 _this.updatePopupSelection();
@@ -251,7 +252,7 @@ function AutoActivator(_popup, _button, _options){
             if(e.button != 0 || _popup.isActive())
                 return;
 
-            if (_this.hasSelection()){
+            if (_this.hasSelection() || _options.allow_engines_without_selection === true){
 
                 if(_lastTimer != undefined)
                     window.clearTimeout(_lastTimer);
@@ -268,7 +269,7 @@ function AutoActivator(_popup, _button, _options){
     }
 
     function _tryShow(e, relative_to_mouse){
-        if (_this.hasSelection() && !_popup.isActive()){
+        if ((_this.hasSelection() || _options.allow_engines_without_selection === true) && !_popup.isActive()){
 
             _this.updatePopupSelection();
 
@@ -320,7 +321,9 @@ function KeyAndMouseActivator(_popup, _options){
 
 
     this.popupShouldOpen = function(e){
-        return _this.hasSelection() && _is_keyboard_combo_activated() && e.button == _options.button;
+        var comboActive = _is_keyboard_combo_activated() && e.button == _mouseButton;
+        if (!comboActive) return false;
+        return _this.hasSelection() || _options.allow_engines_without_selection === true;
     }
 
 
@@ -369,7 +372,7 @@ function KeyAndMouseActivator(_popup, _options){
             }
 
 
-            if (!_this.hasSelection() || !_is_keyboard_combo_activated() || _mouseButton != e.button)
+            if (!_this.popupShouldOpen(e))
                 return;
 
             _this.updatePopupSelection();

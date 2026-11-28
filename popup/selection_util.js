@@ -35,7 +35,11 @@ function SelectionUtil(options){
     }
 
     this.getSelectionRect = function(){
-        var range = window.getSelection().getRangeAt(0);
+        var selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+            return undefined;
+        }
+        var range = selection.getRangeAt(0);
         if(range){
             return range.getBoundingClientRect();
         }
@@ -49,10 +53,12 @@ function SelectionUtil(options){
 
         var rect = this.getSelectionRect();
 
-        if(rect){
-            rx += rect.left;
-            ry += rect.top;
+        if(!rect){
+            return false;
         }
+
+        rx += rect.left;
+        ry += rect.top;
 
         if ((y >= ry && y <= ry + rect.height && x >= rx && x <= rx + rect.width)){
             return true;

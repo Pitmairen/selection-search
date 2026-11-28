@@ -42,7 +42,7 @@ chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
 
 var foundOpenSearchEngines = false;
 
-$("a[href^='/install.html']").each(function(){
+$("a[href^='/install-splash.php']").each(function(){
 
 	var installUrl = $(this).attr('href');
 

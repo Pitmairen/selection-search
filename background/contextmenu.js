@@ -109,10 +109,16 @@ function ContextMenu(options, _clickCounterCallback){
     function _addEngineItem(engine, parentItem){
         return new Promise((resolve, reject) => {
             let id = _nextItemId()
+
+            let contexts = ['selection'];
+            if (_options.allow_engines_without_selection) {
+                contexts.push('page');
+            }
+
             chrome.contextMenus.create({
                 'id': id,
                 'title' :  engine.name,
-                'contexts' : ['selection'],
+                'contexts' : contexts,
                 'parentId' : parentItem,
             }, function(){
                 _registerIconItem(id, engine);
@@ -126,10 +132,15 @@ function ContextMenu(options, _clickCounterCallback){
 
     function _addSeparatorItem(engine, parentItem){
         return new Promise((resolve, reject) => {
+            let contexts = ['selection'];
+            if (_options.allow_engines_without_selection) {
+                contexts.push('page');
+            }
+
             chrome.contextMenus.create({
                 'id': _nextItemId(),
                 'type' : 'separator',
-                'contexts' : ['selection'],
+                'contexts' : contexts,
                 'parentId' : parentItem,
             }, function(){
                 resolve()
@@ -142,10 +153,16 @@ function ContextMenu(options, _clickCounterCallback){
     function _addSubMenuItem(engine, parentItem){
 
         let id = _nextItemId()
+
+        let contexts = ['selection'];
+        if (_options.allow_engines_without_selection) {
+            contexts.push('page');
+        }
+
         var menu = {
             'id': id,
             'title' :  engine.name,
-            'contexts' :  ['selection'],
+            'contexts' :  contexts,
             'parentId' : parentItem,
         };
 
@@ -174,13 +191,15 @@ function ContextMenu(options, _clickCounterCallback){
 
     function _onEngineClick(engine, info, tab){
         var utils = new ContextMenuActionUtils(info, tab);
-        utils.openEngine(engine, info.selectionText)
+        var selection = info.selectionText || '';
+        utils.openEngine(engine, selection)
         _clickCounterCallback(engine);
     }
 
     function _onOpenAll(engine, info, tab){
         var utils = new ContextMenuActionUtils(info, tab);
-        utils.openAllInSubmenu(engine, info.selectionText)
+        var selection = info.selectionText || '';
+        utils.openAllInSubmenu(engine, selection)
         _clickCounterCallback(engine);
     }
 
@@ -217,10 +236,15 @@ function ContextMenu(options, _clickCounterCallback){
     function _createRootItem(){
         return new Promise((resolve, reject) => {
             _removeRootItem().then(() => {
+                let contexts = ['selection'];
+                if (_options.allow_engines_without_selection) {
+                    contexts.push('page');
+                }
+
                 chrome.contextMenus.create({
                     'id': _rootItem,
                     'title' : 'Search',
-                    'contexts' : ['selection']
+                    'contexts' : contexts
                 }, () => {
                     resolve()
                 })

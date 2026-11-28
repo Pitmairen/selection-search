@@ -1,5 +1,9 @@
 
 const defaultStyleCSS = `
+:host {
+  all: initial!important;
+}
+
 .common li, .common span, .common a, .common input, .common img, .common h4,
 .popup, .engine-editor{
     direction: ltr;

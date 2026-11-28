@@ -111,7 +111,10 @@ function setQuery(query){
 }
 
 function hasQuery(){
-    return getQuery().length > 0
+    if (cachedOptions && cachedOptions.allow_engines_without_selection) {
+        return true;
+    }
+    return getQuery().length > 0;
 }
 
 function highlightQueryBox(){
@@ -296,6 +299,9 @@ function openFirstSearch(){
     document.querySelector('.engine a').click();
 }
 
+// Cache options for use in hasQuery() and other functions
+let cachedOptions = null;
+
 chrome.runtime.sendMessage({action:"getToolbarOptions"}, function(response){
     if(response.extra_style){
         let styleNode = document.createElement('style')
@@ -305,6 +311,9 @@ chrome.runtime.sendMessage({action:"getToolbarOptions"}, function(response){
 })
 
 chrome.runtime.sendMessage({action:"getContentScriptData"}, function(response){
+
+    // Cache options for use in hasQuery()
+    cachedOptions = response.options;
 
     if(response.options.toolbar_popup_style === 'icons-only'){
         document.querySelector('.search-engines').classList.add('icons-only');

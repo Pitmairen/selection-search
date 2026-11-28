@@ -196,7 +196,7 @@ function Popup(options, style){
 
     function _createPopupNode(){
 
-        var node = document.createElement("ul");
+        var node = document.createElement("popup-element");
         node.className = "popup common hidden";
 
         node.addEventListener("mousedown", function(e){
