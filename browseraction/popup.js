@@ -280,6 +280,7 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
     if(tabs.length == 1 && tabs[0].id != undefined){
 
         utils.addVariables(tabs[0].url);
+        utils.setTabId(tabs[0].id);
 
         chrome.tabs.sendMessage(tabs[0].id, {action: "getSelection"}, {frameId: 0}, function(response){
 
